@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>THE CELL</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg:#0f0f0f; --surface:#1a1a1a; --surface2:#222;
+    --border:#2e2e2e; --accent:#c8a96e; --green:#4ade80;
+    --text:#f0ede8; --muted:#888; --red:#f87171;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;}
+
+  #loginScreen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;background:radial-gradient(ellipse at 50% 0%,#1e1500 0%,#0f0f0f 70%);}
+  .login-logo{font-family:'Bebas Neue',sans-serif;font-size:4rem;letter-spacing:6px;color:var(--accent);margin-bottom:4px;}
+  .login-sub{color:var(--muted);font-size:0.72rem;letter-spacing:3px;text-transform:uppercase;margin-bottom:44px;}
+  .login-box{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:30px 26px;width:100%;max-width:340px;}
+  .login-box label{display:block;font-size:0.72rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;}
+  .login-box input[type="password"]{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:14px 16px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:1.1rem;letter-spacing:3px;outline:none;transition:border-color 0.2s;margin-bottom:14px;}
+  .login-box input[type="password"]:focus{border-color:var(--accent);}
+  .login-btn{width:100%;background:var(--accent);color:#000;border:none;border-radius:10px;padding:14px;font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:2px;cursor:pointer;transition:opacity 0.2s;}
+  .login-btn:active{opacity:0.8;}
+  .remember-row{display:flex;align-items:center;gap:8px;margin-top:12px;cursor:pointer;font-size:0.78rem;color:var(--muted);}
+  .remember-row input{accent-color:var(--accent);width:15px;height:15px;cursor:pointer;}
+  .login-error{color:var(--red);font-size:0.82rem;text-align:center;margin-top:12px;display:none;}
+  @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+  .shake{animation:shake 0.4s ease;}
+
+  #app{display:none;padding:18px 14px 48px;}
+  header{text-align:center;margin-bottom:20px;position:relative;}
+  header h1{font-family:'Bebas Neue',sans-serif;font-size:2.4rem;letter-spacing:4px;color:var(--accent);line-height:1;}
+  header p{color:var(--muted);font-size:0.72rem;margin-top:2px;letter-spacing:1px;text-transform:uppercase;}
+  .logout-btn{position:absolute;top:4px;right:0;background:none;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:5px 10px;font-size:0.72rem;cursor:pointer;transition:color 0.2s,border-color 0.2s;}
+  .logout-btn:hover{color:var(--red);border-color:var(--red);}
+  .undo-btn{position:absolute;top:4px;left:0;background:none;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:5px 10px;font-size:0.72rem;cursor:pointer;transition:color 0.2s,border-color 0.2s;}
+  .undo-btn:hover:not(:disabled){color:var(--accent);border-color:var(--accent);}
+  .undo-btn:disabled{opacity:0.3;cursor:not-allowed;}
+
+  .date-bar{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:18px;}
+  .date-bar label{color:var(--muted);font-size:0.8rem;}
+  .date-bar input[type="date"]{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:8px 12px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.88rem;cursor:pointer;outline:none;}
+  .date-bar input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(0.6);}
+
+  .summary{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:18px;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;text-align:center;}
+  .s-label{font-size:0.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;}
+  .s-value{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:1px;color:var(--accent);}
+  .s-value.big{color:var(--green);font-size:1.5rem;}
+
+  .backup-bar{display:flex;gap:8px;margin-bottom:18px;}
+  .backup-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:11px;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.82rem;cursor:pointer;transition:opacity 0.2s;}
+  .backup-btn:active{opacity:0.75;}
+  .btn-save{background:rgba(200,169,110,0.15);color:var(--accent);border:1px solid rgba(200,169,110,0.3);}
+  .btn-load{background:rgba(74,222,128,0.12);color:var(--green);border:1px solid rgba(74,222,128,0.3);}
+
+  .barbers-grid{display:flex;flex-direction:column;gap:13px;margin-bottom:20px;}
+  .barber-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:15px;position:relative;overflow:hidden;transition:border-color 0.4s;}
+  .barber-card.goal-reached{border-color:var(--green);background:linear-gradient(135deg,#1a1a1a,#0f2a1a);}
+  .barber-card.goal-reached::after{content:'✓ OBIECTIV ATINS';position:absolute;top:11px;right:11px;background:var(--green);color:#000;font-size:0.58rem;font-weight:700;letter-spacing:1px;padding:3px 8px;border-radius:20px;}
+  .barber-name{font-family:'Bebas Neue',sans-serif;font-size:1.45rem;letter-spacing:2px;color:var(--accent);margin-bottom:2px;}
+  .barber-goal{font-size:0.7rem;color:var(--muted);margin-bottom:9px;}
+  .progress-wrap{background:var(--border);border-radius:99px;height:5px;margin-bottom:11px;overflow:hidden;}
+  .progress-bar{height:100%;border-radius:99px;background:var(--accent);transition:width 0.5s ease;}
+  .goal-reached .progress-bar{background:var(--green);}
+
+  .paste-area{width:100%;background:var(--surface2);border:1px dashed var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.95rem;padding:10px 12px;resize:none;min-height:46px;outline:none;transition:border-color 0.2s;}
+  .paste-area:focus{border-color:var(--accent);}
+  .paste-area::placeholder{color:#444;}
+  .add-btn{margin-top:8px;width:100%;background:var(--accent);color:#000;border:none;border-radius:8px;padding:10px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.88rem;cursor:pointer;transition:opacity 0.2s;}
+  .add-btn:active{opacity:0.75;}
+  .add-btn:disabled{opacity:0.4;cursor:not-allowed;}
+  .parse-error{color:var(--red);font-size:0.74rem;margin-top:5px;display:none;}
+
+  .entries{margin-top:11px;display:flex;flex-direction:column;gap:5px;max-height:160px;overflow-y:auto;}
+  .entry-row{display:flex;justify-content:space-between;align-items:center;background:var(--bg);border-radius:6px;padding:7px 10px;font-size:0.83rem;}
+  .e-date{color:var(--muted);font-size:0.76rem;}
+  .e-amount{color:var(--text);font-weight:600;}
+  .e-del{background:none;border:none;color:#444;cursor:pointer;font-size:1rem;padding:0 4px;transition:color 0.2s;}
+  .e-del:hover{color:var(--red);}
+
+  .barber-totals{margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:6px;}
+  .b-total-item{flex:1;}
+  .b-total-label{font-size:0.63rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;}
+  .b-total-val{font-weight:600;font-size:0.9rem;}
+  .b-total-val.green{color:var(--green);}
+  .b-total-val.gold{color:var(--accent);}
+  .b-total-val.dim{color:var(--muted);}
+
+  .section-title{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:2px;color:var(--muted);margin-bottom:10px;padding-left:2px;}
+  .chart-wrap{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:20px;}
+
+  .table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:auto;}
+  table{width:100%;border-collapse:collapse;font-size:0.8rem;min-width:320px;}
+  thead th{background:var(--surface2);padding:10px 11px;text-align:left;font-size:0.62rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-weight:500;border-bottom:1px solid var(--border);white-space:nowrap;}
+  tbody tr{border-bottom:1px solid var(--border);transition:background 0.15s;}
+  tbody tr:last-child{border-bottom:none;}
+  tbody tr:hover{background:var(--surface2);}
+  tbody td{padding:9px 11px;vertical-align:middle;white-space:nowrap;}
+  .chip{display:inline-block;padding:2px 8px;border-radius:99px;font-size:0.73rem;font-weight:600;}
+  .chip-gold{background:rgba(200,169,110,0.15);color:var(--accent);}
+  .chip-vac{background:rgba(96,165,250,0.15);color:#60a5fa;}
+  tfoot td{padding:10px 11px;font-weight:700;background:var(--surface2);border-top:1px solid var(--border);color:var(--accent);font-size:0.86rem;white-space:nowrap;}
+
+  .vac-section{margin-top:12px;padding-top:10px;border-top:1px solid var(--border);}
+  .vac-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+  .vac-title{font-size:0.68rem;color:#60a5fa;text-transform:uppercase;letter-spacing:1px;}
+  .vac-count{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:#60a5fa;letter-spacing:1px;}
+  .vac-btn{background:rgba(96,165,250,0.12);color:#60a5fa;border:1px solid rgba(96,165,250,0.3);border-radius:7px;padding:6px 12px;font-size:0.78rem;font-weight:600;cursor:pointer;transition:background 0.2s;}
+  .vac-btn:active{background:rgba(96,165,250,0.25);}
+  .vac-days{display:flex;flex-wrap:wrap;gap:5px;}
+  .vac-day-chip{background:rgba(96,165,250,0.1);color:#60a5fa;border:1px solid rgba(96,165,250,0.25);border-radius:6px;padding:3px 8px;font-size:0.74rem;display:flex;align-items:center;gap:5px;}
+  .vac-day-chip button{background:none;border:none;color:#60a5fa;cursor:pointer;font-size:0.85rem;padding:0;opacity:0.6;}
+  .vac-day-chip button:hover{opacity:1;}
+
+  ::-webkit-scrollbar{width:3px;height:3px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+</style>
+</head>
+<body>
+
+<div id="loginScreen">
+  <div class="login-logo">THE CELL</div>
+  <div class="login-sub">Sistem de evidență</div>
+  <div class="login-box" id="loginBox">
+    <label>Parolă de acces</label>
+    <input type="password" id="passInput" placeholder="••••••••" maxlength="20" autocomplete="current-password">
+    <button class="login-btn" id="loginBtn">INTRĂ</button>
+    <label class="remember-row">
+      <input type="checkbox" id="rememberMe"> Rămâi logat
+    </label>
+    <div class="login-error" id="loginErr">⚠ Parolă greșită. Încearcă din nou.</div>
+  </div>
+</div>
+
+<div id="app">
+  <header>
+    <button class="undo-btn" id="undoBtn" disabled>↩ Undo</button>
+    <h1>THE CELL</h1>
+    <p>Evidență zilnică &amp; lunară</p>
+    <button class="logout-btn" id="logoutBtn">Ieși ↩</button>
+  </header>
+  <div class="date-bar">
+    <label>Data:</label>
+    <input type="date" id="currentDate">
+  </div>
+  <div class="summary">
+    <div><div class="s-label">Total azi</div><div class="s-value" id="sumDay">0 lei</div></div>
+    <div><div class="s-label">Total lună</div><div class="s-value big" id="sumMonth">0 lei</div></div>
+    <div><div class="s-label">Zile lucrate</div><div class="s-value" id="sumDays">0</div></div>
+  </div>
+  <div class="backup-bar">
+    <button class="backup-btn btn-save" id="exportBtn">💾 Salvează backup</button>
+    <button class="backup-btn btn-load" id="importBtn">📂 Încarcă backup</button>
+    <input type="file" id="importFile" accept=".json" style="display:none">
+  </div>
+  <div class="barbers-grid" id="barbersGrid"></div>
+  <div class="section-title">PROGRES LUNAR</div>
+  <div class="chart-wrap"><canvas id="progressChart"></canvas></div>
+  <div class="section-title">TABEL LUNAR</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Data</th><th>Florin</th><th>Ionuț</th><th>Casian</th><th>Total zi</th></tr></thead>
+      <tbody id="tableBody"></tbody>
+      <tfoot><tr><td>TOTAL LUNĂ</td><td id="ft-florin">0 lei</td><td id="ft-ionut">0 lei</td><td id="ft-casian">0 lei</td><td id="ft-total">0 lei</td></tr></tfoot>
+    </table>
+  </div>
+</div>
+
+<script>
+const PASSWORD = 'Admin30';
+const AUTH_KEY  = 'frizerie_auth_v1';
+const DATA_KEY  = 'frizerie_data_v3';
+const BARBERS   = [
+  { id:'florin', name:'Florin', goal:7000 },
+  { id:'ionut',  name:'Ionut',  goal:8000 },
+  { id:'casian', name:'Casian', goal:7000 }
+];
+
+let data = JSON.parse(localStorage.getItem(DATA_KEY) || '{}');
+const undoStack = [];
+const MAX_UNDO  = 20;
+let progressChart = null;
+
+/* ── STORAGE ── */
+function saveData(snapshot) {
+  if (snapshot !== undefined) {
+    undoStack.push(snapshot);
+    if (undoStack.length > MAX_UNDO) undoStack.shift();
+  }
+  localStorage.setItem(DATA_KEY, JSON.stringify(data));
+  updateUndoBtn();
+}
+
+function updateUndoBtn() {
+  var btn = document.getElementById('undoBtn');
+  if (!btn) return;
+  btn.disabled = undoStack.length === 0;
+  btn.title = 'Undo (' + undoStack.length + ' actiuni)';
+}
+
+function doUndo() {
+  if (!undoStack.length) return;
+  data = undoStack.pop();
+  localStorage.setItem(DATA_KEY, JSON.stringify(data));
+  updateUndoBtn();
+  renderAll();
+}
+
+/* ── AUTH ── */
+function doLogin() {
+  var pass     = document.getElementById('passInput').value;
+  var remember = document.getElementById('rememberMe').checked;
+  if (pass === PASSWORD) {
+    if (remember) localStorage.setItem(AUTH_KEY, '1');
+    else sessionStorage.setItem(AUTH_KEY, '1');
+    showApp();
+  } else {
+    document.getElementById('loginErr').style.display = 'block';
+    var box = document.getElementById('loginBox');
+    box.classList.remove('shake');
+    void box.offsetWidth;
+    box.classList.add('shake');
+    document.getElementById('passInput').value = '';
+  }
+}
+
+function doLogout() {
+  localStorage.removeItem(AUTH_KEY);
+  sessionStorage.removeItem(AUTH_KEY);
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('passInput').value = '';
+  document.getElementById('loginErr').style.display = 'none';
+}
+
+function showApp() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  initDate();
+  renderAll();
+}
+
+/* ── DATE ── */
+function initDate() {
+  var el = document.getElementById('currentDate');
+  if (!el.value) el.value = new Date().toISOString().slice(0, 10);
+}
+function getDate()  { return document.getElementById('currentDate').value; }
+function getMonth() { return getDate().slice(0, 7); }
+function getMonthKey(d) { return d.slice(0, 7); }
+
+function ensureDay(date) {
+  var m = getMonthKey(date);
+  if (!data[m]) data[m] = {};
+  if (!data[m][date]) data[m][date] = { florin:[], ionut:[], casian:[] };
+  return data[m][date];
+}
+
+function dayTotalBarber(id, dateKey) {
+  var d = data[getMonthKey(dateKey)] && data[getMonthKey(dateKey)][dateKey];
+  if (!d || !d[id]) return 0;
+  return d[id].reduce(function(s,e){ return s + e.amount; }, 0);
+}
+function monthTotalBarber(id, monthKey) {
+  return Object.values(data[monthKey] || {}).reduce(function(s,d){
+    return s + (d[id]||[]).reduce(function(a,e){ return a+e.amount; }, 0);
+  }, 0);
+}
+function fmt(n) { return n.toLocaleString('ro-RO') + ' lei'; }
+
+/* ── VACATION ── */
+function getVacDays(barberId, monthKey) {
+  return JSON.parse(localStorage.getItem('vac_' + monthKey + '_' + barberId) || '[]');
+}
+function addVacation(barberId) {
+  var dateKey  = getDate();
+  var monthKey = getMonth();
+  var vacKey   = 'vac_' + monthKey + '_' + barberId;
+  var days     = getVacDays(barberId, monthKey);
+  if (days.includes(dateKey)) { alert('Aceasta zi e deja marcata ca concediu!'); return; }
+  days.push(dateKey);
+  localStorage.setItem(vacKey, JSON.stringify(days));
+  renderAll();
+}
+function delVacation(barberId, dateKey) {
+  var monthKey = dateKey.slice(0, 7);
+  var days     = getVacDays(barberId, monthKey).filter(function(d){ return d !== dateKey; });
+  localStorage.setItem('vac_' + monthKey + '_' + barberId, JSON.stringify(days));
+  renderAll();
+}
+
+/* ── PARSE LOCAL (fara API) ── */
+function parseMsg(txt) {
+  var result = { amount: null, day: null, month: null };
+
+  // Cauta data: zz.ll sau zz/ll sau zz-ll sau zz ll (cu spatiu)
+  var dateMatch = txt.match(/\b([0-3]?\d)[.\/ -]([01]?\d)\b/);
+  if (dateMatch) {
+    var d = parseInt(dateMatch[1], 10);
+    var m = parseInt(dateMatch[2], 10);
+    if (d >= 1 && d <= 31 && m >= 1 && m <= 12) {
+      result.day   = d;
+      result.month = m;
+    }
+  }
+
+  // Cauta toate numerele din text
+  var nums = [];
+  var re = /\b(\d+(?:[.,]\d+)?)\b/g;
+  var match;
+  while ((match = re.exec(txt)) !== null) {
+    var n = parseFloat(match[1].replace(',', '.'));
+    if (n > 50) nums.push(n);
+  }
+
+  // Elimina ziua si luna daca au fost detectate ca numere
+  if (result.day)   nums = nums.filter(function(n){ return n !== result.day; });
+  if (result.month) nums = nums.filter(function(n){ return n !== result.month; });
+
+  // Suma = cel mai mare numar ramas
+  if (nums.length > 0) {
+    result.amount = Math.max.apply(null, nums);
+  }
+
+  return result;
+}
+
+/* ── ADD ENTRY ── */
+async function addEntry(barberId) {
+  var ta  = document.getElementById('ta_' + barberId);
+  var btn = document.getElementById('btn_' + barberId);
+  var err = document.getElementById('err_' + barberId);
+  var txt = ta.value.trim();
+  if (!txt) return;
+
+  btn.disabled    = true;
+  err.style.display = 'none';
+
+  var parsed = parseMsg(txt);
+
+  if (!parsed || parsed.amount === null) {
+    err.textContent   = 'Nu am gasit o suma valida in mesaj.';
+    err.style.display = 'block';
+    btn.disabled      = false;
+    btn.textContent   = 'Adauga';
+    return;
+  }
+
+  var dateKey = getDate();
+  if (parsed.day && parsed.month) {
+    var y  = dateKey.slice(0,4);
+    var mm = String(parsed.month).padStart(2,'0');
+    var dd = String(parsed.day).padStart(2,'0');
+    dateKey = y + '-' + mm + '-' + dd;
+  }
+
+  var snapshot = JSON.parse(JSON.stringify(data));
+  var dayData  = ensureDay(dateKey);
+  dayData[barberId].push({ amount: parsed.amount, date: dateKey, id: Date.now() });
+  saveData(snapshot);
+  ta.value        = '';
+  btn.disabled    = false;
+  btn.textContent = 'Adauga';
+  renderAll();
+}
+
+/* ── DELETE ENTRY ── */
+function delEntry(barberId, entryId) {
+  var snapshot = JSON.parse(JSON.stringify(data));
+  Object.keys(data).forEach(function(mk){
+    Object.keys(data[mk]).forEach(function(dk){
+      data[mk][dk][barberId] = (data[mk][dk][barberId]||[]).filter(function(e){ return e.id !== entryId; });
+    });
+  });
+  saveData(snapshot);
+  renderAll();
+}
+
+/* ── BACKUP ── */
+function exportBackup() {
+  var payload = { data: data, vac: {} };
+  Object.keys(localStorage).forEach(function(k){
+    if (k.startsWith('vac_')) payload.vac[k] = localStorage.getItem(k);
+  });
+  var blob = new Blob([JSON.stringify(payload, null, 2)], { type:'application/json' });
+  var url  = URL.createObjectURL(blob);
+  var a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'thecell_backup_' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importBackup(e) {
+  var file = e.target.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    try {
+      var payload = JSON.parse(ev.target.result);
+      if (!payload.data) throw new Error('invalid');
+      data = payload.data;
+      localStorage.setItem(DATA_KEY, JSON.stringify(data));
+      if (payload.vac) {
+        Object.entries(payload.vac).forEach(function(kv){ localStorage.setItem(kv[0], kv[1]); });
+      }
+      renderAll();
+      alert('Backup incarcat cu succes!');
+    } catch(err) {
+      alert('Fisier invalid. Alege un backup corect.');
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+/* ── CHART ── */
+function renderChart() {
+  var monthKey  = getMonth();
+  var monthData = data[monthKey] || {};
+  var allDays   = Object.keys(monthData).sort();
+  var colors    = { florin:'#c8a96e', ionut:'#4ade80', casian:'#60a5fa' };
+  var labels    = allDays.map(function(d){ return d.slice(8); });
+
+  var datasets = BARBERS.map(function(b){
+    var cum  = 0;
+    var vals = allDays.map(function(dk){
+      cum += (monthData[dk] && monthData[dk][b.id] ? monthData[dk][b.id] : []).reduce(function(s,e){ return s+e.amount; },0);
+      return cum;
+    });
+    return {
+      label: b.name, data: vals,
+      borderColor: colors[b.id], backgroundColor: colors[b.id]+'18',
+      borderWidth:2.5, pointRadius:3, pointHoverRadius:6, tension:0.35, fill:false
+    };
+  });
+
+  BARBERS.forEach(function(b){
+    datasets.push({
+      label:'Obiectiv '+b.name, data: allDays.map(function(){ return b.goal; }),
+      borderColor: colors[b.id]+'55', borderWidth:1, borderDash:[5,4],
+      pointRadius:0, tension:0, fill:false
+    });
+  });
+
+  var ctx = document.getElementById('progressChart').getContext('2d');
+  if (progressChart) progressChart.destroy();
+  progressChart = new Chart(ctx, {
+    type:'line', data:{ labels:labels, datasets:datasets },
+    options:{
+      responsive:true, interaction:{ mode:'index', intersect:false },
+      plugins:{
+        legend:{
+          labels:{
+            color:'#888', font:{ family:'DM Sans', size:11 },
+            filter:function(i){ return !i.text.startsWith('Obiectiv'); },
+            boxWidth:12, padding:14
+          }
+        },
+        tooltip:{
+          backgroundColor:'#1a1a1a', borderColor:'#2e2e2e', borderWidth:1,
+          titleColor:'#f0ede8', bodyColor:'#888',
+          callbacks:{
+            label:function(ctx){
+              if(ctx.dataset.label.startsWith('Obiectiv')) return null;
+              return ' '+ctx.dataset.label+': '+ctx.parsed.y.toLocaleString('ro-RO')+' lei';
+            }
+          }
+        }
+      },
+      scales:{
+        x:{ ticks:{ color:'#666', font:{size:10} }, grid:{ color:'#1f1f1f' } },
+        y:{ ticks:{ color:'#666', font:{size:10}, callback:function(v){ return v.toLocaleString('ro-RO')+' lei'; } }, grid:{ color:'#1f1f1f' } }
+      }
+    }
+  });
+}
+
+/* ── RENDER ── */
+function renderAll() {
+  var dateKey  = getDate();
+  var monthKey = getMonth();
+
+  var dayTotal = 0, monthTotal = 0;
+  BARBERS.forEach(function(b){
+    dayTotal   += dayTotalBarber(b.id, dateKey);
+    monthTotal += monthTotalBarber(b.id, monthKey);
+  });
+
+  var workedSet = {};
+  Object.keys(data[monthKey] || {}).forEach(function(dk){
+    if (BARBERS.some(function(b){ return (data[monthKey][dk][b.id]||[]).length > 0; })) workedSet[dk] = true;
+  });
+
+  document.getElementById('sumDay').textContent   = fmt(dayTotal);
+  document.getElementById('sumMonth').textContent = fmt(monthTotal);
+  document.getElementById('sumDays').textContent  = Object.keys(workedSet).length;
+
+  var grid = document.getElementById('barbersGrid');
+  grid.innerHTML = '';
+
+  BARBERS.forEach(function(b){
+    var mTotal  = monthTotalBarber(b.id, monthKey);
+    var dTotal  = dayTotalBarber(b.id, dateKey);
+    var pct     = Math.min(100, Math.round(mTotal / b.goal * 100));
+    var reached = mTotal >= b.goal;
+    var vacDays = getVacDays(b.id, monthKey);
+
+    var allEntries = [];
+    Object.values(data[monthKey] || {}).forEach(function(d){
+      (d[b.id]||[]).forEach(function(e){ allEntries.push(e); });
+    });
+    allEntries.sort(function(a,z){ return z.id - a.id; });
+
+    var entriesHTML = allEntries.map(function(e){
+      return '<div class="entry-row">' +
+        '<span class="e-date">' + e.date + '</span>' +
+        '<span class="e-amount">' + fmt(e.amount) + '</span>' +
+        '<button class="e-del" onclick="delEntry(\'' + b.id + '\',' + e.id + ')">✕</button>' +
+        '</div>';
+    }).join('');
+
+    var vacHTML = vacDays.sort().map(function(d){
+      return '<div class="vac-day-chip">' + d +
+        '<button onclick="delVacation(\'' + b.id + '\',\'' + d + '\')">✕</button></div>';
+    }).join('');
+
+    var card = document.createElement('div');
+    card.className = 'barber-card' + (reached ? ' goal-reached' : '');
+    card.innerHTML =
+      '<div class="barber-name">' + b.name + '</div>' +
+      '<div class="barber-goal">Obiectiv lunar: ' + fmt(b.goal) + '</div>' +
+      '<div class="progress-wrap"><div class="progress-bar" style="width:' + pct + '%"></div></div>' +
+      '<textarea class="paste-area" id="ta_' + b.id + '" rows="2" placeholder="Lipeste mesajul WhatsApp..."></textarea>' +
+      '<div class="parse-error" id="err_' + b.id + '"></div>' +
+      '<button class="add-btn" id="btn_' + b.id + '" onclick="addEntry(\'' + b.id + '\')">Adauga</button>' +
+      '<div class="entries">' + entriesHTML + '</div>' +
+      '<div class="barber-totals">' +
+        '<div class="b-total-item"><div class="b-total-label">Azi</div><div class="b-total-val gold">' + fmt(dTotal) + '</div></div>' +
+        '<div class="b-total-item"><div class="b-total-label">Luna</div><div class="b-total-val green">' + fmt(mTotal) + '</div></div>' +
+        '<div class="b-total-item"><div class="b-total-label">Progres</div><div class="b-total-val dim">' + pct + '%</div></div>' +
+      '</div>' +
+      '<div class="vac-section">' +
+        '<div class="vac-header">' +
+          '<div><div class="vac-title">Concediu</div><div class="vac-count">' + vacDays.length + ' zile</div></div>' +
+          '<button class="vac-btn" onclick="addVacation(\'' + b.id + '\')">+ Marcheaza azi</button>' +
+        '</div>' +
+        '<div class="vac-days">' + vacHTML + '</div>' +
+      '</div>';
+    grid.appendChild(card);
+  });
+
+  /* Table */
+  var tbody   = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+  var allDays = Object.keys(data[monthKey] || {}).sort();
+  allDays.forEach(function(dk){
+    var row    = data[monthKey][dk];
+    var totDay = BARBERS.reduce(function(s,b){ return s+(row[b.id]||[]).reduce(function(a,e){ return a+e.amount; },0); },0);
+    var tr     = document.createElement('tr');
+    tr.innerHTML = '<td>' + dk + '</td>' +
+      BARBERS.map(function(b){
+        var t     = (row[b.id]||[]).reduce(function(a,e){ return a+e.amount; },0);
+        var isVac = getVacDays(b.id, monthKey).includes(dk);
+        if (isVac && t===0) return '<td><span class="chip chip-vac">Concediu</span></td>';
+        return '<td>' + (t>0 ? '<span class="chip chip-gold">'+fmt(t)+'</span>' : '<span style="color:var(--muted)">—</span>') + '</td>';
+      }).join('') +
+      '<td><strong>' + fmt(totDay) + '</strong></td>';
+    tbody.appendChild(tr);
+  });
+
+  var grandTotal = 0;
+  BARBERS.forEach(function(b){
+    var t = monthTotalBarber(b.id, monthKey);
+    grandTotal += t;
+    document.getElementById('ft-' + b.id).textContent = fmt(t);
+  });
+  document.getElementById('ft-total').textContent = fmt(grandTotal);
+
+  updateUndoBtn();
+  renderChart();
+}
+
+/* ── EVENT LISTENERS ── */
+document.getElementById('loginBtn').addEventListener('click', doLogin);
+document.getElementById('logoutBtn').addEventListener('click', doLogout);
+document.getElementById('undoBtn').addEventListener('click', doUndo);
+document.getElementById('exportBtn').addEventListener('click', exportBackup);
+document.getElementById('importBtn').addEventListener('click', function(){ document.getElementById('importFile').click(); });
+document.getElementById('importFile').addEventListener('change', importBackup);
+document.getElementById('currentDate').addEventListener('change', renderAll);
+document.getElementById('passInput').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
+
+/* ── INIT ── */
+if (localStorage.getItem(AUTH_KEY)==='1' || sessionStorage.getItem(AUTH_KEY)==='1') {
+  showApp();
+}
+</script>
+</body>
+</html>
