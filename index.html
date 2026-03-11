@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>THE CELL</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{--bg:#0f0f0f;--surface:#1a1a1a;--surface2:#222;--border:#2e2e2e;--accent:#c8a96e;--green:#4ade80;--text:#f0ede8;--muted:#888;--red:#f87171;--blue:#60a5fa;}
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;}
+  #loadingScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;}
+  .spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  #loginScreen{min-height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;background:radial-gradient(ellipse at 50% 0%,#1e1500 0%,#0f0f0f 70%);}
+  .login-logo{font-family:'Bebas Neue',sans-serif;font-size:4rem;letter-spacing:6px;color:var(--accent);margin-bottom:4px;}
+  .login-sub{color:var(--muted);font-size:0.72rem;letter-spacing:3px;text-transform:uppercase;margin-bottom:44px;}
+  .login-box{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:30px 26px;width:100%;max-width:340px;}
+  .login-box label{display:block;font-size:0.72rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;}
+  .login-field{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:13px 16px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:0.95rem;outline:none;transition:border-color 0.2s;margin-bottom:12px;}
+  .login-field:focus{border-color:var(--accent);}
+  .login-btn{width:100%;background:var(--accent);color:#000;border:none;border-radius:10px;padding:14px;font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:2px;cursor:pointer;margin-top:4px;}
+  .login-btn:disabled{opacity:0.5;cursor:not-allowed;}
+  .login-error{color:var(--red);font-size:0.82rem;text-align:center;margin-top:10px;display:none;}
+  @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+  .shake{animation:shake 0.4s ease;}
+
+  #app{display:none;padding:18px 14px 60px;}
+  header{text-align:center;margin-bottom:20px;position:relative;}
+  header h1{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:4px;color:var(--accent);line-height:1;}
+  header p{color:var(--muted);font-size:0.68rem;margin-top:2px;letter-spacing:1px;text-transform:uppercase;}
+  .hdr-left{position:absolute;top:4px;left:0;}
+  .hdr-right{position:absolute;top:4px;right:0;}
+  .hdr-btn{background:none;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:5px 10px;font-size:0.72rem;cursor:pointer;transition:color 0.2s,border-color 0.2s;white-space:nowrap;}
+  .hdr-btn:hover{color:var(--accent);border-color:var(--accent);}
+  .hdr-btn.red:hover{color:var(--red);border-color:var(--red);}
+  .hdr-btn:disabled{opacity:0.3;cursor:not-allowed;}
+
+  .date-bar{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:18px;}
+  .date-bar label{color:var(--muted);font-size:0.8rem;}
+  .date-bar input[type="date"]{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:8px 12px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.88rem;cursor:pointer;outline:none;}
+  .date-bar input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(0.6);}
+
+  .summary{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:18px;display:grid;gap:6px;text-align:center;}
+  .summary.cols3{grid-template-columns:repeat(3,1fr);}
+  .summary.cols2{grid-template-columns:repeat(2,1fr);}
+  .s-label{font-size:0.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;}
+  .s-value{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:1px;color:var(--accent);}
+  .s-value.big{color:var(--green);font-size:1.5rem;}
+
+  .action-bar{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+  .action-btn{flex:1;min-width:80px;display:flex;align-items:center;justify-content:center;gap:5px;padding:10px;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.78rem;cursor:pointer;border:none;}
+  .action-btn:active{opacity:0.75;}
+  .btn-blue{background:rgba(96,165,250,0.12);color:var(--blue);border:1px solid rgba(96,165,250,0.3)!important;}
+  .btn-gold{background:rgba(200,169,110,0.12);color:var(--accent);border:1px solid rgba(200,169,110,0.3)!important;}
+  .btn-green{background:rgba(74,222,128,0.12);color:var(--green);border:1px solid rgba(74,222,128,0.3)!important;}
+
+  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.82);z-index:100;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;}
+  .modal-overlay.open{display:flex;}
+  .modal{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:24px;width:100%;max-width:400px;margin:auto;}
+  .modal h2{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:3px;color:var(--accent);margin-bottom:4px;}
+  .modal-sub{font-size:0.72rem;color:var(--muted);margin-bottom:16px;}
+  .modal-close{float:right;background:none;border:none;color:var(--muted);font-size:1.3rem;cursor:pointer;margin-top:-4px;}
+  .form-label{font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;display:block;margin-top:12px;}
+  .form-input{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:11px 14px;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;transition:border-color 0.2s;}
+  .form-input:focus{border-color:var(--accent);}
+  .form-select{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:11px 14px;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;}
+  .modal-btn{margin-top:16px;width:100%;background:var(--accent);color:#000;border:none;border-radius:10px;padding:12px;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:2px;cursor:pointer;}
+  .modal-btn:disabled{opacity:0.4;cursor:not-allowed;}
+  .modal-err{color:var(--red);font-size:0.78rem;margin-top:8px;display:none;}
+  .modal-row{display:flex;gap:8px;}
+  .modal-row .form-input{flex:1;}
+
+  .barber-item{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:8px;}
+  .barber-item-name{flex:1;font-weight:600;font-size:0.9rem;}
+  .barber-item-email{color:var(--muted);font-size:0.72rem;}
+  .edit-goal-inp{width:90px;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:7px;padding:5px 8px;font-family:'DM Sans',sans-serif;font-size:0.85rem;outline:none;}
+  .save-goal-btn{background:var(--accent);color:#000;border:none;border-radius:6px;padding:5px 10px;font-size:0.75rem;font-weight:700;cursor:pointer;}
+
+  .barbers-grid{display:flex;flex-direction:column;gap:13px;margin-bottom:20px;}
+  .barber-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:15px;position:relative;overflow:hidden;transition:border-color 0.4s;}
+  .barber-card.goal-reached{border-color:var(--green);background:linear-gradient(135deg,#1a1a1a,#0f2a1a);}
+  .barber-card.goal-reached::after{content:'✓ OBIECTIV ATINS';position:absolute;top:11px;right:11px;background:var(--green);color:#000;font-size:0.58rem;font-weight:700;letter-spacing:1px;padding:3px 8px;border-radius:20px;}
+  .barber-name{font-family:'Bebas Neue',sans-serif;font-size:1.45rem;letter-spacing:2px;color:var(--accent);margin-bottom:2px;}
+  .barber-goal-txt{font-size:0.7rem;color:var(--muted);margin-bottom:9px;}
+  .progress-wrap{background:var(--border);border-radius:99px;height:5px;margin-bottom:11px;overflow:hidden;}
+  .progress-bar{height:100%;border-radius:99px;background:var(--accent);transition:width 0.5s ease;}
+  .goal-reached .progress-bar{background:var(--green);}
+
+  .add-entry-box{background:var(--surface2);border-radius:10px;padding:12px;margin-bottom:10px;}
+  .add-entry-box label{font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:6px;}
+  .entry-inputs{display:flex;gap:8px;margin-bottom:8px;}
+  .entry-inputs input{flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.95rem;outline:none;}
+  .entry-inputs input:focus{border-color:var(--accent);}
+  .entry-add-btn{width:100%;background:var(--accent);color:#000;border:none;border-radius:8px;padding:10px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.88rem;cursor:pointer;}
+  .entry-add-btn:disabled{opacity:0.4;cursor:not-allowed;}
+  .entry-err{color:var(--red);font-size:0.74rem;margin-top:5px;display:none;}
+
+  .vac-box{background:rgba(96,165,250,0.07);border:1px solid rgba(96,165,250,0.2);border-radius:10px;padding:12px;margin-bottom:10px;}
+  .vac-box label{font-size:0.68rem;color:var(--blue);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:8px;}
+  .vac-inputs{display:flex;gap:8px;margin-bottom:8px;}
+  .vac-inputs input{flex:1;background:var(--bg);border:1px solid rgba(96,165,250,0.3);color:var(--text);padding:9px 12px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;}
+  .vac-add-btn{width:100%;background:rgba(96,165,250,0.15);color:var(--blue);border:1px solid rgba(96,165,250,0.3);border-radius:8px;padding:9px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.85rem;cursor:pointer;}
+  .vac-days{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
+  .vac-chip{background:rgba(96,165,250,0.1);color:var(--blue);border:1px solid rgba(96,165,250,0.25);border-radius:6px;padding:3px 8px;font-size:0.74rem;display:flex;align-items:center;gap:5px;}
+  .vac-chip button{background:none;border:none;color:var(--blue);cursor:pointer;font-size:0.85rem;padding:0;opacity:0.6;}
+  .vac-chip button:hover{opacity:1;}
+
+  .entries{display:flex;flex-direction:column;gap:5px;max-height:180px;overflow-y:auto;margin-bottom:10px;}
+  .entry-row{display:flex;justify-content:space-between;align-items:center;background:var(--bg);border-radius:6px;padding:7px 10px;font-size:0.83rem;}
+  .e-date{color:var(--muted);font-size:0.76rem;}
+  .e-amount{color:var(--text);font-weight:600;}
+  .e-del{background:none;border:none;color:#444;cursor:pointer;font-size:1rem;padding:0 4px;}
+  .e-del:hover{color:var(--red);}
+  .e-cash{background:none;border:none;cursor:pointer;font-size:0.72rem;font-weight:700;padding:2px 7px;border-radius:5px;line-height:1.4;transition:all 0.2s;letter-spacing:0.5px;}
+  .e-cash.received{color:var(--green);border:1px solid rgba(74,222,128,0.35);background:rgba(74,222,128,0.08);}
+  .e-cash.not-received{color:var(--red);border:1px solid rgba(248,113,113,0.35);background:rgba(248,113,113,0.08);}
+  .e-cash:hover{opacity:0.7;}
+  .e-amount.unpaid{color:var(--red);text-decoration:line-through;opacity:0.7;}
+  .unpaid-badge{display:inline-block;background:rgba(248,113,113,0.15);color:var(--red);border:1px solid rgba(248,113,113,0.3);border-radius:4px;font-size:0.62rem;padding:1px 5px;margin-left:4px;letter-spacing:0.5px;}
+
+  .notes-box{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-top:10px;}
+  .notes-box label{font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:6px;}
+  .notes-textarea{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:9px 11px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.85rem;outline:none;resize:none;min-height:70px;transition:border-color 0.2s;}
+  .notes-textarea:focus{border-color:var(--accent);}
+  .notes-save-btn{margin-top:6px;background:rgba(200,169,110,0.15);color:var(--accent);border:1px solid rgba(200,169,110,0.3);border-radius:7px;padding:5px 14px;font-size:0.78rem;font-weight:600;cursor:pointer;transition:opacity 0.2s;}
+  .notes-save-btn:hover{opacity:0.75;}
+  .notes-saved{font-size:0.72rem;color:var(--green);margin-left:8px;display:none;}
+
+  .barber-totals{padding-top:10px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:6px;}
+  .b-total-item{flex:1;}
+  .b-total-label{font-size:0.63rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;}
+  .b-total-val{font-weight:600;font-size:0.9rem;}
+  .b-total-val.green{color:var(--green);}
+  .b-total-val.gold{color:var(--accent);}
+  .b-total-val.dim{color:var(--muted);}
+
+  .section-title{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:2px;color:var(--muted);margin-bottom:10px;padding-left:2px;}
+  .chart-wrap{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:20px;}
+  .table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:auto;margin-bottom:20px;}
+  table{width:100%;border-collapse:collapse;font-size:0.8rem;min-width:300px;}
+  thead th{background:var(--surface2);padding:10px 11px;text-align:left;font-size:0.62rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-weight:500;border-bottom:1px solid var(--border);white-space:nowrap;}
+  tbody tr{border-bottom:1px solid var(--border);transition:background 0.15s;}
+  tbody tr:last-child{border-bottom:none;}
+  tbody tr:hover{background:var(--surface2);}
+  tbody td{padding:9px 11px;vertical-align:middle;white-space:nowrap;}
+  .chip{display:inline-block;padding:2px 8px;border-radius:99px;font-size:0.73rem;font-weight:600;}
+  .chip-gold{background:rgba(200,169,110,0.15);color:var(--accent);}
+  .chip-vac{background:rgba(96,165,250,0.15);color:var(--blue);}
+  tfoot td{padding:10px 11px;font-weight:700;background:var(--surface2);border-top:1px solid var(--border);color:var(--accent);font-size:0.86rem;white-space:nowrap;}
+
+  .month-nav{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:16px;}
+  .month-nav button{background:none;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:6px 14px;cursor:pointer;font-size:1rem;}
+  .month-nav button:hover{color:var(--accent);border-color:var(--accent);}
+  .month-nav span{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:2px;color:var(--text);min-width:150px;text-align:center;}
+
+  /* ── TABS ── */
+  .tab-bar{display:flex;gap:4px;margin-bottom:18px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:4px;}
+  .tab-btn{flex:1;padding:9px 6px;border:none;background:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.8rem;border-radius:9px;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+  .tab-btn.active{background:var(--surface2);color:var(--accent);border:1px solid var(--border);}
+  .tab-pane{display:none;}
+  .tab-pane.active{display:block;}
+
+  /* ── REFRESH ── */
+  .refresh-btn{background:none;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:5px 10px;font-size:0.85rem;cursor:pointer;transition:all 0.2s;}
+  .refresh-btn:hover{color:var(--accent);border-color:var(--accent);}
+  .refresh-btn.spinning{animation:spin 0.6s linear;}
+
+  /* ── CHAT ── */
+  .chat-wrap{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;height:70vh;max-height:600px;}
+  .chat-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+  .chat-header-title{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:2px;color:var(--accent);}
+  .chat-clear-btn{background:none;border:1px solid rgba(248,113,113,0.3);color:var(--red);border-radius:7px;padding:4px 10px;font-size:0.72rem;cursor:pointer;}
+  .chat-clear-btn:hover{background:rgba(248,113,113,0.1);}
+  .chat-messages{flex:1;overflow-y:auto;padding:14px 12px;display:flex;flex-direction:column;gap:10px;}
+  .chat-msg{display:flex;flex-direction:column;max-width:80%;}
+  .chat-msg.mine{align-self:flex-end;align-items:flex-end;}
+  .chat-msg.theirs{align-self:flex-start;align-items:flex-start;}
+  .chat-bubble{padding:9px 13px;border-radius:14px;font-size:0.88rem;line-height:1.45;word-break:break-word;}
+  .chat-msg.mine .chat-bubble{background:rgba(200,169,110,0.18);border:1px solid rgba(200,169,110,0.3);color:var(--text);border-bottom-right-radius:4px;}
+  .chat-msg.theirs .chat-bubble{background:var(--surface2);border:1px solid var(--border);color:var(--text);border-bottom-left-radius:4px;}
+  .chat-meta{font-size:0.65rem;color:var(--muted);margin-top:3px;display:flex;align-items:center;gap:6px;}
+  .chat-del{background:none;border:none;color:#444;cursor:pointer;font-size:0.8rem;padding:0;line-height:1;}
+  .chat-del:hover{color:var(--red);}
+  .chat-input-row{display:flex;gap:8px;padding:10px 12px;border-top:1px solid var(--border);}
+  .chat-input{flex:1;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:10px 13px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;transition:border-color 0.2s;}
+  .chat-input:focus{border-color:var(--accent);}
+  .chat-send-btn{background:var(--accent);color:#000;border:none;border-radius:10px;padding:10px 16px;font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:1px;cursor:pointer;}
+  .chat-send-btn:disabled{opacity:0.4;cursor:not-allowed;}
+  .chat-empty{color:var(--muted);font-size:0.82rem;text-align:center;padding:30px 0;}
+  .chat-unread{display:inline-block;background:var(--red);color:#fff;border-radius:99px;font-size:0.6rem;font-weight:700;padding:1px 5px;margin-left:4px;vertical-align:middle;}
+  ::-webkit-scrollbar{width:3px;height:3px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+</style>
+</head>
+<body>
+
+<div id="loadingScreen">
+  <div class="spinner"></div>
+  <div style="color:var(--muted);font-size:0.8rem;letter-spacing:2px;">SE ÎNCARCĂ...</div>
+</div>
+
+<div id="loginScreen">
+  <div class="login-logo">THE CELL</div>
+  <div class="login-sub">Sistem de evidență</div>
+  <div class="login-box" id="loginBox">
+    <label>Email</label>
+    <input class="login-field" type="email" id="loginEmail" placeholder="email@exemplu.com" autocomplete="email">
+    <label>Parolă</label>
+    <input class="login-field" type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password">
+    <button class="login-btn" id="loginBtn">INTRĂ</button>
+    <div class="login-error" id="loginErr">⚠ Email sau parolă greșită.</div>
+  </div>
+</div>
+
+<!-- MODAL: Adaugă frizer -->
+<div class="modal-overlay" id="addBarberModal">
+  <div class="modal">
+    <button class="modal-close" id="closeAddBarber">✕</button>
+    <h2>Frizer Nou</h2>
+    <div class="modal-sub">Creează cont pentru un frizer.</div>
+    <label class="form-label">Nume</label>
+    <input class="form-input" type="text" id="nb-name" placeholder="Ex: Florin">
+    <label class="form-label">Email</label>
+    <input class="form-input" type="email" id="nb-email" placeholder="florin@exemplu.com">
+    <label class="form-label">Parolă</label>
+    <input class="form-input" type="password" id="nb-pass" placeholder="minim 6 caractere">
+    <label class="form-label">Obiectiv lunar (lei)</label>
+    <input class="form-input" type="number" id="nb-goal" placeholder="Ex: 7000" min="0">
+    <button class="modal-btn" id="addBarberBtn">ADAUGĂ</button>
+    <div class="modal-err" id="addBarberErr"></div>
+  </div>
+</div>
+
+<!-- MODAL: Gestionează frizeri -->
+<div class="modal-overlay" id="manageModal">
+  <div class="modal">
+    <button class="modal-close" id="closeManage">✕</button>
+    <h2>Gestionează</h2>
+    <div class="modal-sub">Modifică obiectivele frierilor.</div>
+    <div id="manageList"></div>
+  </div>
+</div>
+
+<!-- MODAL: Adaugă sumă ca admin -->
+<div class="modal-overlay" id="addEntryModal">
+  <div class="modal">
+    <button class="modal-close" id="closeAddEntry">✕</button>
+    <h2>Adaugă Sumă</h2>
+    <div class="modal-sub">Adaugă o încasare pentru un frizer.</div>
+    <label class="form-label">Frizer</label>
+    <select class="form-select" id="ae-barber"></select>
+    <label class="form-label">Sumă (lei)</label>
+    <input class="form-input" type="number" id="ae-amount" placeholder="Ex: 350" min="1">
+    <label class="form-label">Data</label>
+    <input class="form-input" type="date" id="ae-date">
+    <button class="modal-btn" id="addEntryBtn">ADAUGĂ</button>
+    <div class="modal-err" id="addEntryErr"></div>
+  </div>
+</div>
+
+<!-- MODAL: Concediu admin -->
+<div class="modal-overlay" id="vacModal">
+  <div class="modal">
+    <button class="modal-close" id="closeVac">✕</button>
+    <h2>Concediu</h2>
+    <div class="modal-sub">Marchează zile libere pentru un frizer.</div>
+    <label class="form-label">Frizer</label>
+    <select class="form-select" id="vac-barber" onchange="loadVacDaysAdmin()"></select>
+    <label class="form-label">Data</label>
+    <input class="form-input" type="date" id="vac-date">
+    <button class="modal-btn" id="addVacBtn" style="margin-top:12px;">MARCHEAZĂ ZI LIBERĂ</button>
+    <div class="modal-err" id="vacErr"></div>
+    <div id="vacDaysList" style="margin-top:14px;display:flex;flex-wrap:wrap;gap:6px;"></div>
+  </div>
+</div>
+
+<div id="app">
+  <header>
+    <div class="hdr-left" style="display:flex;gap:6px;">
+      <button class="hdr-btn" id="undoBtn" disabled>↩ Undo</button>
+      <button class="hdr-btn refresh-btn" id="refreshBtn" title="Refresh">↻</button>
+    </div>
+    <h1>THE CELL</h1>
+    <p id="headerSub">Evidență</p>
+    <div class="hdr-right">
+      <button class="hdr-btn red" id="logoutBtn">Ieși ↩</button>
+    </div>
+  </header>
+
+  <!-- ADMIN VIEW -->
+  <div id="adminView" style="display:none">
+    <div class="tab-bar">
+      <button class="tab-btn active" data-tab="adminMain">📊 Rapoarte</button>
+      <button class="tab-btn" data-tab="adminChat">💬 Chat<span id="adminChatBadge" class="chat-unread" style="display:none">●</span></button>
+    </div>
+    <div id="adminMain" class="tab-pane active">
+    <div class="date-bar">
+      <label>Data:</label>
+      <input type="date" id="currentDate">
+    </div>
+    <div class="summary cols3">
+      <div><div class="s-label">Total azi</div><div class="s-value" id="sumDay">0 lei</div></div>
+      <div><div class="s-label">Total lună</div><div class="s-value big" id="sumMonth">0 lei</div></div>
+      <div><div class="s-label">Zile lucrate</div><div class="s-value" id="sumDays">0</div></div>
+    </div>
+    <div class="action-bar">
+      <button class="action-btn btn-blue" id="openAddBarber">➕ Frizer</button>
+      <button class="action-btn btn-blue" id="openManage">✂️ Obiective</button>
+      <button class="action-btn btn-gold" id="openAddEntry">💰 Sumă</button>
+      <button class="action-btn btn-blue" id="openVac">🏖 Concediu</button>
+    </div>
+    <div class="action-bar" style="margin-top:-10px;">
+      <button class="action-btn btn-green" id="exportBtn">💾 Backup</button>
+      <button class="action-btn btn-green" id="importBtn">📂 Restaurare</button>
+      <input type="file" id="importFile" accept=".json" style="display:none">
+    </div>
+    <div class="barbers-grid" id="adminBarbersGrid"></div>
+    <div class="section-title">PROGRES LUNAR</div>
+    <div class="chart-wrap"><canvas id="adminChart"></canvas></div>
+    <div class="section-title">GRAFIC ANUAL</div>
+    <div class="chart-wrap"><canvas id="adminYearChart"></canvas></div>
+    <div class="section-title">TABEL LUNAR</div>
+    <div class="table-wrap">
+      <table>
+        <thead id="adminTableHead"></thead>
+        <tbody id="adminTableBody"></tbody>
+        <tfoot id="adminTableFoot"></tfoot>
+      </table>
+    </div>
+    </div><!-- /adminMain -->
+    <div id="adminChat" class="tab-pane">
+      <div class="chat-wrap">
+        <div class="chat-header">
+          <span class="chat-header-title">💬 CHAT ECHIPĂ</span>
+          <button class="chat-clear-btn" id="adminClearChat">🗑 Șterge tot</button>
+        </div>
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-input-row">
+          <input class="chat-input" id="chatInput" placeholder="Scrie un mesaj..." maxlength="500">
+          <button class="chat-send-btn" id="chatSendBtn">TRIMITE</button>
+        </div>
+      </div>
+    </div><!-- /adminChat -->
+  </div>
+
+  <!-- FRIZER VIEW -->
+  <div id="barberView" style="display:none">
+    <div class="tab-bar">
+      <button class="tab-btn active" data-tab="barberMain">📊 Raport</button>
+      <button class="tab-btn" data-tab="barberChat">💬 Chat<span id="barberChatBadge" class="chat-unread" style="display:none">●</span></button>
+    </div>
+    <div id="barberMain" class="tab-pane active">
+    <div class="month-nav">
+      <button id="prevMonth">‹</button>
+      <span id="monthLabel"></span>
+      <button id="nextMonth">›</button>
+    </div>
+    <div class="summary cols2">
+      <div><div class="s-label">Total lună</div><div class="s-value big" id="bSumMonth">0 lei</div></div>
+      <div><div class="s-label">Obiectiv</div><div class="s-value" id="bGoal">0 lei</div></div>
+    </div>
+    <div class="barber-card" id="myCard">
+      <div class="barber-name" id="myName">—</div>
+      <div class="barber-goal-txt" id="myGoalTxt">Obiectiv lunar: —</div>
+      <div class="progress-wrap"><div class="progress-bar" id="myProgress" style="width:0%"></div></div>
+      <div class="add-entry-box">
+        <label>Adaugă încasare</label>
+        <div class="entry-inputs">
+          <input type="number" id="myAmount" placeholder="Sumă (lei)" min="0">
+          <input type="date" id="myDate">
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <input type="checkbox" id="myReceivedCash" checked style="width:16px;height:16px;accent-color:var(--green);cursor:pointer;">
+          <label for="myReceivedCash" style="font-size:0.78rem;color:var(--muted);cursor:pointer;">Am primit suma fizic</label>
+        </div>
+        <button class="entry-add-btn" id="myAddBtn">Adaugă</button>
+        <div class="entry-err" id="myErr"></div>
+      </div>
+      <div class="vac-box">
+        <label>🏖 Zi liberă / Concediu</label>
+        <div class="vac-inputs">
+          <input type="date" id="myVacDate">
+        </div>
+        <button class="vac-add-btn" id="myVacBtn">+ Marchează zi liberă</button>
+        <div class="vac-days" id="myVacDays"></div>
+      </div>
+      <div class="entries" id="myEntries"></div>
+      <div class="notes-box">
+        <label>📝 Notițe</label>
+        <textarea class="notes-textarea" id="myNotes" placeholder="Scrie o notiță..."></textarea>
+        <button class="notes-save-btn" id="myNotesSave">Salvează</button>
+        <span class="notes-saved" id="myNotesSaved">✓ Salvat</span>
+      </div>
+      <div class="barber-totals">
+        <div class="b-total-item"><div class="b-total-label">Luna</div><div class="b-total-val green" id="myMonthTotal">0 lei</div></div>
+        <div class="b-total-item"><div class="b-total-label">Progres</div><div class="b-total-val dim" id="myPct">0%</div></div>
+        <div class="b-total-item"><div class="b-total-label">Zile libere</div><div class="b-total-val gold" id="myVacCount">0</div></div>
+      </div>
+    </div>
+    <div class="section-title">GRAFIC LUNAR</div>
+    <div class="chart-wrap"><canvas id="barberChart"></canvas></div>
+    <div class="section-title">ISTORIC</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Data</th><th>Tip</th><th>Suma</th></tr></thead>
+        <tbody id="barberTableBody"></tbody>
+        <tfoot><tr><td colspan="2">TOTAL</td><td id="barberTableTotal">0 lei</td></tr></tfoot>
+      </table>
+    </div>
+    </div><!-- /barberMain -->
+    <div id="barberChat" class="tab-pane">
+      <div class="chat-wrap">
+        <div class="chat-header">
+          <span class="chat-header-title">💬 CHAT ECHIPĂ</span>
+        </div>
+        <div class="chat-messages" id="chatMessagesBarber"></div>
+        <div class="chat-input-row">
+          <input class="chat-input" id="chatInputBarber" placeholder="Scrie un mesaj..." maxlength="500">
+          <button class="chat-send-btn" id="chatSendBtnBarber">TRIMITE</button>
+        </div>
+      </div>
+    </div><!-- /barberChat -->
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs, onSnapshot, addDoc, deleteDoc, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCEzz0mF4frp5fA9Fn-KA3jU4qtqJPf7xI",
+  authDomain: "the-cell-44973.firebaseapp.com",
+  projectId: "the-cell-44973",
+  storageBucket: "the-cell-44973.firebasestorage.app",
+  messagingSenderId: "694657741124",
+  appId: "1:694657741124:web:a237fcd0141e5824512711"
+};
+
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+let currentUser   = null;
+let isAdmin       = false;
+let barberData    = null;
+let barberChart   = null;
+let adminChart    = null;
+let adminYearChart = null;
+let undoStack     = [];
+let viewMonth     = new Date().toISOString().slice(0,7);
+let adminInitDone = false;
+
+const MONTHS = ['Ianuarie','Februarie','Martie','Aprilie','Mai','Iunie','Iulie','August','Septembrie','Octombrie','Noiembrie','Decembrie'];
+
+function fmt(n){ return Number(n).toLocaleString('ro-RO')+' lei'; }
+function getDate(){ return document.getElementById('currentDate').value || new Date().toISOString().slice(0,10); }
+function show(id){ document.getElementById(id).style.display='block'; }
+function hide(id){ document.getElementById(id).style.display='none'; }
+function updateUndoBtn(){ document.getElementById('undoBtn').disabled = undoStack.length===0; }
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+
+// ── LOGIN ──
+document.getElementById('loginBtn').addEventListener('click', async function(){
+  var email=document.getElementById('loginEmail').value.trim();
+  var pass=document.getElementById('loginPass').value;
+  var errEl=document.getElementById('loginErr');
+  var btn=document.getElementById('loginBtn');
+  errEl.style.display='none'; btn.disabled=true; btn.textContent='Se conectează...';
+  try { await signInWithEmailAndPassword(auth,email,pass); }
+  catch(e){
+    errEl.style.display='block';
+    var box=document.getElementById('loginBox');
+    box.classList.remove('shake'); void box.offsetWidth; box.classList.add('shake');
+    document.getElementById('loginPass').value='';
+    btn.disabled=false; btn.textContent='INTRĂ';
+  }
+});
+document.getElementById('loginPass').addEventListener('keydown',function(e){ if(e.key==='Enter') document.getElementById('loginBtn').click(); });
+document.getElementById('logoutBtn').addEventListener('click',function(){ signOut(auth); });
+
+onAuthStateChanged(auth, async function(user){
+  hide('loadingScreen');
+  if(!user){
+    currentUser=null; isAdmin=false; barberData=null; adminInitDone=false;
+    hide('app'); document.getElementById('loginScreen').style.display='flex'; return;
+  }
+  currentUser=user;
+  document.getElementById('loginScreen').style.display='none'; show('app');
+  var adminSnap=await getDoc(doc(db,'admins',user.uid));
+  isAdmin=adminSnap.exists();
+  if(!isAdmin){
+    var bSnap=await getDoc(doc(db,'barbers',user.uid));
+    barberData=bSnap.exists()?{ id:user.uid,...bSnap.data() }:{ id:user.uid,name:user.email,goal:0 };
+  }
+  initDate();
+  if(isAdmin) showAdminView(); else showBarberView();
+});
+
+function initDate(){
+  var el=document.getElementById('currentDate');
+  if(!el.value) el.value=new Date().toISOString().slice(0,10);
+  var myDate=document.getElementById('myDate');
+  if(myDate&&!myDate.value) myDate.value=new Date().toISOString().slice(0,10);
+  var myVacDate=document.getElementById('myVacDate');
+  if(myVacDate&&!myVacDate.value) myVacDate.value=new Date().toISOString().slice(0,10);
+  var aeDate=document.getElementById('ae-date');
+  if(aeDate&&!aeDate.value) aeDate.value=new Date().toISOString().slice(0,10);
+  var vacDate=document.getElementById('vac-date');
+  if(vacDate&&!vacDate.value) vacDate.value=new Date().toISOString().slice(0,10);
+}
+
+// ── HELPERS ──
+async function getBarbers(){
+  var snap=await getDocs(collection(db,'barbers'));
+  var list=[];
+  snap.forEach(function(d){ list.push({ id:d.id,...d.data() }); });
+  list.sort(function(a,b){ return (a.name||'').localeCompare(b.name||''); });
+  return list;
+}
+
+async function getAllEntriesForMonth(monthKey){
+  var snap=await getDocs(query(collection(db,'entries'),where('month','==',monthKey)));
+  var map={};
+  snap.forEach(function(d){ var e=d.data(); if(!map[e.barberId]) map[e.barberId]=[]; map[e.barberId].push({ docId:d.id,...e }); });
+  return map;
+}
+
+async function getVacForMonth(barberId, monthKey){
+  var snap=await getDocs(query(collection(db,'vacations'),where('barberId','==',barberId),where('month','==',monthKey)));
+  var list=[];
+  snap.forEach(function(d){ list.push({ docId:d.id,...d.data() }); });
+  return list;
+}
+
+async function getAllVacForMonth(monthKey){
+  var snap=await getDocs(query(collection(db,'vacations'),where('month','==',monthKey)));
+  var map={};
+  snap.forEach(function(d){ var v=d.data(); if(!map[v.barberId]) map[v.barberId]=[]; map[v.barberId].push({ docId:d.id,...v }); });
+  return map;
+}
+
+// ── ADMIN ──
+async function showAdminView(){
+  document.getElementById('headerSub').textContent='Admin · Evidență completă';
+  show('adminView'); hide('barberView'); show('undoBtn');
+  maybeInitChat('Admin');
+  if(!adminInitDone){
+    adminInitDone=true;
+    document.getElementById('currentDate').addEventListener('change',renderAdminView);
+
+    // Modals
+    document.getElementById('openAddBarber').addEventListener('click',function(){ openModal('addBarberModal'); });
+    document.getElementById('closeAddBarber').addEventListener('click',function(){ closeModal('addBarberModal'); });
+    document.getElementById('addBarberModal').addEventListener('click',function(e){ if(e.target===this) closeModal('addBarberModal'); });
+    document.getElementById('addBarberBtn').addEventListener('click',addNewBarber);
+
+    document.getElementById('openManage').addEventListener('click',async function(){ await renderManageList(); openModal('manageModal'); });
+    document.getElementById('closeManage').addEventListener('click',function(){ closeModal('manageModal'); });
+    document.getElementById('manageModal').addEventListener('click',function(e){ if(e.target===this) closeModal('manageModal'); });
+
+    document.getElementById('openAddEntry').addEventListener('click',async function(){
+      var barbers=await getBarbers();
+      var sel=document.getElementById('ae-barber'); sel.innerHTML='';
+      barbers.forEach(function(b){ var o=document.createElement('option'); o.value=b.id; o.textContent=b.name; sel.appendChild(o); });
+      openModal('addEntryModal');
+    });
+    document.getElementById('closeAddEntry').addEventListener('click',function(){ closeModal('addEntryModal'); });
+    document.getElementById('addEntryModal').addEventListener('click',function(e){ if(e.target===this) closeModal('addEntryModal'); });
+    document.getElementById('addEntryBtn').addEventListener('click',addEntryAsAdmin);
+
+    document.getElementById('openVac').addEventListener('click',async function(){
+      var barbers=await getBarbers();
+      var sel=document.getElementById('vac-barber'); sel.innerHTML='';
+      barbers.forEach(function(b){ var o=document.createElement('option'); o.value=b.id; o.textContent=b.name; sel.appendChild(o); });
+      await loadVacDaysAdmin();
+      openModal('vacModal');
+    });
+    document.getElementById('closeVac').addEventListener('click',function(){ closeModal('vacModal'); });
+    document.getElementById('vacModal').addEventListener('click',function(e){ if(e.target===this) closeModal('vacModal'); });
+    document.getElementById('vac-barber').addEventListener('change',loadVacDaysAdmin);
+    document.getElementById('addVacBtn').addEventListener('click',addVacAdmin);
+
+    document.getElementById('undoBtn').addEventListener('click',doUndo);
+
+    // Backup
+    document.getElementById('exportBtn').addEventListener('click',exportBackup);
+    document.getElementById('importBtn').addEventListener('click',function(){ document.getElementById('importFile').click(); });
+    document.getElementById('importFile').addEventListener('change',importBackup);
+  }
+  await renderAdminView();
+}
+
+async function renderAdminView(){
+  var dateKey=getDate(), monthKey=dateKey.slice(0,7);
+  var barbers=await getBarbers();
+  var allEntries=await getAllEntriesForMonth(monthKey);
+  var allVac=await getAllVacForMonth(monthKey);
+
+  var dayTotal=0, monthTotal=0, workedDays=new Set();
+  barbers.forEach(function(b){
+    (allEntries[b.id]||[]).forEach(function(e){
+      monthTotal+=e.amount;
+      if(e.date===dateKey) dayTotal+=e.amount;
+      workedDays.add(e.date);
+    });
+  });
+  document.getElementById('sumDay').textContent=fmt(dayTotal);
+  document.getElementById('sumMonth').textContent=fmt(monthTotal);
+  document.getElementById('sumDays').textContent=workedDays.size;
+
+  var grid=document.getElementById('adminBarbersGrid'); grid.innerHTML='';
+
+  // Încarcă notițele pentru toți frizerii
+  var notesMap={};
+  await Promise.all(barbers.map(async function(b){
+    try { var ns=await getDoc(doc(db,'notes',b.id)); if(ns.exists()) notesMap[b.id]=ns.data().text||''; } catch(e){}
+  }));
+
+  barbers.forEach(function(b){
+    var entries=allEntries[b.id]||[];
+    var vacDays=(allVac[b.id]||[]).map(function(v){ return v.date; });
+    var mTotal=entries.reduce(function(s,e){ return s+e.amount; },0);
+    var dTotal=entries.filter(function(e){ return e.date===dateKey; }).reduce(function(s,e){ return s+e.amount; },0);
+    var goal=b.goal||0;
+    var pct=goal>0?Math.min(100,Math.round(mTotal/goal*100)):0;
+    var reached=goal>0&&mTotal>=goal;
+    var sorted=entries.slice().sort(function(a,z){ return z.date.localeCompare(a.date)||z.ts-a.ts; });
+    var card=document.createElement('div');
+    card.className='barber-card'+(reached?' goal-reached':'');
+    card.innerHTML=
+      '<div class="barber-name">'+b.name+'</div>'+
+      '<div class="barber-goal-txt">Obiectiv: '+fmt(goal)+' &nbsp;·&nbsp; Azi: '+fmt(dTotal)+'</div>'+
+      '<div class="progress-wrap"><div class="progress-bar" style="width:'+pct+'%"></div></div>'+
+      '<div class="entries">'+sorted.map(function(e){
+        var isPaid = e.receivedCash !== false;
+        return '<div class="entry-row"><span class="e-date">'+e.date+'</span><span class="e-amount'+(isPaid?'':' unpaid')+'">'+fmt(e.amount)+'</span><button class="e-cash '+(isPaid?'received':'not-received')+'" data-id="'+e.docId+'">'+(isPaid?'✓ Achitat':'✗ Neachitat')+'</button><button class="e-del" data-id="'+e.docId+'">✕</button></div>';
+      }).join('')+'</div>'+
+      (vacDays.length?'<div class="vac-days" style="margin-bottom:10px;">'+vacDays.sort().map(function(d){
+        var vacDoc=(allVac[b.id]||[]).find(function(v){ return v.date===d; });
+        return '<div class="vac-chip">🏖 '+d+(vacDoc?'<button data-id="'+vacDoc.docId+'">✕</button>':'')+'</div>';
+      }).join('')+'</div>':'')+
+      '<div class="barber-totals">'+
+        '<div class="b-total-item"><div class="b-total-label">Luna</div><div class="b-total-val green">'+fmt(mTotal)+'</div></div>'+
+        '<div class="b-total-item"><div class="b-total-label">Progres</div><div class="b-total-val dim">'+pct+'%</div></div>'+
+        '<div class="b-total-item"><div class="b-total-label">Ramas</div><div class="b-total-val gold">'+fmt(Math.max(0,goal-mTotal))+'</div></div>'+
+      '</div>'+
+      '<div class="notes-box">'+
+        '<label>📝 Notițe</label>'+
+        '<textarea class="notes-textarea" data-bid="'+b.id+'" placeholder="Scrie o notiță...">'+(notesMap[b.id]||'')+'</textarea>'+
+        '<button class="notes-save-btn" data-bid="'+b.id+'">Salvează</button>'+
+        '<span class="notes-saved" style="display:none">✓ Salvat</span>'+
+      '</div>';
+    card.querySelector('.notes-save-btn').addEventListener('click', async function(){
+      var bid=this.dataset.bid;
+      var txt=card.querySelector('.notes-textarea').value;
+      await setDoc(doc(db,'notes',bid),{ text:txt, updatedAt:Date.now() });
+      var savedEl=card.querySelector('.notes-saved');
+      savedEl.style.display='inline'; setTimeout(function(){ savedEl.style.display='none'; },2000);
+    });
+    card.querySelectorAll('.e-cash').forEach(function(btn){
+      btn.addEventListener('click', async function(){
+        var id=this.dataset.id;
+        var snap=await getDoc(doc(db,'entries',id));
+        if(snap.exists()){
+          var cur=snap.data().receivedCash!==false;
+          await updateDoc(doc(db,'entries',id),{ receivedCash:!cur });
+          renderAdminView();
+        }
+      });
+    });
+    card.querySelectorAll('.e-del').forEach(function(btn){
+      btn.addEventListener('click', async function(){
+        var id=this.dataset.id;
+        var snap=await getDoc(doc(db,'entries',id));
+        if(snap.exists()){
+          undoStack.push({ type:'entry', docId:id, data:snap.data() });
+          if(undoStack.length>20) undoStack.shift();
+          updateUndoBtn();
+          await deleteDoc(doc(db,'entries',id)); renderAdminView();
+        }
+      });
+    });
+    card.querySelectorAll('.vac-chip button').forEach(function(btn){
+      btn.addEventListener('click', async function(){
+        var id=this.dataset.id;
+        var snap=await getDoc(doc(db,'vacations',id));
+        if(snap.exists()){
+          undoStack.push({ type:'vacation', docId:id, data:snap.data() });
+          if(undoStack.length>20) undoStack.shift();
+          updateUndoBtn();
+          await deleteDoc(doc(db,'vacations',id)); renderAdminView();
+        }
+      });
+    });
+    grid.appendChild(card);
+  });
+
+  renderAdminChart(barbers, allEntries);
+  await renderAdminYearChart(barbers);
+
+  // Table
+  var allDays=new Set();
+  Object.values(allEntries).forEach(function(arr){ arr.forEach(function(e){ allDays.add(e.date); }); });
+  Object.values(allVac).forEach(function(arr){ arr.forEach(function(v){ allDays.add(v.date); }); });
+  allDays=Array.from(allDays).sort();
+  document.getElementById('adminTableHead').innerHTML='<tr><th>Data</th>'+barbers.map(function(b){ return '<th>'+b.name+'</th>'; }).join('')+'<th>Total zi</th></tr>';
+  var tbody=document.getElementById('adminTableBody'); tbody.innerHTML='';
+  allDays.forEach(function(dk){
+    var totDay=0;
+    var cells=barbers.map(function(b){
+      var t=(allEntries[b.id]||[]).filter(function(e){ return e.date===dk; }).reduce(function(s,e){ return s+e.amount; },0);
+      var isVac=(allVac[b.id]||[]).some(function(v){ return v.date===dk; });
+      totDay+=t;
+      if(isVac&&t===0) return '<td><span class="chip chip-vac">🏖 Concediu</span></td>';
+      return '<td>'+(t>0?'<span class="chip chip-gold">'+fmt(t)+'</span>':'<span style="color:var(--muted)">—</span>')+'</td>';
+    }).join('');
+    var tr=document.createElement('tr');
+    tr.innerHTML='<td>'+dk+'</td>'+cells+'<td><strong>'+fmt(totDay)+'</strong></td>';
+    tbody.appendChild(tr);
+  });
+  var grandTotal=0;
+  document.getElementById('adminTableFoot').innerHTML='<tr><td>TOTAL</td>'+
+    barbers.map(function(b){ var t=(allEntries[b.id]||[]).reduce(function(s,e){ return s+e.amount; },0); grandTotal+=t; return '<td>'+fmt(t)+'</td>'; }).join('')+
+    '<td>'+fmt(grandTotal)+'</td></tr>';
+}
+
+async function renderAdminYearChart(barbers){
+  var now=new Date();
+  var months=[];
+  for(var i=11;i>=0;i--){
+    var d=new Date(now.getFullYear(),now.getMonth()-i,1);
+    months.push(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'));
+  }
+  var mNames=['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Nov','Dec'];
+  var labels=months.map(function(mk){
+    var yr=parseInt(mk.slice(0,4)), mo=parseInt(mk.slice(5))-1;
+    var lastDay=new Date(yr,mo+1,0).getDate();
+    return lastDay+' '+mNames[mo]+' '+mk.slice(2,4);
+  });
+  var palette=['#c8a96e','#4ade80','#60a5fa','#f87171','#a78bfa','#fb923c'];
+
+  // Total general pe luni
+  var generalTotals=await Promise.all(months.map(async function(mk){
+    var snap=await getDocs(query(collection(db,'entries'),where('month','==',mk)));
+    var t=0; snap.forEach(function(d){ t+=d.data().amount; }); return t;
+  }));
+
+  // Per frizer pe luni
+  var barberDatasets=await Promise.all(barbers.map(async function(b,i){
+    var clr=palette[i%palette.length];
+    var vals=await Promise.all(months.map(async function(mk){
+      var snap=await getDocs(query(collection(db,'entries'),where('barberId','==',b.id),where('month','==',mk)));
+      var t=0; snap.forEach(function(d){ t+=d.data().amount; }); return t;
+    }));
+    return { label:b.name, data:vals, backgroundColor:clr+'33', borderColor:clr, borderWidth:2, borderRadius:4, type:'bar' };
+  }));
+
+  var datasets=[{
+    label:'Total', data:generalTotals,
+    type:'line', borderColor:'#fff', backgroundColor:'rgba(255,255,255,0.05)',
+    borderWidth:2.5, pointRadius:4, pointHoverRadius:7, tension:0.35, fill:false
+  }].concat(barberDatasets);
+
+  var ctx=document.getElementById('adminYearChart').getContext('2d');
+  if(adminYearChart) adminYearChart.destroy();
+  adminYearChart=new Chart(ctx,{
+    type:'bar',
+    data:{ labels:labels, datasets:datasets },
+    options:{
+      responsive:true,
+      interaction:{ mode:'index', intersect:false },
+      plugins:{
+        legend:{ labels:{ color:'#888', font:{family:'DM Sans',size:11}, boxWidth:12, padding:14 } },
+        tooltip:{ backgroundColor:'#1a1a1a', borderColor:'#2e2e2e', borderWidth:1, titleColor:'#f0ede8', bodyColor:'#888',
+          callbacks:{ label:function(c){ return ' '+c.dataset.label+': '+c.parsed.y.toLocaleString('ro-RO')+' lei'; } } }
+      },
+      scales:{
+        x:{ stacked:false, ticks:{ color:'#666', font:{size:10} }, grid:{ color:'#1f1f1f' } },
+        y:{ ticks:{ color:'#666', font:{size:10}, callback:function(v){ return v.toLocaleString('ro-RO')+' lei'; } }, grid:{ color:'#1f1f1f' } }
+      }
+    }
+  });
+}
+
+function renderAdminChart(barbers, allEntries){
+  var palette=['#c8a96e','#4ade80','#60a5fa','#f87171','#a78bfa','#fb923c'];
+  var allDays=new Set();
+  Object.values(allEntries).forEach(function(arr){ arr.forEach(function(e){ allDays.add(e.date); }); });
+  allDays=Array.from(allDays).sort();
+  var labels=allDays.map(function(d){ return d.slice(8); });
+  var datasets=barbers.map(function(b,i){
+    var cum=0, clr=palette[i%palette.length];
+    return { label:b.name, data:allDays.map(function(dk){ cum+=(allEntries[b.id]||[]).filter(function(e){ return e.date===dk; }).reduce(function(s,e){ return s+e.amount; },0); return cum; }), borderColor:clr, backgroundColor:clr+'18', borderWidth:2.5, pointRadius:3, pointHoverRadius:6, tension:0.35, fill:false };
+  });
+  barbers.forEach(function(b,i){ if(!b.goal) return; var clr=palette[i%palette.length]; datasets.push({ label:'Obiectiv '+b.name, data:allDays.map(function(){ return b.goal; }), borderColor:clr+'55', borderWidth:1, borderDash:[5,4], pointRadius:0, fill:false }); });
+  var ctx=document.getElementById('adminChart').getContext('2d');
+  if(adminChart) adminChart.destroy();
+  adminChart=new Chart(ctx,{ type:'line', data:{ labels:labels, datasets:datasets }, options:{ responsive:true, interaction:{ mode:'index', intersect:false }, plugins:{ legend:{ labels:{ color:'#888', font:{family:'DM Sans',size:11}, filter:function(i){ return !i.text.startsWith('Obiectiv'); }, boxWidth:12, padding:14 } }, tooltip:{ backgroundColor:'#1a1a1a', borderColor:'#2e2e2e', borderWidth:1, titleColor:'#f0ede8', bodyColor:'#888', callbacks:{ label:function(c){ if(c.dataset.label.startsWith('Obiectiv')) return null; return ' '+c.dataset.label+': '+c.parsed.y.toLocaleString('ro-RO')+' lei'; } } } }, scales:{ x:{ ticks:{ color:'#666', font:{size:10} }, grid:{ color:'#1f1f1f' } }, y:{ ticks:{ color:'#666', font:{size:10}, callback:function(v){ return v.toLocaleString('ro-RO')+' lei'; } }, grid:{ color:'#1f1f1f' } } } } });
+}
+
+async function doUndo(){
+  if(!undoStack.length) return;
+  var action=undoStack.pop(); updateUndoBtn();
+  if(action.data){ await setDoc(doc(db, action.type==='vacation'?'vacations':'entries', action.docId), action.data); renderAdminView(); }
+}
+
+async function addNewBarber(){
+  var name=document.getElementById('nb-name').value.trim();
+  var email=document.getElementById('nb-email').value.trim();
+  var pass=document.getElementById('nb-pass').value;
+  var goal=parseInt(document.getElementById('nb-goal').value)||0;
+  var errEl=document.getElementById('addBarberErr'), btn=document.getElementById('addBarberBtn');
+  errEl.style.display='none';
+  if(!name||!email||!pass||pass.length<6){ errEl.textContent='Completează toate câmpurile (parola min 6 caractere).'; errEl.style.display='block'; return; }
+  btn.disabled=true; btn.textContent='Se creează...';
+  try {
+    var cred=await createUserWithEmailAndPassword(auth,email,pass);
+    await setDoc(doc(db,'barbers',cred.user.uid),{ name:name, email:email, goal:goal });
+    closeModal('addBarberModal');
+    ['nb-name','nb-email','nb-pass','nb-goal'].forEach(function(id){ document.getElementById(id).value=''; });
+    alert('Frizer adăugat!\nEmail: '+email+'\nParolă: '+pass+'\n\nPagina se reîncarcă.');
+    location.reload();
+  } catch(e){ errEl.textContent='Eroare: '+(e.message||'necunoscută'); errEl.style.display='block'; btn.disabled=false; btn.textContent='ADAUGĂ'; }
+}
+
+async function addEntryAsAdmin(){
+  var barberId=document.getElementById('ae-barber').value;
+  var amount=parseFloat(document.getElementById('ae-amount').value);
+  var date=document.getElementById('ae-date').value;
+  var errEl=document.getElementById('addEntryErr'), btn=document.getElementById('addEntryBtn');
+  errEl.style.display='none';
+  if(!barberId||!amount||amount<1){ errEl.textContent='Completează suma.'; errEl.style.display='block'; return; }
+  if(!date){ errEl.textContent='Alege o dată.'; errEl.style.display='block'; return; }
+  btn.disabled=true;
+  await addDoc(collection(db,'entries'),{ barberId:barberId, amount:amount, date:date, month:date.slice(0,7), ts:Date.now(), addedByAdmin:true });
+  document.getElementById('ae-amount').value='';
+  btn.disabled=false;
+  closeModal('addEntryModal');
+  renderAdminView();
+}
+
+async function loadVacDaysAdmin(){
+  var barberId=document.getElementById('vac-barber').value;
+  if(!barberId) return;
+  var now=new Date();
+  var months=[];
+  for(var i=0;i<3;i++){ var d=new Date(now.getFullYear(),now.getMonth()+i,1); months.push(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')); }
+  var allVacDays=[];
+  for(var mi=0;mi<months.length;mi++){
+    var vacs=await getVacForMonth(barberId,months[mi]);
+    vacs.forEach(function(v){ allVacDays.push(v); });
+  }
+  allVacDays.sort(function(a,b){ return a.date.localeCompare(b.date); });
+  var el=document.getElementById('vacDaysList'); el.innerHTML='';
+  allVacDays.forEach(function(v){
+    var chip=document.createElement('div'); chip.className='vac-chip';
+    chip.innerHTML='🏖 '+v.date+'<button data-id="'+v.docId+'">✕</button>';
+    chip.querySelector('button').addEventListener('click', async function(){
+      await deleteDoc(doc(db,'vacations',this.dataset.id));
+      loadVacDaysAdmin(); renderAdminView();
+    });
+    el.appendChild(chip);
+  });
+}
+
+async function addVacAdmin(){
+  var barberId=document.getElementById('vac-barber').value;
+  var date=document.getElementById('vac-date').value;
+  var errEl=document.getElementById('vacErr');
+  errEl.style.display='none';
+  if(!barberId||!date){ errEl.textContent='Alege frizerul și data.'; errEl.style.display='block'; return; }
+  var existing=await getDocs(query(collection(db,'vacations'),where('barberId','==',barberId),where('date','==',date)));
+  if(!existing.empty){ errEl.textContent='Această zi e deja marcată.'; errEl.style.display='block'; return; }
+  await addDoc(collection(db,'vacations'),{ barberId:barberId, date:date, month:date.slice(0,7) });
+  loadVacDaysAdmin(); renderAdminView();
+}
+
+async function renderManageList(){
+  var barbers=await getBarbers();
+  var el=document.getElementById('manageList'); el.innerHTML='';
+  barbers.forEach(function(b){
+    var item=document.createElement('div'); item.className='barber-item';
+    item.innerHTML='<div style="flex:1"><div class="barber-item-name">'+b.name+'</div><div class="barber-item-email">'+(b.email||'')+'</div></div>'+
+      '<input class="edit-goal-inp" type="number" value="'+(b.goal||0)+'" min="0" data-id="'+b.id+'">'+
+      '<button class="save-goal-btn" data-id="'+b.id+'">✓</button>';
+    item.querySelector('.save-goal-btn').addEventListener('click', async function(){
+      var val=parseInt(item.querySelector('.edit-goal-inp').value)||0;
+      await updateDoc(doc(db,'barbers',this.dataset.id),{ goal:val });
+      var btn=this; btn.style.background='var(--green)';
+      setTimeout(function(){ btn.style.background=''; },1000);
+      renderAdminView();
+    });
+    el.appendChild(item);
+  });
+}
+
+// ── BACKUP ──
+async function exportBackup(){
+  var barbers=await getBarbers();
+  var allEntries=[], allVac=[];
+  var eSnap=await getDocs(collection(db,'entries'));
+  eSnap.forEach(function(d){ allEntries.push({ id:d.id,...d.data() }); });
+  var vSnap=await getDocs(collection(db,'vacations'));
+  vSnap.forEach(function(d){ allVac.push({ id:d.id,...d.data() }); });
+  var payload={ exportedAt:new Date().toISOString(), barbers:barbers, entries:allEntries, vacations:allVac };
+  var blob=new Blob([JSON.stringify(payload,null,2)],{ type:'application/json' });
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url; a.download='thecell_backup_'+new Date().toISOString().slice(0,10)+'.json';
+  a.click(); URL.revokeObjectURL(url);
+}
+
+async function importBackup(e){
+  var file=e.target.files[0]; if(!file) return;
+  var reader=new FileReader();
+  reader.onload=async function(ev){
+    try {
+      var payload=JSON.parse(ev.target.result);
+      if(!payload.entries) throw new Error('invalid');
+      if(!confirm('Ești sigur? Datele existente NU se vor șterge, se vor adăuga peste ele.')) return;
+      for(var i=0;i<payload.entries.length;i++){
+        var en=payload.entries[i]; var id=en.id; delete en.id;
+        await setDoc(doc(db,'entries',id),en);
+      }
+      if(payload.vacations){
+        for(var j=0;j<payload.vacations.length;j++){
+          var vv=payload.vacations[j]; var vid=vv.id; delete vv.id;
+          await setDoc(doc(db,'vacations',vid),vv);
+        }
+      }
+      alert('Backup restaurat cu succes!');
+      renderAdminView();
+    } catch(err){ alert('Fișier invalid.'); }
+  };
+  reader.readAsText(file); e.target.value='';
+}
+
+// ── FRIZER ──
+function showBarberView(){
+  document.getElementById('headerSub').textContent=(barberData.name||'Frizer')+' · Evidență personală';
+  hide('adminView'); show('barberView'); hide('undoBtn');
+  maybeInitChat(barberData.name||'Frizer');
+  document.getElementById('myName').textContent=barberData.name||'—';
+  viewMonth=new Date().toISOString().slice(0,7);
+  updateMonthLabel();
+  document.getElementById('prevMonth').addEventListener('click',function(){
+    var d=new Date(viewMonth+'-01'); d.setMonth(d.getMonth()-1);
+    viewMonth=d.toISOString().slice(0,7); updateMonthLabel(); renderBarberView();
+  });
+  document.getElementById('nextMonth').addEventListener('click',function(){
+    var d=new Date(viewMonth+'-01'); d.setMonth(d.getMonth()+1);
+    if(d.toISOString().slice(0,7)>new Date().toISOString().slice(0,7)) return;
+    viewMonth=d.toISOString().slice(0,7); updateMonthLabel(); renderBarberView();
+  });
+  document.getElementById('myDate').value=new Date().toISOString().slice(0,10);
+  document.getElementById('myVacDate').value=new Date().toISOString().slice(0,10);
+  document.getElementById('myAddBtn').addEventListener('click',addMyEntry);
+  document.getElementById('myVacBtn').addEventListener('click',addMyVac);
+  document.getElementById('myNotesSave').addEventListener('click', async function(){
+    var txt=document.getElementById('myNotes').value;
+    await setDoc(doc(db,'notes',currentUser.uid),{ text:txt, updatedAt:Date.now() });
+    var saved=document.getElementById('myNotesSaved');
+    saved.style.display='inline'; setTimeout(function(){ saved.style.display='none'; },2000);
+  });
+  renderBarberView();
+}
+
+function updateMonthLabel(){
+  var p=viewMonth.split('-');
+  document.getElementById('monthLabel').textContent=MONTHS[parseInt(p[1])-1]+' '+p[0];
+}
+
+async function renderBarberView(){
+  var bSnap=await getDoc(doc(db,'barbers',currentUser.uid));
+  if(bSnap.exists()) barberData={ id:currentUser.uid,...bSnap.data() };
+  var goal=barberData.goal||0;
+  document.getElementById('myGoalTxt').textContent='Obiectiv lunar: '+fmt(goal);
+  document.getElementById('bGoal').textContent=fmt(goal);
+
+  var snap=await getDocs(query(collection(db,'entries'),where('barberId','==',currentUser.uid),where('month','==',viewMonth)));
+  var entries=[]; snap.forEach(function(d){ entries.push({ docId:d.id,...d.data() }); });
+  entries.sort(function(a,b){ return b.date.localeCompare(a.date)||b.ts-a.ts; });
+
+  var vacSnap=await getDocs(query(collection(db,'vacations'),where('barberId','==',currentUser.uid),where('month','==',viewMonth)));
+  var vacDays=[]; vacSnap.forEach(function(d){ vacDays.push({ docId:d.id,...d.data() }); });
+  vacDays.sort(function(a,b){ return a.date.localeCompare(b.date); });
+
+  var mTotal=entries.reduce(function(s,e){ return s+e.amount; },0);
+  var pct=goal>0?Math.min(100,Math.round(mTotal/goal*100)):0;
+  var reached=goal>0&&mTotal>=goal;
+  document.getElementById('myCard').className='barber-card'+(reached?' goal-reached':'');
+  document.getElementById('myProgress').style.width=pct+'%';
+  document.getElementById('myMonthTotal').textContent=fmt(mTotal);
+  document.getElementById('bSumMonth').textContent=fmt(mTotal);
+  document.getElementById('myPct').textContent=pct+'%';
+  document.getElementById('myVacCount').textContent=vacDays.length;
+
+  // Entries
+  var el=document.getElementById('myEntries'); el.innerHTML='';
+  entries.forEach(function(e){
+    var isPaid = e.receivedCash !== false; // default true for old entries
+    var row=document.createElement('div'); row.className='entry-row';
+    row.innerHTML=
+      '<span class="e-date">'+e.date+'</span>'+
+      '<span class="e-amount'+(isPaid?'':' unpaid')+'">'+fmt(e.amount)+'</span>'+
+      '<button class="e-cash '+(isPaid?'received':'not-received')+'" data-id="'+e.docId+'">'+(isPaid?'✓ Achitat':'✗ Neachitat')+'</button>'+
+      '<button class="e-del" data-id="'+e.docId+'">✕</button>';
+    row.querySelector('.e-cash').addEventListener('click', async function(){
+      var newVal = !isPaid;
+      await updateDoc(doc(db,'entries',this.dataset.id),{ receivedCash:newVal });
+      renderBarberView();
+    });
+    row.querySelector('.e-del').addEventListener('click', async function(){
+      if(!confirm('Ștergi această intrare?')) return;
+      await deleteDoc(doc(db,'entries',this.dataset.id)); renderBarberView();
+    });
+    el.appendChild(row);
+  });
+
+  // Vac days
+  var vel=document.getElementById('myVacDays'); vel.innerHTML='';
+  vacDays.forEach(function(v){
+    var chip=document.createElement('div'); chip.className='vac-chip';
+    chip.innerHTML='🏖 '+v.date+'<button data-id="'+v.docId+'">✕</button>';
+    chip.querySelector('button').addEventListener('click', async function(){
+      await deleteDoc(doc(db,'vacations',this.dataset.id)); renderBarberView();
+    });
+    vel.appendChild(chip);
+  });
+
+  // Table
+  var tbody=document.getElementById('barberTableBody'); tbody.innerHTML='';
+  var allDays=new Set();
+  entries.forEach(function(e){ allDays.add(e.date); });
+  vacDays.forEach(function(v){ allDays.add(v.date); });
+  Array.from(allDays).sort().reverse().forEach(function(dk){
+    var dayEntries=entries.filter(function(e){ return e.date===dk; });
+    var isVac=vacDays.some(function(v){ return v.date===dk; });
+    if(dayEntries.length){
+      dayEntries.forEach(function(e){
+        var tr=document.createElement('tr');
+        tr.innerHTML='<td>'+e.date+'</td><td><span class="chip chip-gold">Încasare</span></td><td>'+fmt(e.amount)+'</td>';
+        tbody.appendChild(tr);
+      });
+    }
+    if(isVac&&!dayEntries.length){
+      var tr=document.createElement('tr');
+      tr.innerHTML='<td>'+dk+'</td><td><span class="chip chip-vac">🏖 Concediu</span></td><td>—</td>';
+      tbody.appendChild(tr);
+    }
+  });
+  document.getElementById('barberTableTotal').textContent=fmt(mTotal);
+
+  await renderBarberChart();
+
+  // Notes
+  var noteSnap=await getDoc(doc(db,'notes',currentUser.uid));
+  if(noteSnap.exists()) document.getElementById('myNotes').value=noteSnap.data().text||'';
+}
+
+async function addMyEntry(){
+  var amtEl=document.getElementById('myAmount');
+  var dateEl=document.getElementById('myDate');
+  var errEl=document.getElementById('myErr');
+  var btn=document.getElementById('myAddBtn');
+  var amt=parseFloat(amtEl.value), date=dateEl.value;
+  var receivedCash=document.getElementById('myReceivedCash').checked;
+  errEl.style.display='none';
+  if(!amt||amt<1){ errEl.textContent='Introdu o sumă validă.'; errEl.style.display='block'; return; }
+  if(!date){ errEl.textContent='Alege o dată.'; errEl.style.display='block'; return; }
+  btn.disabled=true;
+  await addDoc(collection(db,'entries'),{ barberId:currentUser.uid, amount:amt, date:date, month:date.slice(0,7), ts:Date.now(), receivedCash:receivedCash });
+  amtEl.value=''; btn.disabled=false;
+  if(date.slice(0,7)!==viewMonth){ viewMonth=date.slice(0,7); updateMonthLabel(); }
+  renderBarberView();
+}
+
+async function addMyVac(){
+  var date=document.getElementById('myVacDate').value;
+  if(!date) return;
+  var existing=await getDocs(query(collection(db,'vacations'),where('barberId','==',currentUser.uid),where('date','==',date)));
+  if(!existing.empty){ alert('Această zi e deja marcată ca zi liberă!'); return; }
+  await addDoc(collection(db,'vacations'),{ barberId:currentUser.uid, date:date, month:date.slice(0,7) });
+  if(date.slice(0,7)!==viewMonth){ viewMonth=date.slice(0,7); updateMonthLabel(); }
+  renderBarberView();
+}
+
+async function renderBarberChart(){
+  var months=[], now=new Date();
+  for(var i=5;i>=0;i--){ var d=new Date(now.getFullYear(),now.getMonth()-i,1); months.push(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')); }
+  var totals=await Promise.all(months.map(async function(mk){
+    var snap=await getDocs(query(collection(db,'entries'),where('barberId','==',currentUser.uid),where('month','==',mk)));
+    var t=0; snap.forEach(function(d){ t+=d.data().amount; }); return t;
+  }));
+  var mNames=['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Nov','Dec'];
+  var labels=months.map(function(mk){ return mNames[parseInt(mk.slice(5))-1]+' '+mk.slice(2,4); });
+  var ctx=document.getElementById('barberChart').getContext('2d');
+  if(barberChart) barberChart.destroy();
+  barberChart=new Chart(ctx,{ type:'bar', data:{ labels:labels, datasets:[{ label:'Incasari', data:totals, backgroundColor:'rgba(200,169,110,0.25)', borderColor:'#c8a96e', borderWidth:2, borderRadius:6 },{ label:'Obiectiv', data:months.map(function(){ return barberData.goal||0; }), type:'line', borderColor:'rgba(74,222,128,0.5)', borderWidth:1.5, borderDash:[5,4], pointRadius:0, fill:false }] }, options:{ responsive:true, plugins:{ legend:{ labels:{ color:'#888', font:{family:'DM Sans',size:11}, boxWidth:12, padding:14 } }, tooltip:{ backgroundColor:'#1a1a1a', borderColor:'#2e2e2e', borderWidth:1, titleColor:'#f0ede8', bodyColor:'#888', callbacks:{ label:function(c){ return ' '+c.dataset.label+': '+c.parsed.y.toLocaleString('ro-RO')+' lei'; } } } }, scales:{ x:{ ticks:{ color:'#666', font:{size:10} }, grid:{ color:'#1f1f1f' } }, y:{ ticks:{ color:'#666', font:{size:10}, callback:function(v){ return v.toLocaleString('ro-RO')+' lei'; } }, grid:{ color:'#1f1f1f' } } } } });
+}
+
+window.loadVacDaysAdmin = loadVacDaysAdmin;
+
+// ── TABS ──
+function initTabs(containerSelector){
+  document.querySelectorAll(containerSelector+' .tab-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var tabId=this.dataset.tab;
+      document.querySelectorAll(containerSelector+' .tab-btn').forEach(function(b){ b.classList.remove('active'); });
+      document.querySelectorAll(containerSelector+' .tab-pane').forEach(function(p){ p.classList.remove('active'); });
+      this.classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+      // Dacă se deschide chat, resetăm badge-ul
+      if(tabId==='adminChat'||tabId==='barberChat'){
+        var badge=document.getElementById(isAdmin?'adminChatBadge':'barberChatBadge');
+        if(badge) badge.style.display='none';
+        lastSeenTs=Date.now();
+      }
+    });
+  });
+}
+
+// ── REFRESH ──
+document.getElementById('refreshBtn').addEventListener('click', async function(){
+  this.classList.add('spinning');
+  var self=this;
+  if(isAdmin) await renderAdminView(); else await renderBarberView();
+  setTimeout(function(){ self.classList.remove('spinning'); }, 600);
+});
+
+// ── CHAT ──
+var chatUnsub=null;
+var lastSeenTs=Date.now();
+var currentUserName='';
+
+function timeAgo(ts){
+  var d=new Date(ts);
+  return d.toLocaleDateString('ro-RO',{day:'2-digit',month:'2-digit'})+' '+d.toLocaleTimeString('ro-RO',{hour:'2-digit',minute:'2-digit'});
+}
+
+function renderChatMessages(msgs, containerId, isMine){
+  var el=document.getElementById(containerId); if(!el) return;
+  el.innerHTML='';
+  if(!msgs.length){ el.innerHTML='<div class="chat-empty">Niciun mesaj încă. Spune ceva! 👋</div>'; return; }
+  msgs.forEach(function(m){
+    var mine=(m.uid===currentUser.uid);
+    var div=document.createElement('div');
+    div.className='chat-msg '+(mine?'mine':'theirs');
+    div.innerHTML=
+      '<div class="chat-bubble">'+m.text.replace(/</g,'&lt;')+'</div>'+
+      '<div class="chat-meta">'+
+        (mine?'':'<strong style="color:var(--accent);font-size:0.7rem">'+m.name+'</strong> · ')+
+        timeAgo(m.ts)+
+        (mine?'<button class="chat-del" data-id="'+m.docId+'" title="Șterge">🗑</button>':'')+
+      '</div>';
+    if(mine){
+      div.querySelector('.chat-del').addEventListener('click', async function(){
+        await deleteDoc(doc(db,'chat',this.dataset.id));
+      });
+    }
+    el.appendChild(div);
+  });
+  el.scrollTop=el.scrollHeight;
+}
+
+function startChatListener(){
+  if(chatUnsub) chatUnsub();
+  var q=query(collection(db,'chat'),orderBy('ts','asc'),limit(100));
+  chatUnsub=onSnapshot(q,function(snap){
+    var msgs=[];
+    snap.forEach(function(d){ msgs.push({ docId:d.id,...d.data() }); });
+    // Verifică dacă sunt mesaje noi de la alții
+    var activeTab=isAdmin
+      ? (document.getElementById('adminChat')&&document.getElementById('adminChat').classList.contains('active'))
+      : (document.getElementById('barberChat')&&document.getElementById('barberChat').classList.contains('active'));
+    var hasNew=msgs.some(function(m){ return m.ts>lastSeenTs && m.uid!==currentUser.uid; });
+    if(hasNew && !activeTab){
+      var badge=document.getElementById(isAdmin?'adminChatBadge':'barberChatBadge');
+      if(badge) badge.style.display='inline';
+    }
+    renderChatMessages(msgs, isAdmin?'chatMessages':'chatMessagesBarber');
+  });
+}
+
+async function sendChatMessage(inputId){
+  var inp=document.getElementById(inputId);
+  var text=inp.value.trim();
+  if(!text) return;
+  inp.value='';
+  await addDoc(collection(db,'chat'),{ uid:currentUser.uid, name:currentUserName, text:text, ts:Date.now() });
+}
+
+function initChat(){
+  // Admin
+  var adminInput=document.getElementById('chatInput');
+  var adminSend=document.getElementById('chatSendBtn');
+  if(adminInput&&adminSend){
+    adminSend.addEventListener('click',function(){ sendChatMessage('chatInput'); });
+    adminInput.addEventListener('keydown',function(e){ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); sendChatMessage('chatInput'); } });
+  }
+  var clearBtn=document.getElementById('adminClearChat');
+  if(clearBtn){
+    clearBtn.addEventListener('click', async function(){
+      if(!confirm('Ștergi toată conversația?')) return;
+      var snap=await getDocs(collection(db,'chat'));
+      var batch=[];
+      snap.forEach(function(d){ batch.push(deleteDoc(doc(db,'chat',d.id))); });
+      await Promise.all(batch);
+    });
+  }
+  // Barber
+  var barberInput=document.getElementById('chatInputBarber');
+  var barberSend=document.getElementById('chatSendBtnBarber');
+  if(barberInput&&barberSend){
+    barberSend.addEventListener('click',function(){ sendChatMessage('chatInputBarber'); });
+    barberInput.addEventListener('keydown',function(e){ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); sendChatMessage('chatInputBarber'); } });
+  }
+  startChatListener();
+}
+
+// Patch showAdminView și showBarberView să inițializeze tabs + chat
+// (integrate via onAuthStateChanged flag)
+var chatInitDone=false;
+function maybeInitChat(name){
+  if(chatInitDone) return;
+  chatInitDone=true;
+  currentUserName=name;
+  initTabs('#adminView');
+  initTabs('#barberView');
+  initChat();
+}
+
+</script>
+</body>
+</html>
