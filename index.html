@@ -2578,8 +2578,11 @@ async function meroFetch(endpoint, params){
     url+='?'+Object.keys(params).map(function(k){ return k+'='+encodeURIComponent(params[k]); }).join('&');
   }
   var proxyBase='https://thecellmero.birispatryk2.workers.dev';
-  var proxyUrl=proxyBase+'/'+encodeURIComponent(url)+'?token='+encodeURIComponent(token);
-  var resp=await fetch(proxyUrl);
+  var resp=await fetch(proxyBase, {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({ url:url, token:token })
+  });
   if(resp.status===401||resp.status===403){
     updateMeroStatus('red','Token expirat! Reînnoire necesară.');
     throw new Error('Token expirat');
