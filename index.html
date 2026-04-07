@@ -1169,6 +1169,18 @@
       </div>
       <div class="section-title">BREAKDOWN PER FRIZER</div>
       <div id="finBarberBreakdown" style="display:flex;flex-direction:column;gap:6px;margin-bottom:18px;"></div>
+      <div class="section-title">PATRICK — PROFIT ADMIN</div>
+      <div id="finPatrickBox" style="margin-bottom:18px;">
+        <div style="background:rgba(74,222,128,0.04);border:1px solid rgba(74,222,128,0.2);border-radius:14px;padding:14px;">
+          <div style="display:flex;gap:8px;margin-bottom:8px;">
+            <div style="flex:1;text-align:center;"><div style="font-size:0.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;">Mero Patrick</div><div style="font-family:Bebas Neue;font-size:1.2rem;color:var(--green);" id="finPatrickMero">0 lei</div></div>
+            <div style="flex:1;text-align:center;"><div style="font-size:0.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;">Parte admin (frizeri)</div><div style="font-family:Bebas Neue;font-size:1.2rem;color:var(--accent);" id="finPatrickAdminShare">0 lei</div></div>
+            <div style="flex:1;text-align:center;"><div style="font-size:0.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;">Total Patrick</div><div style="font-family:Bebas Neue;font-size:1.3rem;color:var(--green);" id="finPatrickTotal">0 lei</div></div>
+          </div>
+          <div style="font-size:0.75rem;color:var(--muted2);" id="finPatrickDetails">Sincronizează Mero pentru date.</div>
+        </div>
+        <button class="action-btn btn-blue" id="finMeroSync" style="width:100%;margin-top:8px;">📱 Sincronizează cu Mero (Finanțe)</button>
+      </div>
       <div class="section-title">CHELTUIELI LUNARE</div>
       <div style="margin-bottom:10px;">
         <input class="form-input" type="text" id="exp-name" placeholder="Nume cheltuială (ex: Chirie, Utilități...)" style="width:100%;margin-bottom:6px;">
@@ -2334,7 +2346,9 @@ function initFinanceTab(){
 
 function updateFinMonthLabel(){
   var p=finMonth.split('-');
-  document.getElementById('finMonthLabel').textContent=MONTHS[parseInt(p[1])-1]+' '+p[0];
+  var el=document.getElementById('finMonthLabel');
+  el.textContent=MONTHS[parseInt(p[1])-1]+' '+p[0];
+  el.dataset.monthKey=finMonth;
 }
 
 async function addExpense(){
@@ -4120,8 +4134,85 @@ var meroInitDone=false;
 var _origShowAdmin=showAdminView;
 showAdminView=async function(){
   await _origShowAdmin();
-  if(!meroInitDone){ meroInitDone=true; initMeroTab(); initNecesar(); }
+  if(!meroInitDone){
+    meroInitDone=true;
+    initMeroTab();
+    initNecesar();
+    // Finance Mero sync button
+    var finSyncBtn=document.getElementById('finMeroSync');
+    if(finSyncBtn) finSyncBtn.addEventListener('click',finMeroSync);
+  }
 };
+
+// ── FINANCE MERO SYNC — Patrick admin profit ──
+async function finMeroSync(){
+  var token=getMeroToken();
+  if(!token){ toast('Setează token-ul în tab-ul Mero','warning'); return; }
+  var btn=document.getElementById('finMeroSync');
+  if(btn){ btn.disabled=true; btn.textContent='⏳ Se calculează...'; }
+
+  try {
+    // Get current finance month
+    var finLabel=document.getElementById('finMonthLabel');
+    var finMonthKey=finLabel?finLabel.dataset.monthKey:new Date().toISOString().slice(0,7);
+    if(!finMonthKey) finMonthKey=new Date().toISOString().slice(0,7);
+    var p=finMonthKey.split('-'), yr=parseInt(p[0]), mo=parseInt(p[1]);
+    var from=yr+'-'+String(mo).padStart(2,'0')+'-01T00:00:00.000Z';
+    var lastDay=new Date(yr,mo,0).getDate();
+    var to=yr+'-'+String(mo).padStart(2,'0')+'-'+lastDay+'T23:59:59.999Z';
+
+    var barbers=await getBarbers();
+    var wids=Object.keys(MERO_WID);
+    var patrickMero=0, totalAdminFromBarbers=0, totalBarberEarnings=0;
+    var detailsHtml='';
+
+    for(var i=0;i<wids.length;i++){
+      try {
+        var resp=await meroPost(meroStatsUrl(from,to,wids[i]));
+        var r=resp.result;
+        if(!r||!r.bookings) continue;
+        var income=r.bookings.finishedStats.income||0;
+        var wName=MERO_WID[wids[i]];
+
+        // Find matching barber for settings
+        var matchedBarber=null;
+        barbers.forEach(function(b){
+          if(matchBarberToWorker(b)===wids[i]) matchedBarber=b;
+        });
+        if(!matchedBarber) matchedBarber={name:wName,goal:0,goal2:0};
+
+        if(isPatrickBarber(matchedBarber)){
+          // Patrick = 100%
+          patrickMero=income;
+          detailsHtml+='<div style="display:flex;justify-content:space-between;font-size:0.78rem;padding:3px 0;"><span style="color:var(--green);">'+esc(wName)+' (100%)</span><span style="color:var(--green);font-weight:600;">'+fmt(income)+'</span></div>';
+        } else {
+          var bd=calcMeroBreakdown(income, matchedBarber);
+          totalAdminFromBarbers+=bd.adminShare;
+          totalBarberEarnings+=bd.barberShare;
+          detailsHtml+='<div style="display:flex;justify-content:space-between;font-size:0.78rem;padding:3px 0;border-bottom:1px solid var(--border);"><span>'+esc(wName)+'</span><span>Brut: '+fmt(income)+' → Admin: <strong>'+fmt(bd.adminShare)+'</strong> · Frizer: '+fmt(bd.barberShare)+'</span></div>';
+        }
+      } catch(e){}
+    }
+
+    var totalPatrick=patrickMero+totalAdminFromBarbers;
+
+    document.getElementById('finPatrickMero').textContent=fmt(patrickMero);
+    document.getElementById('finPatrickAdminShare').textContent=fmt(totalAdminFromBarbers);
+    document.getElementById('finPatrickTotal').textContent=fmt(totalPatrick);
+    document.getElementById('finPatrickDetails').innerHTML=
+      '<div style="margin-top:6px;">'+detailsHtml+'</div>'+
+      '<div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(74,222,128,0.2);display:flex;gap:12px;">'+
+        '<div><span style="font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);">Total brut salon</span><div style="font-weight:700;">'+fmt(patrickMero+totalAdminFromBarbers+totalBarberEarnings)+'</div></div>'+
+        '<div><span style="font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);">Plătit frizeri</span><div style="font-weight:700;color:var(--blue);">'+fmt(totalBarberEarnings)+'</div></div>'+
+        '<div><span style="font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);">Rămâne Patrick</span><div style="font-weight:700;color:var(--green);">'+fmt(totalPatrick)+'</div></div>'+
+      '</div>';
+
+    toast('Finanțe Mero actualizate!','success');
+  } catch(e){
+    toast('Eroare: '+e.message,'error');
+  }
+  if(btn){ btn.disabled=false; btn.textContent='📱 Sincronizează cu Mero (Finanțe)'; }
+}
 
 // ══════════════════════════════════════════════════
 // ── NECESAR (produse necesare — toți pot adăuga) ──
