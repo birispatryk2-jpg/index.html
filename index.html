@@ -31,9 +31,106 @@
     --muted2:#777;
     --red:#f87171;
     --blue:#60a5fa;
+    --gold:#fbbf24;
+    --gold-glow:rgba(251,191,36,0.2);
   }
 
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+
+  /* ── LIGHT THEME ── */
+  body.light{
+    --bg:#f5f5f5;--bg2:#ebebeb;
+    --surface:rgba(0,0,0,0.03);--surface2:rgba(0,0,0,0.05);--surface3:rgba(0,0,0,0.08);
+    --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.12);
+    --accent:#1a1a1a;--accent2:#555;
+    --glow:rgba(0,0,0,0.06);--glow2:rgba(0,0,0,0.03);
+    --green:#16a34a;--green-glow:rgba(22,163,74,0.15);
+    --text:#1a1a1a;--muted:#999;--muted2:#777;
+    --red:#dc2626;--blue:#2563eb;
+    --gold:#d97706;--gold-glow:rgba(217,119,6,0.15);
+    background-image:none;
+  }
+  body.light .login-logo,body.light header h1{
+    background:linear-gradient(135deg,#111 0%,#444 50%,#111 100%);
+    -webkit-background-clip:text;background-clip:text;
+  }
+  body.light .barber-name{
+    background:linear-gradient(135deg,#111 0%,#333 100%);
+    -webkit-background-clip:text;background-clip:text;
+  }
+  body.light .chat-msg.mine .chat-bubble{background:rgba(0,0,0,0.06);border-color:rgba(0,0,0,0.1);}
+  body.light .chat-msg.theirs .chat-bubble{background:rgba(0,0,0,0.03);border-color:rgba(0,0,0,0.06);}
+  body.light .modal{background:rgba(245,245,245,0.98);border-color:rgba(0,0,0,0.12);}
+  body.light .toast{background:rgba(250,250,250,0.98);border-color:rgba(0,0,0,0.1);}
+  body.light .confirm-box{background:rgba(245,245,245,0.98);border-color:rgba(0,0,0,0.12);}
+  /* Progress bars pe light */
+  body.light .progress-wrap{background:rgba(0,0,0,0.08);}
+  body.light .progress-bar{background:linear-gradient(90deg,rgba(0,0,0,0.2),rgba(0,0,0,0.45));box-shadow:none;}
+  body.light .goal-reached .progress-bar{background:linear-gradient(90deg,#22c55e,#16a34a);box-shadow:0 0 8px rgba(22,163,74,0.3);}
+  body.light .goal2-reached .progress-bar{background:linear-gradient(90deg,#f59e0b,#d97706);box-shadow:0 0 8px rgba(217,119,6,0.3);}
+  body.light .goal2-reached .barber-name{background:linear-gradient(135deg,#d97706 0%,#b45309 40%,#f59e0b 100%);-webkit-background-clip:text;background-clip:text;}
+  /* Carduri pe light */
+  body.light .barber-card{background:rgba(255,255,255,0.8);border-color:rgba(0,0,0,0.1);box-shadow:0 2px 12px rgba(0,0,0,0.06);}
+  body.light .barber-card::before{background:none;}
+  body.light .barber-card.goal-reached{border-color:rgba(22,163,74,0.35);box-shadow:0 2px 16px rgba(22,163,74,0.08);}
+  body.light .barber-card.goal2-reached{border-color:rgba(217,119,6,0.4);box-shadow:0 2px 16px rgba(217,119,6,0.1);background:rgba(255,251,235,0.6);}
+  /* Summary cards pe light */
+  body.light .summary{background:rgba(255,255,255,0.8);border-color:rgba(0,0,0,0.08);box-shadow:0 1px 8px rgba(0,0,0,0.04);}
+  /* Inputs pe light */
+  body.light .form-input,body.light .form-select,body.light .login-field{background:rgba(0,0,0,0.04);border-color:rgba(0,0,0,0.12);color:#1a1a1a;}
+  body.light .form-input:focus,body.light .login-field:focus{border-color:rgba(0,0,0,0.3);box-shadow:0 0 12px rgba(0,0,0,0.06);}
+  body.light .entry-inputs input{background:rgba(0,0,0,0.04);border-color:rgba(0,0,0,0.1);}
+  body.light .notes-textarea{background:rgba(0,0,0,0.03);border-color:rgba(0,0,0,0.08);}
+  /* Buttons pe light */
+  body.light .action-btn{backdrop-filter:none;}
+  body.light .btn-blue{background:rgba(37,99,235,0.08);color:#2563eb;border-color:rgba(37,99,235,0.2)!important;}
+  body.light .btn-gold{background:rgba(0,0,0,0.04);color:#333;border-color:rgba(0,0,0,0.12)!important;}
+  body.light .btn-green{background:rgba(22,163,74,0.08);color:#16a34a;border-color:rgba(22,163,74,0.2)!important;}
+  body.light .tool-btn{background:rgba(0,0,0,0.03);border-color:rgba(0,0,0,0.08);color:#666;}
+  body.light .hdr-btn{background:rgba(0,0,0,0.04);border-color:rgba(0,0,0,0.1);color:#666;}
+  /* Tabs pe light */
+  body.light .tab-bar{background:rgba(0,0,0,0.04);border-color:rgba(0,0,0,0.06);}
+  body.light .tab-btn.active{background:rgba(255,255,255,0.9);color:#1a1a1a;border-color:rgba(0,0,0,0.1);box-shadow:0 1px 6px rgba(0,0,0,0.06);}
+  /* Entry rows pe light */
+  body.light .entry-row{background:rgba(0,0,0,0.02);border-color:rgba(0,0,0,0.06);}
+  body.light .entry-row:hover{background:rgba(0,0,0,0.04);}
+  /* Stock items pe light */
+  body.light .stock-item{background:rgba(0,0,0,0.02);border-color:rgba(0,0,0,0.08);}
+  body.light .stock-item.low-stock{border-color:rgba(220,38,38,0.25);background:rgba(220,38,38,0.03);}
+  body.light .sale-item{background:rgba(22,163,74,0.04);border-color:rgba(22,163,74,0.1);}
+  /* Notes box pe light */
+  body.light .notes-box{background:rgba(0,0,0,0.02);border-color:rgba(0,0,0,0.06);}
+  /* Stats pe light */
+  body.light .stat-card{background:rgba(0,0,0,0.02);border-color:rgba(0,0,0,0.06);}
+  body.light .motivation-box{background:rgba(0,0,0,0.02);border-color:rgba(0,0,0,0.06);}
+  /* Chart pe light */
+  body.light .chart-wrap{background:rgba(0,0,0,0.02);border-color:rgba(0,0,0,0.06);}
+  /* Table pe light */
+  body.light .table-wrap{background:rgba(0,0,0,0.02);border-color:rgba(0,0,0,0.06);}
+  body.light thead th{background:rgba(0,0,0,0.04);border-color:rgba(0,0,0,0.06);}
+  body.light tbody tr{border-color:rgba(0,0,0,0.04);}
+  body.light tbody tr:hover{background:rgba(0,0,0,0.03);}
+  body.light tfoot td{background:rgba(0,0,0,0.04);border-color:rgba(0,0,0,0.06);}
+  /* Vac chips pe light */
+  body.light .vac-chip{background:rgba(37,99,235,0.06);border-color:rgba(37,99,235,0.2);}
+  /* Schedule rows pe light */
+  body.light .sched-row{background:rgba(0,0,0,0.02);border-color:rgba(0,0,0,0.06);}
+  body.light .sched-start,body.light .sched-end,body.light .sched-break{background:rgba(0,0,0,0.04);border-color:rgba(0,0,0,0.1);color:#1a1a1a;}
+  /* Date input pe light */
+  body.light .date-bar input[type="date"]{background:rgba(0,0,0,0.04);border-color:rgba(0,0,0,0.1);color:#1a1a1a;}
+  body.light .date-bar input[type="date"]::-webkit-calendar-picker-indicator{filter:none;}
+  /* Chat pe light */
+  body.light .chat-wrap{background:rgba(0,0,0,0.02);border-color:rgba(0,0,0,0.08);}
+  body.light .chat-header{border-color:rgba(0,0,0,0.06);}
+  body.light .chat-input{background:rgba(0,0,0,0.04);border-color:rgba(0,0,0,0.08);color:#1a1a1a;}
+  body.light .chat-send-btn{background:rgba(0,0,0,0.06);border-color:rgba(0,0,0,0.1);color:#333;}
+  /* Announce pe light */
+  body.light #adminAnnounceBox,body.light #barberAnnounceBox{background:rgba(217,119,6,0.06);border-color:rgba(217,119,6,0.2);}
+  /* Login pe light */
+  body.light .login-box{background:rgba(255,255,255,0.9);border-color:rgba(0,0,0,0.1);box-shadow:0 4px 30px rgba(0,0,0,0.08);}
+  body.light .login-btn{background:linear-gradient(135deg,rgba(0,0,0,0.08),rgba(0,0,0,0.04));color:#1a1a1a;border-color:rgba(0,0,0,0.15);}
+  /* Barber totals pe light */
+  body.light .barber-totals{border-color:rgba(0,0,0,0.06);}
 
   body{
     background:var(--bg);
@@ -242,12 +339,22 @@
     border-color:rgba(74,222,128,0.3);
     box-shadow:0 4px 40px rgba(0,0,0,0.4), 0 0 40px rgba(74,222,128,0.08), inset 0 1px 0 rgba(74,222,128,0.1);
   }
+  .barber-card.goal2-reached{
+    border-color:rgba(251,191,36,0.4);
+    box-shadow:0 4px 40px rgba(0,0,0,0.4), 0 0 50px rgba(251,191,36,0.12), inset 0 1px 0 rgba(251,191,36,0.15);
+    background:rgba(251,191,36,0.02);
+  }
+  .barber-card.goal2-reached .barber-name{
+    background:linear-gradient(135deg,#fbbf24 0%,#f59e0b 40%,#fcd34d 100%);
+    -webkit-background-clip:text;background-clip:text;
+    filter:drop-shadow(0 0 8px rgba(251,191,36,0.3));
+  }
+  .barber-card.goal2-reached .progress-bar{
+    background:linear-gradient(90deg,rgba(251,191,36,0.6),rgba(251,191,36,1));
+    box-shadow:0 0 12px var(--gold-glow);
+  }
   .barber-card.goal-reached::after{
-    content:'✓ OBIECTIV ATINS';position:absolute;top:12px;right:12px;
-    background:rgba(74,222,128,0.15);color:var(--green);
-    border:1px solid rgba(74,222,128,0.3);
-    font-size:0.58rem;font-weight:700;letter-spacing:1px;padding:3px 9px;border-radius:20px;
-    text-shadow:0 0 10px var(--green-glow);
+    content:'';display:none;
   }
   .barber-name{
     font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:3px;
@@ -573,6 +680,138 @@
 
   /* ── SCROLLBAR ── */
   ::-webkit-scrollbar{width:3px;height:3px;}
+
+  /* ── STOCK ── */
+
+  /* ── STATS DASHBOARD ── */
+  .stats-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;
+  }
+  .stat-card{
+    background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);
+    border-radius:12px;padding:12px;
+  }
+  .stat-label{font-size:0.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;}
+  .stat-value{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:1px;color:var(--accent);}
+  .stat-value.green{color:var(--green);}
+  .stat-value.gold{color:var(--gold);}
+  .stat-value.red{color:var(--red);}
+  .stat-sub{font-size:0.68rem;color:var(--muted2);margin-top:2px;}
+  .stat-sub.up{color:var(--green);}
+  .stat-sub.down{color:var(--red);}
+  .motivation-box{
+    background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);
+    border-radius:12px;padding:14px;margin-bottom:14px;text-align:center;
+  }
+  .motivation-msg{font-size:0.88rem;color:var(--text);line-height:1.5;}
+  .motivation-sub{font-size:0.75rem;color:var(--muted2);margin-top:4px;}
+
+  /* ── SVG ICON BUTTONS ── */
+  .action-btn svg{width:16px;height:16px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
+  .tools-bar{display:flex;gap:8px;margin-bottom:18px;justify-content:center;}
+  .tool-btn{
+    display:flex;align-items:center;gap:5px;
+    padding:7px 14px;border-radius:9px;
+    font-family:'DM Sans',sans-serif;font-weight:500;font-size:0.72rem;
+    cursor:pointer;border:1px solid rgba(255,255,255,0.08);
+    background:rgba(255,255,255,0.03);color:var(--muted2);
+    transition:all 0.2s;
+  }
+  .tool-btn:hover{color:var(--text);border-color:rgba(255,255,255,0.2);background:rgba(255,255,255,0.06);}
+  .tool-btn svg{width:14px;height:14px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+
+  /* ── SETTINGS MODAL ── */
+  .settings-tabs{display:flex;gap:4px;margin-bottom:14px;flex-wrap:wrap;}
+  .settings-tab{
+    padding:6px 12px;border-radius:8px;font-size:0.75rem;font-weight:600;
+    cursor:pointer;border:1px solid rgba(255,255,255,0.08);
+    background:rgba(255,255,255,0.03);color:var(--muted);transition:all 0.2s;
+  }
+  .settings-tab.active{background:rgba(255,255,255,0.1);color:var(--text);border-color:rgba(255,255,255,0.2);}
+  .settings-section{display:none;}
+  .settings-section.active{display:block;}
+  .settings-row{display:flex;gap:8px;align-items:center;margin-bottom:10px;}
+  .settings-row label{font-size:0.68rem;color:var(--muted2);text-transform:uppercase;letter-spacing:1px;min-width:70px;}
+  .settings-row input,.settings-row select{
+    flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);
+    color:var(--text);padding:8px 10px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.85rem;outline:none;
+  }
+  .days-check{display:flex;gap:4px;flex-wrap:wrap;}
+  .day-btn{
+    width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+    font-size:0.7rem;font-weight:600;cursor:pointer;
+    border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.03);color:var(--muted);
+    transition:all 0.2s;
+  }
+  .day-btn.active{background:rgba(74,222,128,0.15);color:var(--green);border-color:rgba(74,222,128,0.3);}
+
+  /* ── SCHEDULE TABLE ── */
+  .sched-row{
+    display:flex;align-items:center;gap:5px;
+    background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);
+    border-radius:8px;padding:6px 8px;
+  }
+  .sched-row.disabled{opacity:0.35;}
+  .sched-day{font-weight:700;font-size:0.78rem;color:var(--accent);min-width:24px;text-align:center;}
+  .sched-check{width:16px;height:16px;accent-color:var(--green);cursor:pointer;flex-shrink:0;}
+  .sched-start,.sched-end{
+    width:80px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);
+    color:var(--text);padding:5px 6px;border-radius:6px;font-family:'DM Sans',sans-serif;
+    font-size:0.78rem;outline:none;
+  }
+  .sched-break{
+    width:42px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);
+    color:var(--text);padding:5px 4px;border-radius:6px;font-family:'DM Sans',sans-serif;
+    font-size:0.75rem;outline:none;text-align:center;
+  }
+
+  /* ── STOCK ── */
+  .stock-item{
+    display:flex;align-items:center;gap:8px;
+    background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
+    border-radius:10px;padding:10px 12px;
+  }
+  .stock-item.low-stock{border-color:rgba(248,113,113,0.3);background:rgba(248,113,113,0.04);}
+  .stock-name{flex:1;font-weight:600;font-size:0.88rem;}
+  .stock-price{color:var(--muted2);font-size:0.75rem;}
+  .stock-qty{
+    font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px;
+    min-width:32px;text-align:center;
+  }
+  .stock-qty.low{color:var(--red);}
+  .stock-qty.ok{color:var(--green);}
+  .stock-edit-btn{
+    background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);
+    color:var(--muted2);border-radius:6px;padding:3px 8px;font-size:0.72rem;cursor:pointer;
+    transition:all 0.2s;
+  }
+  .stock-edit-btn:hover{color:var(--text);border-color:rgba(255,255,255,0.3);}
+  .stock-del-btn{
+    background:none;border:1px solid rgba(248,113,113,0.2);color:var(--red);
+    border-radius:6px;padding:3px 8px;font-size:0.72rem;cursor:pointer;transition:all 0.2s;
+  }
+  .stock-del-btn:hover{background:rgba(248,113,113,0.08);}
+  .stock-sell-row{display:flex;gap:6px;align-items:center;}
+  .stock-sell-qty{
+    width:50px;background:rgba(255,255,255,0.05);border:1px solid rgba(74,222,128,0.2);
+    color:var(--text);padding:6px 8px;border-radius:7px;font-family:'DM Sans',sans-serif;
+    font-size:0.85rem;text-align:center;outline:none;
+  }
+  .stock-sell-btn{
+    background:rgba(74,222,128,0.08);color:var(--green);border:1px solid rgba(74,222,128,0.25);
+    border-radius:7px;padding:6px 12px;font-size:0.78rem;font-weight:600;cursor:pointer;
+    transition:all 0.2s;white-space:nowrap;
+  }
+  .stock-sell-btn:hover{background:rgba(74,222,128,0.15);}
+  .stock-sell-btn:disabled{opacity:0.3;cursor:not-allowed;}
+  .sale-item{
+    display:flex;align-items:center;gap:8px;
+    background:rgba(74,222,128,0.04);border:1px solid rgba(74,222,128,0.1);
+    border-radius:8px;padding:8px 10px;font-size:0.78rem;
+  }
+  .sale-item .sale-who{color:var(--accent);font-weight:600;}
+  .sale-item .sale-what{color:var(--green);flex:1;}
+  .sale-item .sale-when{color:var(--muted);font-size:0.68rem;}
   ::-webkit-scrollbar-track{background:transparent;}
   ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:4px;}
   ::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.2);}
@@ -591,62 +830,33 @@
 
 #toastContainer{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none;width:90%;max-width:380px;}.toast{pointer-events:auto;background:rgba(22,22,22,0.95);border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:14px 18px;display:flex;align-items:center;gap:10px;backdrop-filter:blur(20px);box-shadow:0 8px 40px rgba(0,0,0,0.6);animation:toastIn 0.4s cubic-bezier(0.16,1,0.3,1) forwards;font-size:0.85rem;}.toast.removing{animation:toastOut 0.3s ease forwards;}.toast-icon{font-size:1.1rem;flex-shrink:0;}.toast-text{flex:1;color:var(--text);}.toast.success{border-color:rgba(74,222,128,0.3);}.toast.success .toast-icon{color:var(--green);}.toast.error{border-color:rgba(248,113,113,0.3);}.toast.error .toast-icon{color:var(--red);}.toast.warning{border-color:rgba(251,191,36,0.3);}.toast.warning .toast-icon{color:#fbbf24;}.toast.info{border-color:rgba(96,165,250,0.3);}.toast.info .toast-icon{color:var(--blue);}@keyframes toastIn{from{opacity:0;transform:translateY(-20px) scale(0.95)}to{opacity:1;transform:translateY(0) scale(1)}}@keyframes toastOut{from{opacity:1}to{opacity:0;transform:translateY(-10px)}}.confirm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:200;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(6px);}.confirm-overlay.open{display:flex;}.confirm-box{background:rgba(18,18,18,0.98);border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:28px;width:100%;max-width:340px;text-align:center;box-shadow:0 0 80px rgba(0,0,0,0.8);}.confirm-icon{font-size:2.2rem;margin-bottom:12px;}.confirm-title{font-family:"Bebas Neue",sans-serif;font-size:1.2rem;letter-spacing:2px;color:var(--accent);margin-bottom:6px;}.confirm-msg{font-size:0.84rem;color:var(--muted2);margin-bottom:20px;line-height:1.5;}.confirm-actions{display:flex;gap:10px;}.confirm-actions button{flex:1;padding:12px;border-radius:12px;font-family:"DM Sans",sans-serif;font-weight:600;font-size:0.85rem;cursor:pointer;transition:all 0.2s;}.confirm-cancel{background:rgba(255,255,255,0.06);color:var(--muted2);border:1px solid rgba(255,255,255,0.1);}.confirm-cancel:hover{background:rgba(255,255,255,0.1);color:var(--text);}.confirm-ok{background:rgba(248,113,113,0.1);color:var(--red);border:1px solid rgba(248,113,113,0.3);}.confirm-ok:hover{background:rgba(248,113,113,0.18);}
   /* ── MERO SYNC ── */
-  .mero-token-box{
-    background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);
-    border-radius:16px;padding:16px;
-    backdrop-filter:blur(20px);
-  }
-  .mero-status{
-    display:flex;align-items:center;gap:8px;margin-bottom:14px;
-    font-size:0.82rem;color:var(--muted2);
-  }
+  .mero-token-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px;backdrop-filter:blur(20px);}
+  .mero-status{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:0.82rem;color:var(--muted2);}
   .mero-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-  .mero-dot.red{background:#f87171;box-shadow:0 0 8px rgba(248,113,113,0.5);}
-  .mero-dot.green{background:#4ade80;box-shadow:0 0 8px rgba(74,222,128,0.5);}
-  .mero-dot.yellow{background:#fbbf24;box-shadow:0 0 8px rgba(251,191,36,0.5);}
-  .mero-compare-card{
-    background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);
-    border-radius:14px;padding:14px;margin-bottom:10px;
-    backdrop-filter:blur(10px);
-  }
-  .mero-compare-card .mc-name{
-    font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:2px;color:var(--accent);margin-bottom:8px;
-  }
-  .mero-compare-row{
-    display:flex;justify-content:space-between;align-items:center;padding:4px 0;
-    font-size:0.82rem;border-bottom:1px solid rgba(255,255,255,0.04);
-  }
+  .mero-dot.red{background:var(--red);box-shadow:0 0 8px rgba(248,113,113,0.5);}
+  .mero-dot.green{background:var(--green);box-shadow:0 0 8px rgba(74,222,128,0.5);}
+  .mero-dot.yellow{background:var(--gold);box-shadow:0 0 8px rgba(251,191,36,0.5);}
+  .mero-compare-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;}
+  .mero-compare-card .mc-name{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:2px;color:var(--accent);margin-bottom:8px;}
+  .mero-compare-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:0.82rem;border-bottom:1px solid var(--border);}
   .mero-compare-row:last-child{border-bottom:none;}
   .mc-label{color:var(--muted2);}
   .mc-val{font-weight:600;}
   .mc-val.match{color:var(--green);}
   .mc-val.mismatch{color:var(--red);}
   .mc-val.neutral{color:var(--accent);}
-  .mero-stats-box{
-    background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);
-    border-radius:14px;padding:14px;
-  }
-  .mero-stat-row{
-    display:flex;justify-content:space-between;padding:5px 0;font-size:0.82rem;
-    border-bottom:1px solid rgba(255,255,255,0.04);
-  }
-  .mero-stat-row:last-child{border-bottom:none;}
-  .mero-guide-steps{display:flex;flex-direction:column;gap:8px;}
-  .mero-step{
-    display:flex;align-items:flex-start;gap:10px;font-size:0.82rem;color:var(--muted2);
-    background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);
-    border-radius:10px;padding:10px 12px;
-  }
-  .mero-step-nr{
-    background:rgba(255,255,255,0.1);color:var(--accent);
-    width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-    font-size:0.72rem;font-weight:700;flex-shrink:0;
-  }
-  .mero-service-row{
-    display:flex;justify-content:space-between;padding:3px 0;font-size:0.78rem;
-    color:var(--muted2);
-  }
-  table th[style*="color:#60a5fa"]{background:rgba(96,165,250,0.06);}
+  .mero-suggestion{background:rgba(96,165,250,0.06);border:1px solid rgba(96,165,250,0.2);border-radius:12px;padding:12px;margin-top:10px;color:var(--blue);font-size:0.85rem;line-height:1.5;}
+  .mero-breakdown{display:flex;gap:6px;margin-top:6px;}
+  .mero-breakdown-item{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:6px 8px;text-align:center;}
+  .mero-breakdown-item .mbi-label{font-size:0.5rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+  .mero-breakdown-item .mbi-val{font-family:'Bebas Neue',sans-serif;font-size:1rem;}
+  .mero-service-row{display:flex;justify-content:space-between;padding:3px 0;font-size:0.78rem;color:var(--muted2);}
+  /* ── NECESAR ── */
+  .necesar-item{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-size:0.85rem;}
+  .necesar-item .ni-name{font-weight:700;color:var(--blue);font-size:0.78rem;min-width:60px;}
+  .necesar-item .ni-text{flex:1;color:var(--text);}
+  .necesar-item .ni-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;padding:0 4px;transition:color 0.2s;}
+  .necesar-item .ni-del:hover{color:var(--red);}
 </style>
 </head>
 <body>
@@ -684,20 +894,47 @@
     <input class="form-input" type="email" id="nb-email" placeholder="florin@exemplu.com">
     <label class="form-label">Parolă</label>
     <input class="form-input" type="password" id="nb-pass" placeholder="minim 6 caractere">
-    <label class="form-label">Obiectiv lunar (lei)</label>
+    <label class="form-label">Obiectiv 1 (lei)</label>
     <input class="form-input" type="number" id="nb-goal" placeholder="Ex: 7000" min="0">
+    <label class="form-label">Obiectiv 2 (lei)</label>
+    <input class="form-input" type="number" id="nb-goal2" placeholder="Ex: 10000" min="0">
     <button class="modal-btn" id="addBarberBtn">ADAUGĂ</button>
     <div class="modal-err" id="addBarberErr"></div>
   </div>
 </div>
 
-<!-- MODAL: Gestionează frizeri -->
+<!-- MODAL: Setări frizeri -->
 <div class="modal-overlay" id="manageModal">
-  <div class="modal">
+  <div class="modal" style="max-width:440px;">
     <button class="modal-close" id="closeManage">✕</button>
-    <h2>Gestionează</h2>
-    <div class="modal-sub">Modifică obiectivele frierilor.</div>
-    <div id="manageList"></div>
+    <h2>SETĂRI</h2>
+    <div class="modal-sub">Selectează frizerul și configurează totul.</div>
+    <select class="form-select" id="settings-barber" style="margin-bottom:14px;"></select>
+    <div id="settingsContent">
+      <div class="settings-row"><label>Obiectiv 1</label><input type="number" id="set-goal" min="0" placeholder="lei"></div>
+      <div class="settings-row"><label>Obiectiv 2</label><input type="number" id="set-goal2" min="0" placeholder="lei"></div>
+      <div class="settings-row"><label>% la Ob.1</label><input type="number" id="set-pct1" min="0" max="100" placeholder="ex: 40"> <span style="font-size:0.7rem;color:var(--muted2);">% al tău</span></div>
+      <div class="settings-row"><label>% la Ob.2</label><input type="number" id="set-pct2" min="0" max="100" placeholder="ex: 30"> <span style="font-size:0.7rem;color:var(--muted2);">% al tău</span></div>
+      <div style="border-top:1px solid rgba(255,255,255,0.07);margin:14px 0;padding-top:14px;">
+        <div style="font-size:0.68rem;color:var(--muted2);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px;">Orar săptămânal</div>
+        <div id="set-schedule" style="display:flex;flex-direction:column;gap:6px;">
+          <div class="sched-row" data-day="1"><div class="sched-day">L</div><input type="checkbox" class="sched-check" checked><input type="time" class="sched-start" value="10:00"><span style="color:var(--muted);font-size:0.75rem;">—</span><input type="time" class="sched-end" value="20:00"><input type="number" class="sched-break" placeholder="P" min="0" title="Pauza (min)"></div>
+          <div class="sched-row" data-day="2"><div class="sched-day">Ma</div><input type="checkbox" class="sched-check" checked><input type="time" class="sched-start" value="10:00"><span style="color:var(--muted);font-size:0.75rem;">—</span><input type="time" class="sched-end" value="20:00"><input type="number" class="sched-break" placeholder="P" min="0" title="Pauza (min)"></div>
+          <div class="sched-row" data-day="3"><div class="sched-day">Mi</div><input type="checkbox" class="sched-check" checked><input type="time" class="sched-start" value="10:00"><span style="color:var(--muted);font-size:0.75rem;">—</span><input type="time" class="sched-end" value="20:00"><input type="number" class="sched-break" placeholder="P" min="0" title="Pauza (min)"></div>
+          <div class="sched-row" data-day="4"><div class="sched-day">J</div><input type="checkbox" class="sched-check" checked><input type="time" class="sched-start" value="10:00"><span style="color:var(--muted);font-size:0.75rem;">—</span><input type="time" class="sched-end" value="20:00"><input type="number" class="sched-break" placeholder="P" min="0" title="Pauza (min)"></div>
+          <div class="sched-row" data-day="5"><div class="sched-day">V</div><input type="checkbox" class="sched-check" checked><input type="time" class="sched-start" value="10:00"><span style="color:var(--muted);font-size:0.75rem;">—</span><input type="time" class="sched-end" value="20:00"><input type="number" class="sched-break" placeholder="P" min="0" title="Pauza (min)"></div>
+          <div class="sched-row" data-day="6"><div class="sched-day">S</div><input type="checkbox" class="sched-check" checked><input type="time" class="sched-start" value="10:00"><span style="color:var(--muted);font-size:0.75rem;">—</span><input type="time" class="sched-end" value="20:00"><input type="number" class="sched-break" placeholder="P" min="0" title="Pauza (min)"></div>
+          <div class="sched-row" data-day="0"><div class="sched-day">D</div><input type="checkbox" class="sched-check"><input type="time" class="sched-start" value="10:00"><span style="color:var(--muted);font-size:0.75rem;">—</span><input type="time" class="sched-end" value="20:00"><input type="number" class="sched-break" placeholder="P" min="0" title="Pauza (min)"></div>
+        </div>
+      </div>
+      <div style="border-top:1px solid rgba(255,255,255,0.07);margin:14px 0;padding-top:14px;">
+        <div style="font-size:0.68rem;color:var(--muted2);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px;">Programare medie</div>
+        <div class="settings-row"><label>Preț mediu</label><input type="number" id="set-avgprice" min="0" placeholder="din Mero"> <span style="font-size:0.7rem;color:var(--muted2);">lei/programare</span></div>
+        <div class="settings-row"><label>Durată medie</label><input type="number" id="set-avgduration" min="0" placeholder="ex: 45"> <span style="font-size:0.7rem;color:var(--muted2);">min/programare</span></div>
+      </div>
+      <button class="modal-btn" id="saveSettingsBtn">SALVEAZĂ</button>
+      <div class="modal-err" id="settingsErr"></div>
+    </div>
   </div>
 </div>
 
@@ -731,6 +968,47 @@
     <button class="modal-btn" id="addVacBtn" style="margin-top:12px;">MARCHEAZĂ ZI LIBERĂ</button>
     <div class="modal-err" id="vacErr"></div>
     <div id="vacDaysList" style="margin-top:14px;display:flex;flex-wrap:wrap;gap:6px;"></div>
+  </div>
+</div>
+
+<!-- MODAL: Gestionare Stoc Produse -->
+<div class="modal-overlay" id="stockModal">
+  <div class="modal" style="max-width:460px;">
+    <button class="modal-close" id="closeStock">✕</button>
+    <h2>STOC PRODUSE</h2>
+    <div class="modal-sub">Adaugă produse și gestionează stocul.</div>
+    <div style="display:flex;gap:6px;margin-bottom:6px;">
+      <input class="form-input" type="text" id="stock-name" placeholder="Nume produs" style="flex:2">
+      <input class="form-input" type="number" id="stock-qty" placeholder="Buc" min="0" style="flex:1;min-width:50px;">
+    </div>
+    <div style="display:flex;gap:6px;margin-bottom:12px;">
+      <input class="form-input" type="number" id="stock-price-buy" placeholder="Preț achiziție" min="0" style="flex:1">
+      <input class="form-input" type="number" id="stock-price-barber" placeholder="Preț frizer" min="0" style="flex:1">
+      <input class="form-input" type="number" id="stock-price-client" placeholder="Preț client" min="0" style="flex:1">
+    </div>
+    <button class="modal-btn" id="addStockBtn" style="margin-top:0;">ADAUGĂ PRODUS</button>
+    <div class="modal-err" id="stockErr"></div>
+    <div id="stockList" style="margin-top:14px;display:flex;flex-direction:column;gap:6px;"></div>
+    <div class="section-title" style="margin-top:18px;">ÎNREGISTREAZĂ VÂNZARE</div>
+    <div style="margin-bottom:12px;">
+      <div style="display:flex;gap:6px;margin-bottom:6px;">
+        <select class="form-select" id="admin-sell-product" style="flex:2"></select>
+        <input class="form-input" type="number" id="admin-sell-qty" placeholder="Buc" min="1" value="1" style="flex:1;min-width:50px;">
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:6px;">
+        <select class="form-select" id="admin-sell-who" style="flex:1">
+          <option value="admin">Eu (Admin) — preț client</option>
+        </select>
+        <select class="form-select" id="admin-sell-type" style="flex:1">
+          <option value="admin">Vânzare client</option>
+          <option value="client">Revânzare (preț frizer)</option>
+          <option value="personal">Uz personal (preț achiziție)</option>
+        </select>
+      </div>
+      <button class="modal-btn" id="adminSellBtn" style="margin-top:0;width:100%;padding:10px;">ÎNREGISTREAZĂ VÂNZARE</button>
+    </div>
+    <div class="section-title" style="margin-top:12px;">ISTORIC VÂNZĂRI</div>
+    <div id="salesHistory" style="max-height:300px;overflow-y:auto;display:flex;flex-direction:column;gap:4px;"></div>
   </div>
 </div>
 
@@ -810,7 +1088,8 @@
     </div>
     <h1>THE CELL</h1>
     <p id="headerSub">Evidență</p>
-    <div class="hdr-right">
+    <div class="hdr-right" style="display:flex;gap:6px;">
+      <button class="hdr-btn" id="themeToggle" title="Schimbă tema">◑</button>
       <button class="hdr-btn red" id="logoutBtn">Ieși ↩</button>
     </div>
   </header>
@@ -818,12 +1097,26 @@
   <!-- ADMIN VIEW -->
   <div id="adminView" style="display:none">
     <div class="tab-bar">
-      <button class="tab-btn active" data-tab="adminMain">📊 Rapoarte</button>
-      <button class="tab-btn" data-tab="adminNotif">🔔 Notificări<span id="adminNotifBadge" class="chat-unread" style="display:none">●</span></button>
-      <button class="tab-btn" data-tab="adminChat">💬 Chat<span id="adminChatBadge" class="chat-unread" style="display:none">●</span></button>
-      <button class="tab-btn" data-tab="adminMero">📱 Mero</button>
+      <button class="tab-btn active" data-tab="adminMain">Rapoarte</button>
+      <button class="tab-btn" data-tab="adminFinance">Finanțe</button>
+      <button class="tab-btn" data-tab="adminNotif">Notificări<span id="adminNotifBadge" class="chat-unread" style="display:none">●</span></button>
+      <button class="tab-btn" data-tab="adminChat">Chat<span id="adminChatBadge" class="chat-unread" style="display:none">●</span></button>
+      <button class="tab-btn" data-tab="adminMero">Mero</button>
+      <button class="tab-btn" data-tab="adminNecesar">Necesar</button>
     </div>
     <div id="adminMain" class="tab-pane active">
+    <!-- Anunț fixat admin -->
+    <div id="adminAnnounceBox" style="display:none;background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.25);border-radius:12px;padding:12px 14px;margin-bottom:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <div style="font-size:0.65rem;color:var(--gold);text-transform:uppercase;letter-spacing:1.5px;font-weight:700;">Anunț</div>
+        <div style="display:flex;gap:6px;">
+          <button class="hdr-btn" id="editAnnounce" style="font-size:0.65rem;padding:3px 8px;">Editează</button>
+          <button class="hdr-btn red" id="deleteAnnounce" style="font-size:0.65rem;padding:3px 8px;">Șterge</button>
+        </div>
+      </div>
+      <div id="adminAnnounceText" style="font-size:0.85rem;color:var(--text);line-height:1.5;"></div>
+    </div>
+    <div style="margin-bottom:10px;"><button class="tool-btn" id="addAnnounceBtn"><svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;stroke-width:2;fill:none;"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Anunț nou</button></div>
     <div class="date-bar">
       <label>Data:</label>
       <input type="date" id="currentDate">
@@ -834,15 +1127,16 @@
       <div><div class="s-label">Zile lucrate</div><div class="s-value" id="sumDays">0</div></div>
     </div>
     <div class="action-bar">
-      <button class="action-btn btn-blue" id="openAddBarber">➕ Frizer</button>
-      <button class="action-btn btn-blue" id="openManage">✂️ Obiective</button>
-      <button class="action-btn btn-gold" id="openAddEntry">💰 Sumă</button>
-      <button class="action-btn btn-blue" id="openVac">🏖 Concediu</button>
+      <button class="action-btn btn-blue" id="openAddBarber"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg> Frizer</button>
+      <button class="action-btn btn-blue" id="openManage"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> Setări</button>
+      <button class="action-btn btn-gold" id="openAddEntry"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Sumă</button>
+      <button class="action-btn btn-blue" id="openVac"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Concediu</button>
+      <button class="action-btn btn-green" id="openStock"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg> Stoc</button>
     </div>
-    <div class="action-bar" style="margin-top:-10px;">
-      <button class="action-btn btn-green" id="exportBtn">💾 Backup</button>
-      <button class="action-btn btn-green" id="importBtn">📂 Restaurare</button>
-      <button class="action-btn btn-green" id="openExportExcel">📊 Excel</button>
+    <div class="tools-bar">
+      <button class="tool-btn" id="exportBtn"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Backup</button>
+      <button class="tool-btn" id="importBtn"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Restaurare</button>
+      <button class="tool-btn" id="openExportExcel"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Excel</button>
       <input type="file" id="importFile" accept=".json" style="display:none">
     </div>
     <div class="barbers-grid" id="adminBarbersGrid"></div>
@@ -859,6 +1153,32 @@
       </table>
     </div>
     </div><!-- /adminMain -->
+    <div id="adminFinance" class="tab-pane">
+      <div class="month-nav">
+        <button id="finPrevMonth">‹</button>
+        <span id="finMonthLabel"></span>
+        <button id="finNextMonth">›</button>
+      </div>
+      <div class="summary cols2" style="margin-bottom:14px;">
+        <div><div class="s-label">Încasări servicii</div><div class="s-value green" id="finServices">0 lei</div></div>
+        <div><div class="s-label">Profit produse</div><div class="s-value" id="finProducts">0 lei</div></div>
+      </div>
+      <div class="summary cols2" style="margin-bottom:14px;">
+        <div><div class="s-label">Cheltuieli</div><div class="s-value" style="color:var(--red);" id="finExpenses">0 lei</div></div>
+        <div><div class="s-label">Profit net</div><div class="s-value big" id="finProfit">0 lei</div></div>
+      </div>
+      <div class="section-title">BREAKDOWN PER FRIZER</div>
+      <div id="finBarberBreakdown" style="display:flex;flex-direction:column;gap:6px;margin-bottom:18px;"></div>
+      <div class="section-title">CHELTUIELI LUNARE</div>
+      <div style="margin-bottom:10px;">
+        <input class="form-input" type="text" id="exp-name" placeholder="Nume cheltuială (ex: Chirie, Utilități...)" style="width:100%;margin-bottom:6px;">
+        <input class="form-input" type="number" id="exp-amount" placeholder="Sumă (lei)" min="0" style="width:100%;margin-bottom:6px;">
+        <button class="modal-btn" id="addExpenseBtn" style="margin-top:0;width:100%;padding:12px;">+ Adaugă cheltuială</button>
+      </div>
+      <div id="expensesList" style="display:flex;flex-direction:column;gap:4px;margin-bottom:18px;"></div>
+      <div class="section-title">PROFIT ULTIMELE 6 LUNI</div>
+      <div class="chart-wrap"><canvas id="finChart"></canvas></div>
+    </div><!-- /adminFinance -->
     <div id="adminNotif" class="tab-pane">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
         <div class="section-title" style="margin-bottom:0;">ISTORIC NOTIFICĂRI</div>
@@ -885,26 +1205,17 @@
     <div id="adminMero" class="tab-pane">
       <div class="section-title">SINCRONIZARE MERO</div>
       <div class="mero-token-box">
-        <div class="mero-status" id="meroStatus">
-          <span class="mero-dot red"></span> Neconectat
-        </div>
-        <div style="margin-bottom:12px;">
-          <label class="form-label" style="margin-top:0;">URL Proxy</label>
-          <input type="text" class="form-input" id="meroProxy" placeholder="https://mero-proxy.xxxxx.workers.dev" style="font-size:0.8rem;">
-        </div>
+        <div class="mero-status" id="meroStatus"><span class="mero-dot red"></span> Neconectat</div>
         <div style="margin-bottom:12px;">
           <label class="form-label" style="margin-top:0;">Token Bearer</label>
           <input type="password" class="form-input" id="meroToken" placeholder="Lipește token-ul aici..." style="font-size:0.8rem;">
-          <div style="font-size:0.68rem;color:var(--muted);margin-top:6px;">
-            🔑 Copiază din Chrome DevTools → Network → Headers → Authorization
-          </div>
+          <div style="font-size:0.68rem;color:var(--muted);margin-top:6px;">🔑 DevTools → Network → Headers → Authorization</div>
         </div>
         <div style="display:flex;gap:8px;">
-          <button class="action-btn btn-blue" id="meroSaveToken" style="flex:1;">💾 Salvează token</button>
+          <button class="action-btn btn-blue" id="meroSaveToken" style="flex:1;">💾 Salvează</button>
           <button class="action-btn btn-gold" id="meroSync" style="flex:1;">🔄 Sincronizează</button>
         </div>
       </div>
-
       <div id="meroSelectMonth" style="display:none;">
         <div class="month-nav" style="margin-top:16px;">
           <button id="meroPrevMonth">‹</button>
@@ -913,71 +1224,69 @@
         </div>
         <button class="action-btn btn-gold" id="meroSyncMonth" style="margin-top:8px;width:100%;">📊 Compară luna selectată</button>
       </div>
-
       <div id="meroResults" style="display:none;margin-top:16px;">
         <div class="section-title">COMPARAȚIE: APLICAȚIE vs MERO</div>
         <div id="meroCompareCards"></div>
         <div class="section-title" style="margin-top:16px;">STATISTICI MERO</div>
         <div id="meroStatsBox"></div>
       </div>
-
-      <div id="meroGuide" style="margin-top:20px;">
-        <div class="section-title">SETUP (O SINGURĂ DATĂ)</div>
-        <div class="mero-guide-steps">
-          <div class="mero-step">
-            <span class="mero-step-nr">1</span>
-            <span>Intră pe <strong>workers.cloudflare.com</strong> → Sign Up (cont gratuit)</span>
-          </div>
-          <div class="mero-step">
-            <span class="mero-step-nr">2</span>
-            <span>Dashboard → <strong>Workers & Pages</strong> → <strong>Create</strong> → <strong>Create Worker</strong></span>
-          </div>
-          <div class="mero-step">
-            <span class="mero-step-nr">3</span>
-            <span>Dă-i un nume (ex: <strong>mero-proxy</strong>) → <strong>Deploy</strong> → apoi <strong>Edit Code</strong></span>
-          </div>
-          <div class="mero-step">
-            <span class="mero-step-nr">4</span>
-            <span>Șterge tot codul existent și lipește codul proxy (vezi fișierul <strong>worker.js</strong>)</span>
-          </div>
-          <div class="mero-step">
-            <span class="mero-step-nr">5</span>
-            <span>Apasă <strong>Save and Deploy</strong> → copiază URL-ul (ex: <strong>mero-proxy.xxx.workers.dev</strong>)</span>
-          </div>
-          <div class="mero-step">
-            <span class="mero-step-nr">6</span>
-            <span>Lipește URL-ul proxy sus + token-ul Bearer din Mero DevTools</span>
-          </div>
-        </div>
-        <div style="margin-top:12px;font-size:0.75rem;color:var(--muted);">
-          ℹ️ Proxy-ul e gratuit (100.000 cereri/zi), fără card, token-ul ține 6 luni.
-        </div>
-      </div>
     </div><!-- /adminMero -->
+
+    <div id="adminNecesar" class="tab-pane">
+      <div class="section-title">NECESAR PRODUSE</div>
+      <div style="display:flex;gap:8px;margin-bottom:12px;">
+        <input class="form-input" type="text" id="necesarInput" placeholder="Ce produs e necesar? (ex: șampon, pudră...)" style="flex:1;">
+        <button class="action-btn btn-blue" id="necesarAddBtn" style="flex:none;padding:10px 16px;">+ Adaugă</button>
+      </div>
+      <div id="necesarList" style="display:flex;flex-direction:column;gap:4px;">
+        <div style="color:var(--muted);font-size:0.82rem;text-align:center;padding:20px 0;">Se încarcă...</div>
+      </div>
+    </div><!-- /adminNecesar -->
 
   </div>
 
   <!-- FRIZER VIEW -->
   <div id="barberView" style="display:none">
     <div class="tab-bar">
-      <button class="tab-btn active" data-tab="barberMain">📊 Raport</button>
-      <button class="tab-btn" data-tab="barberChat">💬 Chat<span id="barberChatBadge" class="chat-unread" style="display:none">●</span></button>
+      <button class="tab-btn active" data-tab="barberMain">Raport</button>
+      <button class="tab-btn" data-tab="barberChat">Chat<span id="barberChatBadge" class="chat-unread" style="display:none">●</span></button>
+      <button class="tab-btn" data-tab="barberNecesar">Necesar</button>
     </div>
     <div id="barberMain" class="tab-pane active">
+    <!-- Anunț fixat pentru frizeri -->
+    <div id="barberAnnounceBox" style="display:none;background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.25);border-radius:12px;padding:12px 14px;margin-bottom:14px;">
+      <div style="font-size:0.65rem;color:var(--gold);text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:4px;">Anunț</div>
+      <div id="barberAnnounceText" style="font-size:0.85rem;color:var(--text);line-height:1.5;"></div>
+    </div>
     <div class="month-nav">
       <button id="prevMonth">‹</button>
       <span id="monthLabel"></span>
       <button id="nextMonth">›</button>
       <button class="action-btn btn-green" id="openExportExcelBarber" style="flex:none;padding:6px 12px;font-size:0.75rem;">📊 Export</button>
     </div>
-    <div class="summary cols2">
+    <div class="summary cols3">
       <div><div class="s-label">Total lună</div><div class="s-value big" id="bSumMonth">0 lei</div></div>
-      <div><div class="s-label">Obiectiv</div><div class="s-value" id="bGoal">0 lei</div></div>
+      <div><div class="s-label">Obiectiv 1</div><div class="s-value" id="bGoal">0 lei</div></div>
+      <div><div class="s-label">Obiectiv 2</div><div class="s-value" id="bGoal2">0 lei</div></div>
     </div>
     <div class="barber-card" id="myCard">
       <div class="barber-name" id="myName">—</div>
-      <div class="barber-goal-txt" id="myGoalTxt">Obiectiv lunar: —</div>
-      <div class="progress-wrap"><div class="progress-bar" id="myProgress" style="width:0%"></div></div>
+      <div class="barber-goal-txt" id="myGoalTxt">Obiectiv 1: — · Obiectiv 2: —</div>
+      <div style="display:flex;gap:8px;margin-bottom:12px;">
+        <div style="flex:1"><div style="font-size:0.55rem;color:var(--muted);letter-spacing:1px;margin-bottom:2px;" id="myProgressLabel1">OB.1 — 0%</div><div class="progress-wrap"><div class="progress-bar" id="myProgress" style="width:0%"></div></div></div>
+        <div style="flex:1"><div style="font-size:0.55rem;color:var(--muted);letter-spacing:1px;margin-bottom:2px;" id="myProgressLabel2">OB.2 — 0%</div><div class="progress-wrap"><div class="progress-bar" id="myProgress2" style="width:0%"></div></div></div>
+      </div>
+      <!-- Stats Dashboard -->
+      <div class="stats-grid" id="myStatsGrid">
+        <div class="stat-card"><div class="stat-label">Câștigul tău</div><div class="stat-value green" id="myEarnings">0 lei</div></div>
+        <div class="stat-card"><div class="stat-label">Grad ocupare</div><div class="stat-value" id="myOccupancy">0%</div></div>
+        <div class="stat-card"><div class="stat-label">Estimare final lună</div><div class="stat-value" id="myEstimate">0 lei</div></div>
+        <div class="stat-card"><div class="stat-label">Programări/zi necesare</div><div class="stat-value" id="myNeeded">0</div></div>
+      </div>
+      <div class="motivation-box" id="myMotivation">
+        <div class="motivation-msg" id="myMotivMsg">Se calculează...</div>
+        <div class="motivation-sub" id="myMotivSub"></div>
+      </div>
       <div class="add-entry-box">
         <label>Adaugă încasare</label>
         <div class="entry-inputs">
@@ -1005,9 +1314,20 @@
         <button class="notes-save-btn" id="myNotesSave">Salvează</button>
         <span class="notes-saved" id="myNotesSaved">✓ Salvat</span>
       </div>
+      <div class="notes-box" style="margin-top:8px;border-color:rgba(74,222,128,0.15);">
+        <label style="color:var(--green);">Produse — Vinde din stoc</label>
+        <div id="myStockList" style="display:flex;flex-direction:column;gap:6px;margin-top:8px;">
+          <div style="color:var(--muted);font-size:0.82rem;text-align:center;padding:10px 0;">Se încarcă produsele...</div>
+        </div>
+        <div style="margin-top:10px;border-top:1px solid rgba(255,255,255,0.07);padding-top:10px;display:flex;gap:8px;">
+          <div style="flex:1;text-align:center;"><div style="font-size:0.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;">Profit produse</div><div style="font-family:Bebas Neue;font-size:1.1rem;color:var(--green);" id="myProductProfit">0 lei</div></div>
+          <div style="flex:1;text-align:center;"><div style="font-size:0.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;">Cheltuieli personale</div><div style="font-family:Bebas Neue;font-size:1.1rem;color:var(--red);" id="myPersonalExpenses">0 lei</div></div>
+        </div>
+      </div>
       <div class="barber-totals">
         <div class="b-total-item"><div class="b-total-label">Luna</div><div class="b-total-val green" id="myMonthTotal">0 lei</div></div>
-        <div class="b-total-item"><div class="b-total-label">Progres</div><div class="b-total-val dim" id="myPct">0%</div></div>
+        <div class="b-total-item"><div class="b-total-label">Ob.1</div><div class="b-total-val dim" id="myPct">0%</div></div>
+        <div class="b-total-item"><div class="b-total-label">Ob.2</div><div class="b-total-val dim" id="myPct2">0%</div></div>
         <div class="b-total-item"><div class="b-total-label">Zile libere</div><div class="b-total-val gold" id="myVacCount">0</div></div>
       </div>
     </div>
@@ -1034,6 +1354,18 @@
         </div>
       </div>
     </div><!-- /barberChat -->
+
+    <div id="barberNecesar" class="tab-pane">
+      <div class="section-title">NECESAR PRODUSE</div>
+      <div style="display:flex;gap:8px;margin-bottom:12px;">
+        <input class="form-input" type="text" id="necesarInputBarber" placeholder="Ce produs e necesar?" style="flex:1;">
+        <button class="action-btn btn-blue" id="necesarAddBtnBarber" style="flex:none;padding:10px 16px;">+ Adaugă</button>
+      </div>
+      <div id="necesarListBarber" style="display:flex;flex-direction:column;gap:4px;">
+        <div style="color:var(--muted);font-size:0.82rem;text-align:center;padding:20px 0;">Se încarcă...</div>
+      </div>
+    </div><!-- /barberNecesar -->
+
   </div>
 </div>
 
@@ -1121,6 +1453,16 @@ let barberChart   = null;
 let adminChart    = null;
 let adminYearChart = null;
 let undoStack     = [];
+
+// Încarcă undo stack din localStorage
+try {
+  var savedUndo = localStorage.getItem('thecell_undoStack');
+  if(savedUndo) undoStack = JSON.parse(savedUndo);
+} catch(e){}
+
+function saveUndoStack(){
+  try { localStorage.setItem('thecell_undoStack', JSON.stringify(undoStack)); } catch(e){}
+}
 let viewMonth     = new Date().toISOString().slice(0,7);
 let adminInitDone = false;
 let barberInitDone = false;
@@ -1131,7 +1473,7 @@ function fmt(n){ return Number(n).toLocaleString('ro-RO')+' lei'; }
 function getDate(){ return document.getElementById('currentDate').value || new Date().toISOString().slice(0,10); }
 function show(id){ document.getElementById(id).style.display='block'; }
 function hide(id){ document.getElementById(id).style.display='none'; }
-function updateUndoBtn(){ document.getElementById('undoBtn').disabled = undoStack.length===0; }
+function updateUndoBtn(){ document.getElementById('undoBtn').disabled = undoStack.length===0; saveUndoStack(); }
 function openModal(id){ document.getElementById(id).classList.add('open'); }
 function closeModal(id){ document.getElementById(id).classList.remove('open'); }
 
@@ -1166,7 +1508,7 @@ onAuthStateChanged(auth, async function(user){
   isAdmin=adminSnap.exists();
   if(!isAdmin){
     var bSnap=await getDoc(doc(db,'barbers',user.uid));
-    barberData=bSnap.exists()?{ id:user.uid,...bSnap.data() }:{ id:user.uid,name:user.email,goal:0 };
+    barberData=bSnap.exists()?{ id:user.uid,...bSnap.data() }:{ id:user.uid,name:user.email,goal:0,goal2:0 };
   }
   initDate();
   if(isAdmin) showAdminView(); else showBarberView();
@@ -1218,7 +1560,7 @@ async function getAllVacForMonth(monthKey){
 // ── ADMIN ──
 async function showAdminView(){
   document.getElementById('headerSub').textContent='Admin · Evidență completă';
-  show('adminView'); hide('barberView'); show('undoBtn');
+  show('adminView'); hide('barberView'); show('undoBtn'); updateUndoBtn();
   maybeInitChat('Admin');
   if(!adminInitDone){
     adminInitDone=true;
@@ -1230,9 +1572,16 @@ async function showAdminView(){
     document.getElementById('addBarberModal').addEventListener('click',function(e){ if(e.target===this) closeModal('addBarberModal'); });
     document.getElementById('addBarberBtn').addEventListener('click',addNewBarber);
 
-    document.getElementById('openManage').addEventListener('click',async function(){ await renderManageList(); openModal('manageModal'); });
+    document.getElementById('openManage').addEventListener('click',async function(){ await openSettingsModal(); });
     document.getElementById('closeManage').addEventListener('click',function(){ closeModal('manageModal'); });
     document.getElementById('manageModal').addEventListener('click',function(e){ if(e.target===this) closeModal('manageModal'); });
+    document.getElementById('settings-barber').addEventListener('change',function(){ loadBarberSettings(this.value); });
+    document.getElementById('saveSettingsBtn').addEventListener('click',saveBarberSettings);
+    document.querySelectorAll('#set-schedule .sched-check').forEach(function(chk){
+      chk.addEventListener('change',function(){
+        this.closest('.sched-row').classList.toggle('disabled',!this.checked);
+      });
+    });
 
     document.getElementById('openAddEntry').addEventListener('click',async function(){
       var barbers=await getBarbers();
@@ -1257,6 +1606,49 @@ async function showAdminView(){
     document.getElementById('addVacBtn').addEventListener('click',addVacAdmin);
 
     document.getElementById('undoBtn').addEventListener('click',doUndo);
+
+    // Stock Modal
+    document.getElementById('openStock').addEventListener('click',async function(){
+      try { await renderStockModal(); } catch(err){ console.error('Stock modal error:',err); }
+      openModal('stockModal');
+    });
+    document.getElementById('closeStock').addEventListener('click',function(){ closeModal('stockModal'); });
+    document.getElementById('stockModal').addEventListener('click',function(e){ if(e.target===this) closeModal('stockModal'); });
+    document.getElementById('addStockBtn').addEventListener('click',addStockProduct);
+    document.getElementById('adminSellBtn').addEventListener('click',adminSellProduct);
+
+    // Theme toggle
+    document.getElementById('themeToggle').addEventListener('click',function(){
+      document.body.classList.toggle('light');
+      localStorage.setItem('thecell_theme',document.body.classList.contains('light')?'light':'dark');
+      this.textContent=document.body.classList.contains('light')?'◐':'◑';
+    });
+
+    // Anunțuri
+    document.getElementById('addAnnounceBtn').addEventListener('click', async function(){
+      var text=prompt('Scrie anunțul:');
+      if(!text||!text.trim()) return;
+      try {
+        await setDoc(doc(db,'announcements','current'),{text:text.trim(),ts:Date.now()});
+        toast('Anunț publicat!','success');
+        loadAnnouncement();
+      } catch(err){ toast('Eroare: '+err.message,'error'); }
+    });
+    document.getElementById('editAnnounce').addEventListener('click', async function(){
+      var cur=document.getElementById('adminAnnounceText').textContent;
+      var text=prompt('Editează anunțul:',cur);
+      if(text===null) return;
+      if(!text.trim()){ try { await deleteDoc(doc(db,'announcements','current')); loadAnnouncement(); } catch(e){} return; }
+      try { await setDoc(doc(db,'announcements','current'),{text:text.trim(),ts:Date.now()}); toast('Anunț actualizat!','success'); loadAnnouncement(); } catch(err){ toast('Eroare: '+err.message,'error'); }
+    });
+    document.getElementById('deleteAnnounce').addEventListener('click', async function(){
+      var ok3=await showConfirm('Șterge anunț','Ești sigur?','🗑️'); if(!ok3) return;
+      try { await deleteDoc(doc(db,'announcements','current')); toast('Anunț șters!','success'); loadAnnouncement(); } catch(err){ toast('Eroare: '+err.message,'error'); }
+    });
+    loadAnnouncement();
+
+    // Finanțe
+    initFinanceTab();
 
     // Backup
     document.getElementById('exportBtn').addEventListener('click',exportBackup);
@@ -1319,15 +1711,39 @@ async function renderAdminView(){
     var mTotal=entries.reduce(function(s,e){ return s+e.amount; },0);
     var dTotal=entries.filter(function(e){ return e.date===dateKey; }).reduce(function(s,e){ return s+e.amount; },0);
     var goal=b.goal||0;
+    var goal2=b.goal2||0;
     var pct=goal>0?Math.min(100,Math.round(mTotal/goal*100)):0;
+    var pct2=goal2>0?Math.min(100,Math.round(mTotal/goal2*100)):0;
     var reached=goal>0&&mTotal>=goal;
+    var reached2=goal2>0&&mTotal>=goal2;
     var sorted=entries.slice().sort(function(a,z){ return z.date.localeCompare(a.date)||z.ts-a.ts; });
     var card=document.createElement('div');
-    card.className='barber-card'+(reached?' goal-reached':'');
+    card.className='barber-card'+(reached2?' goal2-reached':(reached?' goal-reached':''));
+    var goalReachedLabel = reached2 ? 'OBIECTIV 2 ATINS' : (reached ? 'OBIECTIV 1 ATINS' : '');
+    var badgeStyle = reached2 
+      ? 'background:rgba(251,191,36,0.15);color:var(--gold);border:1px solid rgba(251,191,36,0.4);text-shadow:0 0 10px var(--gold-glow);'
+      : 'background:rgba(74,222,128,0.15);color:var(--green);border:1px solid rgba(74,222,128,0.3);text-shadow:0 0 10px var(--green-glow);';
+    // Grad de ocupare admin
+    var hoursPassed=getHoursPassed(b,monthKey,(allVac[b.id]||[]));
+    var wDaysPassed=getWorkingDaysPassed(b,monthKey,(allVac[b.id]||[]));
+    var wDaysTotal=getWorkingDaysInMonth(b,monthKey,(allVac[b.id]||[]));
+    var adminPct=getCurrentAdminPct(mTotal,b);
+    var breakdown=calcMonthBreakdown(entries,b);
+    var realRevenue=breakdown.totalReal;
+    var barberEarn=breakdown.barberEarnings;
+    var maxCap=calcCapacity(hoursPassed,b);
+    var occupancy=maxCap>0?Math.min(100,Math.round(realRevenue/maxCap*100)):0;
     card.innerHTML=
       '<div class="barber-name">'+esc(b.name)+'</div>'+
-      '<div class="barber-goal-txt">Obiectiv: '+fmt(goal)+' &nbsp;·&nbsp; Azi: '+fmt(dTotal)+'</div>'+
-      '<div class="progress-wrap"><div class="progress-bar" style="width:'+pct+'%"></div></div>'+
+      (goalReachedLabel?'<div style="position:absolute;top:12px;right:12px;'+badgeStyle+'font-size:0.58rem;font-weight:700;letter-spacing:1px;padding:3px 9px;border-radius:20px;">'+goalReachedLabel+'</div>':'')+
+      '<div class="barber-goal-txt">Ob.1: '+fmt(goal)+' · Ob.2: '+fmt(goal2)+' · Azi: '+fmt(dTotal)+'</div>'+
+      '<div style="display:flex;gap:8px;margin-bottom:4px;"><div style="flex:1"><div style="font-size:0.55rem;color:var(--muted);letter-spacing:1px;margin-bottom:2px;">OB.1 — '+pct+'%</div><div class="progress-wrap"><div class="progress-bar" style="width:'+pct+'%"></div></div></div>'+
+      '<div style="flex:1"><div style="font-size:0.55rem;color:var(--muted);letter-spacing:1px;margin-bottom:2px;">OB.2 — '+pct2+'%</div><div class="progress-wrap"><div class="progress-bar" style="width:'+pct2+'%"></div></div></div></div>'+
+      '<div style="display:flex;gap:6px;margin-bottom:10px;">'+
+        '<div style="flex:1;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:8px;padding:6px 8px;text-align:center;"><div style="font-size:0.5rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;">Ocupare</div><div style="font-family:Bebas Neue;font-size:1rem;color:'+(occupancy>=70?'var(--green)':occupancy>=40?'var(--gold)':'var(--red)')+';">'+occupancy+'%</div></div>'+
+        '<div style="flex:1;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:8px;padding:6px 8px;text-align:center;"><div style="font-size:0.5rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;">Câștig frizer</div><div style="font-family:Bebas Neue;font-size:1rem;color:var(--green);">'+fmt(barberEarn)+'</div></div>'+
+        '<div style="flex:1;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:8px;padding:6px 8px;text-align:center;"><div style="font-size:0.5rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;">Admin %</div><div style="font-family:Bebas Neue;font-size:1rem;color:var(--accent2);">'+adminPct+'%</div></div>'+
+      '</div>'+
       '<div class="entries">'+sorted.map(function(e){
         var isPaid = e.receivedCash !== false;
         var status = e.status || 'approved';
@@ -1344,8 +1760,9 @@ async function renderAdminView(){
       }).join('')+'</div>':'')+
       '<div class="barber-totals">'+
         '<div class="b-total-item"><div class="b-total-label">Luna</div><div class="b-total-val green">'+fmt(mTotal)+'</div></div>'+
-        '<div class="b-total-item"><div class="b-total-label">Progres</div><div class="b-total-val dim">'+pct+'%</div></div>'+
-        '<div class="b-total-item"><div class="b-total-label">Ramas</div><div class="b-total-val gold">'+fmt(Math.max(0,goal-mTotal))+'</div></div>'+
+        '<div class="b-total-item"><div class="b-total-label">Ob.1</div><div class="b-total-val dim">'+pct+'%</div></div>'+
+        '<div class="b-total-item"><div class="b-total-label">Ob.2</div><div class="b-total-val dim">'+pct2+'%</div></div>'+
+        '<div class="b-total-item"><div class="b-total-label">Rămas Ob.1</div><div class="b-total-val gold">'+fmt(Math.max(0,goal-mTotal))+'</div></div>'+
       '</div>'+
       '<div class="notes-box">'+
         '<label>📝 Notițe</label>'+
@@ -1356,9 +1773,13 @@ async function renderAdminView(){
     card.querySelector('.notes-save-btn').addEventListener('click', async function(){
       var bid=this.dataset.bid;
       var txt=card.querySelector('.notes-textarea').value;
-      await setDoc(doc(db,'notes',bid),{ text:txt, updatedAt:Date.now() });
-      var savedEl=card.querySelector('.notes-saved');
-      savedEl.style.display='inline'; setTimeout(function(){ savedEl.style.display='none'; },2000);
+      try {
+        await setDoc(doc(db,'notes',bid),{ text:txt, updatedAt:Date.now() });
+        var savedEl=card.querySelector('.notes-saved');
+        savedEl.style.display='inline'; setTimeout(function(){ savedEl.style.display='none'; },2000);
+      } catch(err){
+        toast('Eroare la salvare notițe: '+err.message,'error');
+      }
     });
     card.querySelectorAll('.e-approve').forEach(function(btn){
       btn.addEventListener('click', async function(){
@@ -1415,103 +1836,84 @@ async function renderAdminView(){
   renderAdminChart(barbers, allEntries);
   await renderAdminYearChart(barbers);
 
-  // Table
+  // Table with optional Mero columns
   var allDays=new Set();
   Object.values(allEntries).forEach(function(arr){ arr.forEach(function(e){ allDays.add(e.date); }); });
   Object.values(allVac).forEach(function(arr){ arr.forEach(function(v){ allDays.add(v.date); }); });
   allDays=Array.from(allDays).sort();
 
-  // Check if Mero data is cached for this month
-  var hasMero = window._meroDaily && window._meroDaily.monthKey === monthKey;
-
-  var headCols = barbers.map(function(b){ 
-    return '<th>'+esc(b.name)+'</th>' + (hasMero ? '<th style="color:#60a5fa;font-size:0.65rem;">Mero</th>' : ''); 
+  var hasMero=window._meroDaily&&window._meroDaily.monthKey===monthKey;
+  var headCols=barbers.map(function(b){
+    return '<th>'+esc(b.name)+'</th>'+(hasMero?'<th style="color:var(--blue);font-size:0.6rem;">Mero</th>':'');
   }).join('');
-  document.getElementById('adminTableHead').innerHTML='<tr><th>Data</th>'+headCols+'<th>Total zi</th>'+(hasMero?'<th style="color:#60a5fa;font-size:0.65rem;">Mero zi</th>':'')+'</tr>';
+  document.getElementById('adminTableHead').innerHTML='<tr><th>Data</th>'+headCols+'<th>Total zi</th>'+(hasMero?'<th style="color:var(--blue);font-size:0.6rem;">Mero zi</th>':'')+'</tr>';
 
   var tbody=document.getElementById('adminTableBody'); tbody.innerHTML='';
   allDays.forEach(function(dk){
-    var totDay=0, meroTotDay=0;
+    var totDay=0,mTotDay=0;
     var cells=barbers.map(function(b){
       var t=(allEntries[b.id]||[]).filter(function(e){ return e.date===dk; }).reduce(function(s,e){ return s+e.amount; },0);
       var isVac=(allVac[b.id]||[]).some(function(v){ return v.date===dk; });
       totDay+=t;
       var appCell='';
-      if(isVac&&t===0) appCell='<td><span class="chip chip-vac">🏖 Concediu</span></td>';
+      if(isVac&&t===0) appCell='<td><span class="chip chip-vac">🏖</span></td>';
       else appCell='<td>'+(t>0?'<span class="chip chip-gold">'+fmt(t)+'</span>':'<span style="color:var(--muted)">—</span>')+'</td>';
-
       if(!hasMero) return appCell;
-
       var wId=matchBarberToWorker(b);
-      var mVal=(wId && window._meroDaily.data[wId] && window._meroDaily.data[wId][dk]) ? window._meroDaily.data[wId][dk] : 0;
-      meroTotDay+=mVal;
-      var diff=Math.abs(t-mVal);
-      var meroClass=mVal===0&&t===0?'color:var(--muted)':diff<1?'color:var(--green)':'color:var(--red);font-weight:700';
-      var meroCell='<td style="'+meroClass+';font-size:0.78rem;">'+(mVal>0?fmt(mVal):'—')+'</td>';
-      return appCell+meroCell;
+      var mVal=(wId&&window._meroDaily.data[wId]&&window._meroDaily.data[wId][dk])?window._meroDaily.data[wId][dk]:0;
+      // Calcul admin share din Mero
+      var mAdmin=isPatrickBarber(b)?mVal:Math.round(mVal*0.5); // simplificat pe zi
+      mTotDay+=mVal;
+      var diff=Math.abs(t-mAdmin);
+      var cls=mVal===0&&t===0?'color:var(--muted)':diff<1?'color:var(--green)':'color:var(--red);font-weight:700';
+      return appCell+'<td style="'+cls+';font-size:0.75rem;">'+(mVal>0?fmt(mVal):'—')+'</td>';
     }).join('');
     var tr=document.createElement('tr');
-    tr.innerHTML='<td>'+dk+'</td>'+cells+'<td><strong>'+fmt(totDay)+'</strong></td>'+(hasMero?'<td style="color:#60a5fa;font-weight:600;">'+fmt(meroTotDay)+'</td>':'');
+    tr.innerHTML='<td>'+dk+'</td>'+cells+'<td><strong>'+fmt(totDay)+'</strong></td>'+(hasMero?'<td style="color:var(--blue);font-weight:600;font-size:0.78rem;">'+fmt(mTotDay)+'</td>':'');
     tbody.appendChild(tr);
   });
 
-  // Also add Mero-only days (days that exist in Mero but not in app)
+  // Mero-only days
   if(hasMero){
     var meroDays=new Set();
-    Object.values(window._meroDaily.data).forEach(function(dayMap){
-      Object.keys(dayMap).forEach(function(d){ if(dayMap[d]>0) meroDays.add(d); });
-    });
+    Object.values(window._meroDaily.data).forEach(function(dm){ Object.keys(dm).forEach(function(d){ if(dm[d]>0) meroDays.add(d); }); });
     meroDays.forEach(function(dk){
-      if(allDays.indexOf(dk)!==-1) return; // already shown
-      var totDay=0, meroTotDay=0;
+      if(allDays.indexOf(dk)!==-1) return;
+      var mTotDay=0;
       var cells=barbers.map(function(b){
         var wId=matchBarberToWorker(b);
-        var mVal=(wId && window._meroDaily.data[wId] && window._meroDaily.data[wId][dk]) ? window._meroDaily.data[wId][dk] : 0;
-        meroTotDay+=mVal;
-        var appCell='<td><span style="color:var(--muted)">—</span></td>';
-        var meroCell='<td style="color:var(--red);font-weight:700;font-size:0.78rem;">'+(mVal>0?fmt(mVal):'—')+'</td>';
-        return appCell+meroCell;
+        var mVal=(wId&&window._meroDaily.data[wId]&&window._meroDaily.data[wId][dk])?window._meroDaily.data[wId][dk]:0;
+        mTotDay+=mVal;
+        return '<td><span style="color:var(--muted)">—</span></td><td style="color:var(--red);font-weight:700;font-size:0.75rem;">'+(mVal>0?fmt(mVal):'—')+'</td>';
       }).join('');
-      var tr=document.createElement('tr');
-      tr.style.background='rgba(248,113,113,0.05)';
-      tr.innerHTML='<td style="color:var(--red);">'+dk+' ⚠</td>'+cells+'<td><strong>'+fmt(0)+'</strong></td><td style="color:var(--red);font-weight:600;">'+fmt(meroTotDay)+'</td>';
+      var tr=document.createElement('tr'); tr.style.background='rgba(248,113,113,0.04)';
+      tr.innerHTML='<td style="color:var(--red);">'+dk+' ⚠</td>'+cells+'<td>0 lei</td><td style="color:var(--red);font-weight:600;">'+fmt(mTotDay)+'</td>';
       tbody.appendChild(tr);
     });
   }
 
-  var grandTotal=0, grandMero=0;
+  var grandTotal=0,grandMero=0;
   document.getElementById('adminTableFoot').innerHTML='<tr><td>TOTAL</td>'+
-    barbers.map(function(b){ 
-      var t=(allEntries[b.id]||[]).reduce(function(s,e){ return s+e.amount; },0); 
-      grandTotal+=t; 
-      var appTd='<td>'+fmt(t)+'</td>';
-      if(!hasMero) return appTd;
-      var wId=matchBarberToWorker(b);
-      var mTotal=0;
-      if(wId && window._meroDaily.data[wId]){
-        Object.values(window._meroDaily.data[wId]).forEach(function(v){ mTotal+=v; });
-      }
-      grandMero+=mTotal;
-      var diff=Math.abs(t-mTotal);
-      var cls=diff<1?'color:var(--green)':'color:var(--red);font-weight:700';
-      return appTd+'<td style="'+cls+'">'+fmt(mTotal)+'</td>';
+    barbers.map(function(b){
+      var t=(allEntries[b.id]||[]).reduce(function(s,e){ return s+e.amount; },0); grandTotal+=t;
+      var td='<td>'+fmt(t)+'</td>';
+      if(!hasMero) return td;
+      var wId=matchBarberToWorker(b); var mT=0;
+      if(wId&&window._meroDaily.data[wId]) Object.values(window._meroDaily.data[wId]).forEach(function(v){mT+=v;});
+      grandMero+=mT;
+      var cls=Math.abs(t-mT)<1?'color:var(--green)':'color:var(--red);font-weight:700';
+      return td+'<td style="'+cls+'">'+fmt(mT)+'</td>';
     }).join('')+
-    '<td>'+fmt(grandTotal)+'</td>'+(hasMero?'<td style="color:#60a5fa;font-weight:700;">'+fmt(grandMero)+'</td>':'')+'</tr>';
+    '<td>'+fmt(grandTotal)+'</td>'+(hasMero?'<td style="color:var(--blue);font-weight:700;">'+fmt(grandMero)+'</td>':'')+'</tr>';
 
-  // Show Mero sync button if not yet synced
-  var syncRow=document.getElementById('meroSyncRow');
-  if(!syncRow){
-    syncRow=document.createElement('div');
-    syncRow.id='meroSyncRow';
-    syncRow.style.cssText='display:flex;gap:8px;margin-bottom:12px;margin-top:-10px;';
-    syncRow.innerHTML='<button class="action-btn btn-blue" id="meroSyncTable" style="flex:1;">📱 Verifică cu Mero</button>';
-    var tableTitle=document.querySelector('#adminMain .section-title:last-of-type');
-    if(!tableTitle){
-      // Insert before the table-wrap
-      var tw=document.querySelector('#adminMain .table-wrap');
-      if(tw) tw.parentNode.insertBefore(syncRow, tw);
-    }
-    document.getElementById('meroSyncTable').addEventListener('click', loadMeroDailyData);
+  // Mero sync button
+  if(!document.getElementById('meroSyncRow')){
+    var sr=document.createElement('div'); sr.id='meroSyncRow';
+    sr.style.cssText='display:flex;gap:8px;margin-bottom:12px;margin-top:-10px;';
+    sr.innerHTML='<button class="action-btn btn-blue" id="meroSyncTable" style="flex:1;">📱 Verifică cu Mero</button>';
+    var tw=document.querySelector('#adminMain .table-wrap');
+    if(tw) tw.parentNode.insertBefore(sr,tw);
+    document.getElementById('meroSyncTable').addEventListener('click',loadMeroDailyData);
   }
 }
 
@@ -1583,32 +1985,483 @@ function renderAdminChart(barbers, allEntries){
     var cum=0, clr=palette[i%palette.length];
     return { label:b.name, data:allDays.map(function(dk){ cum+=(allEntries[b.id]||[]).filter(function(e){ return e.date===dk; }).reduce(function(s,e){ return s+e.amount; },0); return cum; }), borderColor:clr, backgroundColor:clr+'18', borderWidth:2.5, pointRadius:3, pointHoverRadius:6, tension:0.35, fill:false };
   });
-  barbers.forEach(function(b,i){ if(!b.goal) return; var clr=palette[i%palette.length]; datasets.push({ label:'Obiectiv '+esc(b.name), data:allDays.map(function(){ return b.goal; }), borderColor:clr+'55', borderWidth:1, borderDash:[5,4], pointRadius:0, fill:false }); });
+  barbers.forEach(function(b,i){ if(!b.goal) return; var clr=palette[i%palette.length]; datasets.push({ label:'Ob.1 '+esc(b.name), data:allDays.map(function(){ return b.goal; }), borderColor:clr+'55', borderWidth:1, borderDash:[5,4], pointRadius:0, fill:false }); });
+  barbers.forEach(function(b,i){ if(!b.goal2) return; var clr=palette[i%palette.length]; datasets.push({ label:'Ob.2 '+esc(b.name), data:allDays.map(function(){ return b.goal2; }), borderColor:clr+'33', borderWidth:1, borderDash:[3,6], pointRadius:0, fill:false }); });
   var ctx=document.getElementById('adminChart').getContext('2d');
   if(adminChart) adminChart.destroy();
-  adminChart=new Chart(ctx,{ type:'line', data:{ labels:labels, datasets:datasets }, options:{ responsive:true, interaction:{ mode:'index', intersect:false }, plugins:{ legend:{ labels:{ color:'#888', font:{family:'DM Sans',size:11}, filter:function(i){ return !i.text.startsWith('Obiectiv'); }, boxWidth:12, padding:14 } }, tooltip:{ backgroundColor:'#1a1a1a', borderColor:'#2e2e2e', borderWidth:1, titleColor:'#f0ede8', bodyColor:'#888', callbacks:{ label:function(c){ if(c.dataset.label.startsWith('Obiectiv')) return null; return ' '+c.dataset.label+': '+c.parsed.y.toLocaleString('ro-RO')+' lei'; } } } }, scales:{ x:{ ticks:{ color:'#666', font:{size:10} }, grid:{ color:'#1f1f1f' } }, y:{ ticks:{ color:'#666', font:{size:10}, callback:function(v){ return v.toLocaleString('ro-RO')+' lei'; } }, grid:{ color:'#1f1f1f' } } } } });
+  adminChart=new Chart(ctx,{ type:'line', data:{ labels:labels, datasets:datasets }, options:{ responsive:true, interaction:{ mode:'index', intersect:false }, plugins:{ legend:{ labels:{ color:'#888', font:{family:'DM Sans',size:11}, filter:function(i){ return !i.text.startsWith('Ob.'); }, boxWidth:12, padding:14 } }, tooltip:{ backgroundColor:'#1a1a1a', borderColor:'#2e2e2e', borderWidth:1, titleColor:'#f0ede8', bodyColor:'#888', callbacks:{ label:function(c){ if(c.dataset.label.startsWith('Ob.')) return null; return ' '+c.dataset.label+': '+c.parsed.y.toLocaleString('ro-RO')+' lei'; } } } }, scales:{ x:{ ticks:{ color:'#666', font:{size:10} }, grid:{ color:'#1f1f1f' } }, y:{ ticks:{ color:'#666', font:{size:10}, callback:function(v){ return v.toLocaleString('ro-RO')+' lei'; } }, grid:{ color:'#1f1f1f' } } } } });
 }
 
 async function doUndo(){
-  if(!undoStack.length) return;
-  var action=undoStack.pop(); updateUndoBtn();
-  if(action.data){ await setDoc(doc(db, action.type==='vacation'?'vacations':'entries', action.docId), action.data); renderAdminView(); }
+  if(!undoStack.length){ toast('Nu ai nimic de anulat.','warning'); return; }
+  var action=undoStack[undoStack.length-1];
+  var tipText = action.type==='vacation' ? 'zi liberă' : 'încasare';
+  var detalii = action.data ? (action.data.amount ? action.data.amount+' lei ('+action.data.date+')' : action.data.date||'') : '';
+  var ok = await showConfirm('Undo','Restaurezi '+tipText+(detalii?' — '+detalii:'')+'?','↩️');
+  if(!ok) return;
+  undoStack.pop(); updateUndoBtn();
+  try {
+    if(action.data){
+      await setDoc(doc(db, action.type==='vacation'?'vacations':'entries', action.docId), action.data);
+      toast('✓ Restaurat cu succes!','success');
+      renderAdminView();
+    }
+  } catch(err){
+    toast('Eroare la undo: '+err.message,'error');
+    // Pune înapoi în stack dacă a dat eroare
+    undoStack.push(action); updateUndoBtn();
+  }
 }
+
+// ── STOC PRODUSE ──
+async function getStockProducts(){
+  try {
+    var snap=await getDocs(collection(db,'stock'));
+    var list=[];
+    snap.forEach(function(d){ list.push({ id:d.id,...d.data() }); });
+    list.sort(function(a,b){ return (a.name||'').localeCompare(b.name||''); });
+    return list;
+  } catch(e){ console.error('Stock error:',e); return []; }
+}
+
+async function getSalesHistory(limitN){
+  try {
+    var q2=query(collection(db,'sales'),orderBy('ts','desc'),limit(limitN||50));
+    var snap=await getDocs(q2);
+    var list=[];
+    snap.forEach(function(d){ list.push({ id:d.id,...d.data() }); });
+    return list;
+  } catch(e){ console.error('Sales history error:',e); return []; }
+}
+
+async function addStockProduct(){
+  var nameEl=document.getElementById('stock-name');
+  var qtyEl=document.getElementById('stock-qty');
+  var pBuy=document.getElementById('stock-price-buy');
+  var pBarber=document.getElementById('stock-price-barber');
+  var pClient=document.getElementById('stock-price-client');
+  var errEl=document.getElementById('stockErr');
+  var name=nameEl.value.trim();
+  errEl.style.display='none';
+  if(!name){ errEl.textContent='Introdu numele produsului.'; errEl.style.display='block'; return; }
+  try {
+    await addDoc(collection(db,'stock'),{
+      name:name, qty:parseInt(qtyEl.value)||0,
+      priceBuy:parseFloat(pBuy.value)||0,
+      priceBarber:parseFloat(pBarber.value)||0,
+      priceClient:parseFloat(pClient.value)||0,
+      createdAt:Date.now()
+    });
+    nameEl.value=''; qtyEl.value=''; pBuy.value=''; pBarber.value=''; pClient.value='';
+    toast('Produs adaugat!','success');
+    await renderStockModal();
+  } catch(err){ errEl.textContent='Eroare: '+err.message; errEl.style.display='block'; }
+}
+
+async function renderStockModal(){
+  var products=await getStockProducts();
+  var barbers=await getBarbers();
+  var el=document.getElementById('stockList'); el.innerHTML='';
+  var adminSel=document.getElementById('admin-sell-product');
+  if(adminSel){
+    adminSel.innerHTML='';
+    products.forEach(function(p){
+      var o=document.createElement('option'); o.value=p.id;
+      o.textContent=p.name+' ('+p.qty+' buc)';
+      if(p.qty<=0) o.disabled=true;
+      adminSel.appendChild(o);
+    });
+  }
+  // Populează select frizer
+  var whoSel=document.getElementById('admin-sell-who');
+  if(whoSel){
+    whoSel.innerHTML='<option value="admin">Eu (Admin)</option>';
+    barbers.forEach(function(b){
+      var o=document.createElement('option'); o.value=b.id; o.textContent=b.name;
+      whoSel.appendChild(o);
+    });
+  }
+  if(!products.length){
+    el.innerHTML='<div style="color:var(--muted);font-size:0.82rem;text-align:center;padding:10px 0;">Niciun produs adaugat.</div>';
+  } else {
+    products.forEach(function(p){
+      var isLow=p.qty<=3;
+      var pb=p.priceBuy||p.price||0, pf=p.priceBarber||0, pc=p.priceClient||0;
+      var item=document.createElement('div');
+      item.className='stock-item'+(isLow?' low-stock':'');
+      item.style.flexWrap='wrap';
+      item.innerHTML=
+        '<div style="display:flex;align-items:center;gap:8px;width:100%;">'+
+          '<div class="stock-name" style="flex:1">'+esc(p.name)+'</div>'+
+          '<div class="stock-qty '+(isLow?'low':'ok')+'">'+p.qty+'</div>'+
+          '<input type="number" min="0" value="'+p.qty+'" style="width:50px;" class="stock-sell-qty stock-edit-qty" data-id="'+p.id+'">'+
+          '<button class="stock-edit-btn" data-id="'+p.id+'">✓</button>'+
+          '<button class="stock-del-btn" data-id="'+p.id+'">✕</button>'+
+        '</div>'+
+        '<div style="display:flex;gap:8px;width:100%;margin-top:4px;font-size:0.68rem;color:var(--muted2);">'+
+          '<span>Ach: '+pb+'</span><span>Frizer: '+pf+'</span><span>Client: '+pc+'</span>'+
+        '</div>';
+      item.querySelector('.stock-edit-btn').addEventListener('click', async function(){
+        var newQty=parseInt(item.querySelector('.stock-edit-qty').value)||0;
+        try { await updateDoc(doc(db,'stock',this.dataset.id),{qty:newQty}); toast('Stoc actualizat!','success'); await renderStockModal(); } catch(err){ toast('Eroare: '+err.message,'error'); }
+      });
+      item.querySelector('.stock-del-btn').addEventListener('click', async function(){
+        var ok2=await showConfirm('Sterge produs','Stergi '+esc(p.name)+'?','\u{1F5D1}'); if(!ok2) return;
+        try { await deleteDoc(doc(db,'stock',this.dataset.id)); toast('Produs sters!','success'); await renderStockModal(); } catch(err){ toast('Eroare: '+err.message,'error'); }
+      });
+      el.appendChild(item);
+    });
+  }
+  // Istoric vanzari
+  var sales=await getSalesHistory(50);
+  var hEl=document.getElementById('salesHistory'); hEl.innerHTML='';
+  if(!sales.length){
+    hEl.innerHTML='<div style="color:var(--muted);font-size:0.82rem;text-align:center;padding:10px 0;">Nicio vanzare inregistrata.</div>';
+  } else {
+    sales.forEach(function(s){
+      var d=new Date(s.ts);
+      var dateStr=d.toLocaleDateString('ro-RO',{day:'2-digit',month:'2-digit'})+' '+d.toLocaleTimeString('ro-RO',{hour:'2-digit',minute:'2-digit'});
+      var status=s.status||'approved';
+      var saleType=s.saleType||'client';
+      var isPaid=s.paid!==false;
+      var statusHtml=(status==='pending')?'<span class="e-status pending" style="font-size:0.6rem;">Pending</span>':'<span class="e-status approved" style="font-size:0.6rem;">\u2713</span>';
+      var typeLabel=saleType==='personal'?'Personal':saleType==='admin'?'Admin':'Client';
+      var paidHtml='<button class="e-cash '+(isPaid?'received':'not-received')+'" data-id="'+s.id+'" style="font-size:0.6rem;">'+(isPaid?'Achitat':'Neachitat')+'</button>';
+      var div=document.createElement('div');
+      div.className='sale-item'; div.style.flexWrap='wrap';
+      div.innerHTML='<span class="sale-who">'+esc(s.barberName||'Admin')+'</span>'+
+        '<span class="sale-what">'+esc(s.productName)+' x'+s.qty+'</span>'+
+        '<span style="font-size:0.6rem;color:var(--muted2);">'+typeLabel+'</span>'+
+        '<span style="font-size:0.68rem;color:var(--accent);">'+(s.salePrice||0)+' lei</span>'+
+        statusHtml+paidHtml+
+        (status==='pending'?'<button class="e-approve sale-approve-btn" data-id="'+s.id+'" style="font-size:0.6rem;">\u2713</button>':'')+
+        '<button class="stock-del-btn sale-del-btn" data-id="'+s.id+'" style="padding:2px 6px;font-size:0.65rem;">\u2715</button>';
+      div.querySelector('.e-cash').addEventListener('click', async function(){
+        try { await updateDoc(doc(db,'sales',s.id),{paid:!isPaid}); toast(!isPaid?'Achitat':'Neachitat','success'); await renderStockModal(); } catch(err){ toast('Eroare: '+err.message,'error'); }
+      });
+      if(status==='pending' && div.querySelector('.sale-approve-btn')){
+        div.querySelector('.sale-approve-btn').addEventListener('click', async function(){
+          try { await updateDoc(doc(db,'sales',s.id),{status:'approved'}); toast('Confirmat!','success'); await renderStockModal(); } catch(err){ toast('Eroare: '+err.message,'error'); }
+        });
+      }
+      div.querySelector('.sale-del-btn').addEventListener('click', async function(){
+        var ok2=await showConfirm('Anuleaza','Stergi vanzarea?','\u21A9'); if(!ok2) return;
+        try {
+          await deleteDoc(doc(db,'sales',s.id));
+          if(s.productId){ try { var ps=await getDoc(doc(db,'stock',s.productId)); if(ps.exists()) await updateDoc(doc(db,'stock',s.productId),{qty:(ps.data().qty||0)+s.qty}); } catch(e){} }
+          toast('Anulat, stoc refacut!','success'); await renderStockModal();
+        } catch(err){ toast('Eroare: '+err.message,'error'); }
+      });
+      hEl.appendChild(div);
+    });
+  }
+}
+
+async function adminSellProduct(){
+  var sel=document.getElementById('admin-sell-product');
+  var qtyEl=document.getElementById('admin-sell-qty');
+  var whoSel=document.getElementById('admin-sell-who');
+  var typeSel=document.getElementById('admin-sell-type');
+  var productId=sel.value;
+  var sellQty=parseInt(qtyEl.value)||1;
+  var who=whoSel.value; // 'admin' sau barberId
+  var saleType=typeSel.value; // 'admin','client','personal'
+  if(!productId){ toast('Selectează un produs.','warning'); return; }
+  try {
+    var pSnap=await getDoc(doc(db,'stock',productId));
+    if(!pSnap.exists()){ toast('Produsul nu există.','error'); return; }
+    var p=pSnap.data();
+    if(sellQty>p.qty){ toast('Nu sunt destule în stoc!','warning'); return; }
+    var pb=p.priceBuy||p.price||0, pf=p.priceBarber||0, pc=p.priceClient||0;
+    // Determină prețul de vânzare bazat pe tip
+    var salePrice=pc; // default admin vinde la preț client
+    if(saleType==='client') salePrice=pf; // revânzare = preț frizer
+    if(saleType==='personal') salePrice=pb; // uz personal = preț achiziție
+    // Determină numele vânzătorului
+    var barberName='Admin';
+    var barberId='admin';
+    if(who!=='admin'){
+      barberId=who;
+      var bSnap=await getDoc(doc(db,'barbers',who));
+      if(bSnap.exists()) barberName=bSnap.data().name||'Frizer';
+    }
+    await updateDoc(doc(db,'stock',productId),{qty:p.qty-sellQty});
+    await addDoc(collection(db,'sales'),{
+      productId:productId, productName:p.name, qty:sellQty,
+      priceBuy:pb, salePrice:salePrice, priceClient:pc,
+      barberId:barberId, barberName:barberName,
+      saleType:saleType, status:'approved', paid:false, ts:Date.now()
+    });
+    var typeLabel=saleType==='personal'?'uz personal':saleType==='client'?'revânzare':'vânzare client';
+    toast(barberName+' — '+sellQty+'× '+p.name+' ('+typeLabel+')','success');
+    qtyEl.value='1'; await renderStockModal();
+  } catch(err){ toast('Eroare: '+err.message,'error'); }
+}
+
+async function renderBarberStockList(){
+  var products=await getStockProducts();
+  var el=document.getElementById('myStockList'); if(!el) return;
+  el.innerHTML='';
+  if(!products.length){
+    el.innerHTML='<div style="color:var(--muted);font-size:0.82rem;text-align:center;padding:10px 0;">Nu sunt produse in stoc.</div>';
+    return;
+  }
+  products.forEach(function(p){
+    var isLow=p.qty<=3, outOfStock=p.qty<=0;
+    var pc=p.priceClient||p.price||0, pf=p.priceBarber||0, pb=p.priceBuy||p.price||0;
+    var item=document.createElement('div');
+    item.className='stock-item'+(isLow?' low-stock':'');
+    item.style.flexWrap='wrap';
+    item.innerHTML=
+      '<div style="display:flex;align-items:center;gap:8px;width:100%;">'+
+        '<div class="stock-name" style="flex:1">'+esc(p.name)+'</div>'+
+        '<div class="stock-qty '+(isLow?'low':'ok')+'">'+p.qty+'</div>'+
+      '</div>'+
+      '<div style="display:flex;gap:4px;width:100%;margin-top:4px;font-size:0.7rem;color:var(--muted2);">'+
+        '<span>Uz personal: '+pb+' lei</span> | <span>Client: '+pc+' lei</span>'+
+      '</div>'+
+      '<div style="display:flex;gap:6px;width:100%;margin-top:6px;">'+
+        '<select class="form-select" style="flex:2;padding:6px 8px;font-size:0.78rem;"'+(outOfStock?' disabled':'')+'>'+
+          '<option value="personal">Uz personal ('+pb+' lei)</option>'+
+          '<option value="client" selected>Revanzare client ('+pf+' lei)</option>'+
+        '</select>'+
+        '<input type="number" min="1" max="'+p.qty+'" value="1" class="stock-sell-qty" style="width:45px;"'+(outOfStock?' disabled':'')+'>'+
+        '<button class="stock-sell-btn"'+(outOfStock?' disabled':'')+'>Vinde</button>'+
+      '</div>';
+    if(!outOfStock){
+      item.querySelector('.stock-sell-btn').addEventListener('click', async function(){
+        var btn=this;
+        var sellQty=parseInt(item.querySelector('.stock-sell-qty').value)||1;
+        var saleType=item.querySelector('select').value;
+        if(sellQty<1||sellQty>p.qty){ toast('Cantitate invalida.','warning'); return; }
+        btn.disabled=true; btn.textContent='...';
+        var salePrice=(saleType==='personal')?pb:pf;
+        try {
+          await updateDoc(doc(db,'stock',p.id),{qty:p.qty-sellQty});
+          await addDoc(collection(db,'sales'),{
+            productId:p.id, productName:p.name, qty:sellQty,
+            priceBuy:pb, salePrice:salePrice, priceClient:pc,
+            barberId:currentUser.uid, barberName:barberData.name||'Frizer',
+            saleType:saleType, status:'pending', paid:false, ts:Date.now()
+          });
+          toast((saleType==='personal'?'Cumparat':'Vandut')+' '+sellQty+'x '+p.name+'!','success');
+          await renderBarberStockList();
+        } catch(err){ toast('Eroare: '+err.message,'error'); btn.disabled=false; btn.textContent='Vinde'; }
+      });
+    }
+    el.appendChild(item);
+  });
+  // Istoric + calcul profit/cheltuieli
+  var productProfit=0, personalExpenses=0;
+  try {
+    var mySalesSnap=await getDocs(query(collection(db,'sales'),where('barberId','==',currentUser.uid),orderBy('ts','desc'),limit(50)));
+    var mySales=[]; mySalesSnap.forEach(function(d){ mySales.push({id:d.id,...d.data()}); });
+    mySales.forEach(function(s){
+      if(s.saleType==='client'&&s.status==='approved') productProfit+=((s.priceClient||0)-(s.salePrice||0))*s.qty;
+      if(s.saleType==='personal') personalExpenses+=((s.salePrice||s.priceBuy||0)*s.qty);
+    });
+    if(mySales.length){
+      var histDiv=document.createElement('div');
+      histDiv.style.cssText='margin-top:12px;border-top:1px solid rgba(255,255,255,0.07);padding-top:10px;';
+      histDiv.innerHTML='<div style="font-size:0.66rem;color:var(--muted2);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;">Vanzarile mele recente</div>';
+      mySales.forEach(function(s){
+        var d2=new Date(s.ts);
+        var dateStr=d2.toLocaleDateString('ro-RO',{day:'2-digit',month:'2-digit'})+' '+d2.toLocaleTimeString('ro-RO',{hour:'2-digit',minute:'2-digit'});
+        var statusHtml=(s.status==='pending')?'<span class="e-status pending">Pending</span>':'<span class="e-status approved">\u2713</span>';
+        var typeLabel=s.saleType==='personal'?'Personal':'Client';
+        var row=document.createElement('div'); row.className='sale-item'; row.style.cssText='margin-bottom:4px;';
+        row.innerHTML='<span class="sale-what" style="flex:1;">'+esc(s.productName)+' x'+s.qty+'</span>'+
+          '<span style="font-size:0.6rem;color:var(--muted2);">'+typeLabel+'</span>'+statusHtml+
+          '<span class="sale-when">'+dateStr+'</span>'+
+          (s.status==='pending'?'<button class="stock-del-btn" style="padding:2px 6px;font-size:0.65rem;">\u2715</button>':'');
+        if(s.status==='pending'&&row.querySelector('.stock-del-btn')){
+          row.querySelector('.stock-del-btn').addEventListener('click', async function(){
+            var ok2=await showConfirm('Anuleaza','Stergi '+esc(s.productName)+' x'+s.qty+'?','\u{1F5D1}'); if(!ok2) return;
+            try {
+              await deleteDoc(doc(db,'sales',s.id));
+              if(s.productId){ try { var ps=await getDoc(doc(db,'stock',s.productId)); if(ps.exists()) await updateDoc(doc(db,'stock',s.productId),{qty:(ps.data().qty||0)+s.qty}); } catch(e){} }
+              toast('Anulat!','success'); await renderBarberStockList();
+            } catch(err){ toast('Eroare: '+err.message,'error'); }
+          });
+        }
+        histDiv.appendChild(row);
+      });
+      el.appendChild(histDiv);
+    }
+  } catch(e){ console.error('My sales error:',e); }
+  var ppEl=document.getElementById('myProductProfit');
+  var peEl=document.getElementById('myPersonalExpenses');
+  if(ppEl) ppEl.textContent=fmt(productProfit);
+  if(peEl) peEl.textContent=fmt(personalExpenses);
+}
+
+// ── ANUNȚURI ──
+async function loadAnnouncement(){
+  try {
+    var snap=await getDoc(doc(db,'announcements','current'));
+    var adminBox=document.getElementById('adminAnnounceBox');
+    var barberBox=document.getElementById('barberAnnounceBox');
+    if(snap.exists()&&snap.data().text){
+      var txt=snap.data().text;
+      if(adminBox){ adminBox.style.display='block'; document.getElementById('adminAnnounceText').textContent=txt; }
+      if(barberBox){ barberBox.style.display='block'; document.getElementById('barberAnnounceText').textContent=txt; }
+    } else {
+      if(adminBox) adminBox.style.display='none';
+      if(barberBox) barberBox.style.display='none';
+    }
+  } catch(e){}
+}
+
+// ── FINANȚE ──
+var finMonth=new Date().toISOString().slice(0,7);
+var finChart=null;
+
+function initFinanceTab(){
+  updateFinMonthLabel();
+  document.getElementById('finPrevMonth').addEventListener('click',function(){
+    var d=new Date(finMonth+'-01'); d.setMonth(d.getMonth()-1);
+    finMonth=d.toISOString().slice(0,7); updateFinMonthLabel(); renderFinance();
+  });
+  document.getElementById('finNextMonth').addEventListener('click',function(){
+    var d=new Date(finMonth+'-01'); d.setMonth(d.getMonth()+1);
+    finMonth=d.toISOString().slice(0,7); updateFinMonthLabel(); renderFinance();
+  });
+  document.getElementById('addExpenseBtn').addEventListener('click',addExpense);
+  renderFinance();
+}
+
+function updateFinMonthLabel(){
+  var p=finMonth.split('-');
+  document.getElementById('finMonthLabel').textContent=MONTHS[parseInt(p[1])-1]+' '+p[0];
+}
+
+async function addExpense(){
+  var name=document.getElementById('exp-name').value.trim();
+  var amount=parseFloat(document.getElementById('exp-amount').value)||0;
+  if(!name||!amount){ toast('Completează numele și suma.','warning'); return; }
+  try {
+    await addDoc(collection(db,'expenses'),{name:name,amount:amount,month:finMonth,ts:Date.now()});
+    document.getElementById('exp-name').value='';
+    document.getElementById('exp-amount').value='';
+    toast('Cheltuială adăugată!','success');
+    renderFinance();
+  } catch(err){ toast('Eroare: '+err.message,'error'); }
+}
+
+async function renderFinance(){
+  try {
+    // Încasări servicii
+    var barbers=await getBarbers();
+    var entriesSnap=await getDocs(query(collection(db,'entries'),where('month','==',finMonth)));
+    var totalServices=0;
+    entriesSnap.forEach(function(d){ totalServices+=d.data().amount; });
+
+    // Breakdown per frizer
+    var barberTotals={};
+    entriesSnap.forEach(function(d){ var e=d.data(); barberTotals[e.barberId]=(barberTotals[e.barberId]||0)+e.amount; });
+
+    // Profit produse
+    var salesSnap=await getSalesHistory(200);
+    var profitProdAdmin=0, profitProdBarbers=0;
+    salesSnap.forEach(function(s){
+      var sMonth=new Date(s.ts).toISOString().slice(0,7);
+      if(sMonth!==finMonth||s.status==='pending') return;
+      var buy=(s.priceBuy||0)*s.qty;
+      var sell=(s.salePrice||0)*s.qty;
+      if(s.saleType==='admin') profitProdAdmin+=(sell-buy);
+      else if(s.saleType==='client') profitProdBarbers+=(sell-buy);
+      else if(s.saleType==='personal') profitProdBarbers+=(sell-buy);
+    });
+
+    // Cheltuieli
+    var expSnap=await getDocs(query(collection(db,'expenses'),where('month','==',finMonth)));
+    var totalExpenses=0;
+    var expList=[];
+    expSnap.forEach(function(d){ var e=d.data(); totalExpenses+=e.amount; expList.push({id:d.id,...e}); });
+    expList.sort(function(a,b){ return (b.ts||0)-(a.ts||0); });
+
+    // Update UI
+    document.getElementById('finServices').textContent=fmt(totalServices);
+    document.getElementById('finProducts').textContent=fmt(profitProdAdmin+profitProdBarbers);
+    document.getElementById('finExpenses').textContent=fmt(totalExpenses);
+    var netProfit=totalServices+profitProdAdmin+profitProdBarbers-totalExpenses;
+    var profitEl=document.getElementById('finProfit');
+    profitEl.textContent=fmt(netProfit);
+    profitEl.style.color=netProfit>=0?'var(--green)':'var(--red)';
+
+    // Breakdown per frizer
+    var brkEl=document.getElementById('finBarberBreakdown'); brkEl.innerHTML='';
+    barbers.forEach(function(b){
+      var total=barberTotals[b.id]||0;
+      if(!total) return;
+      var div=document.createElement('div');
+      div.className='stock-item';
+      div.innerHTML='<div class="stock-name" style="flex:1">'+esc(b.name)+'</div><div style="font-family:Bebas Neue;font-size:1rem;color:var(--green);">'+fmt(total)+'</div>';
+      brkEl.appendChild(div);
+    });
+
+    // Cheltuieli lista
+    var elExp=document.getElementById('expensesList'); elExp.innerHTML='';
+    expList.forEach(function(e){
+      var div=document.createElement('div');
+      div.className='sale-item';
+      div.innerHTML='<span style="flex:1;font-size:0.85rem;">'+esc(e.name)+'</span>'+
+        '<span style="color:var(--red);font-weight:600;">'+fmt(e.amount)+'</span>'+
+        '<button class="stock-del-btn" style="padding:2px 6px;font-size:0.65rem;">✕</button>';
+      div.querySelector('.stock-del-btn').addEventListener('click', async function(){
+        var ok2=await showConfirm('Șterge','Ștergi cheltuiala?','🗑️'); if(!ok2) return;
+        try { await deleteDoc(doc(db,'expenses',e.id)); toast('Șters!','success'); renderFinance(); } catch(err){ toast('Eroare: '+err.message,'error'); }
+      });
+      elExp.appendChild(div);
+    });
+
+    // Grafic profit 6 luni
+    await renderFinChart();
+  } catch(err){ console.error('Finance error:',err); }
+}
+
+async function renderFinChart(){
+  var months=[],now=new Date();
+  for(var i=5;i>=0;i--){ var d=new Date(now.getFullYear(),now.getMonth()-i,1); months.push(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')); }
+  var profits=await Promise.all(months.map(async function(mk){
+    try {
+      var eSnap=await getDocs(query(collection(db,'entries'),where('month','==',mk)));
+      var svc=0; eSnap.forEach(function(d){ svc+=d.data().amount; });
+      var xSnap=await getDocs(query(collection(db,'expenses'),where('month','==',mk)));
+      var exp=0; xSnap.forEach(function(d){ exp+=d.data().amount; });
+      return svc-exp;
+    } catch(e){ return 0; }
+  }));
+  var mNames=['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Nov','Dec'];
+  var labels=months.map(function(mk){ return mNames[parseInt(mk.slice(5))-1]; });
+  var ctx=document.getElementById('finChart').getContext('2d');
+  if(finChart) finChart.destroy();
+  finChart=new Chart(ctx,{type:'bar',data:{labels:labels,datasets:[{label:'Profit net',data:profits,backgroundColor:profits.map(function(v){return v>=0?'rgba(74,222,128,0.3)':'rgba(248,113,113,0.3)';}),borderColor:profits.map(function(v){return v>=0?'#4ade80':'#f87171';}),borderWidth:2,borderRadius:6}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1a1a1a',borderColor:'#2e2e2e',borderWidth:1,titleColor:'#f0ede8',bodyColor:'#888',callbacks:{label:function(c){return c.parsed.y.toLocaleString('ro-RO')+' lei';}}}},scales:{x:{ticks:{color:'#666',font:{size:10}},grid:{color:'#1f1f1f'}},y:{ticks:{color:'#666',font:{size:10},callback:function(v){return v.toLocaleString('ro-RO');}},grid:{color:'#1f1f1f'}}}}});
+}
+
+// ── THEME INIT ──
+(function(){
+  var saved=localStorage.getItem('thecell_theme');
+  if(saved==='light') document.body.classList.add('light');
+  var btn=document.getElementById('themeToggle');
+  if(btn) btn.textContent=document.body.classList.contains('light')?'◐':'◑';
+})();
 
 async function addNewBarber(){
   var name=document.getElementById('nb-name').value.trim();
   var email=document.getElementById('nb-email').value.trim();
   var pass=document.getElementById('nb-pass').value;
   var goal=parseInt(document.getElementById('nb-goal').value)||0;
+  var goal2=parseInt(document.getElementById('nb-goal2').value)||0;
   var errEl=document.getElementById('addBarberErr'), btn=document.getElementById('addBarberBtn');
   errEl.style.display='none';
   if(!name||!email||!pass||pass.length<6){ errEl.textContent='Completează toate câmpurile (parola min 6 caractere).'; errEl.style.display='block'; return; }
   btn.disabled=true; btn.textContent='Se creează...';
   try {
     var cred=await createUserWithEmailAndPassword(auth,email,pass);
-    await setDoc(doc(db,'barbers',cred.user.uid),{ name:name, email:email, goal:goal });
+    await setDoc(doc(db,'barbers',cred.user.uid),{ name:name, email:email, goal:goal, goal2:goal2 });
     closeModal('addBarberModal');
-    ['nb-name','nb-email','nb-pass','nb-goal'].forEach(function(id){ document.getElementById(id).value=''; });
+    ['nb-name','nb-email','nb-pass','nb-goal','nb-goal2'].forEach(function(id){ document.getElementById(id).value=''; });
     toast('Frizer adăugat! Pagina se reîncărcă...','success',3000);
     location.reload();
   } catch(e){ errEl.textContent='Eroare: '+(e.message||'necunoscută'); errEl.style.display='block'; btn.disabled=false; btn.textContent='ADAUGĂ'; }
@@ -1666,24 +2519,333 @@ async function addVacAdmin(){
   loadVacDaysAdmin(); renderAdminView();
 }
 
-async function renderManageList(){
-  var barbers=await getBarbers();
-  var el=document.getElementById('manageList'); el.innerHTML='';
-  barbers.forEach(function(b){
-    var item=document.createElement('div'); item.className='barber-item';
-    item.innerHTML='<div style="flex:1"><div class="barber-item-name">'+b.name+'</div><div class="barber-item-email">'+(b.email||'')+'</div></div>'+
-      '<input class="edit-goal-inp" type="number" value="'+(b.goal||0)+'" min="0" data-id="'+b.id+'">'+
-      '<button class="save-goal-btn" data-id="'+b.id+'">✓</button>';
-    item.querySelector('.save-goal-btn').addEventListener('click', async function(){
-      var val=parseInt(item.querySelector('.edit-goal-inp').value)||0;
-      await updateDoc(doc(db,'barbers',this.dataset.id),{ goal:val });
-      var btn=this; btn.style.background='var(--green)';
-      setTimeout(function(){ btn.style.background=''; },1000);
-      renderAdminView();
-    });
-    el.appendChild(item);
+// ── SETĂRI PER FRIZER ──
+var settingsBarbers=[];
+async function openSettingsModal(){
+  settingsBarbers=await getBarbers();
+  var sel=document.getElementById('settings-barber'); sel.innerHTML='';
+  settingsBarbers.forEach(function(b){
+    var o=document.createElement('option'); o.value=b.id; o.textContent=b.name; sel.appendChild(o);
+  });
+  if(settingsBarbers.length) loadBarberSettings(settingsBarbers[0].id);
+  openModal('manageModal');
+}
+
+function loadBarberSettings(barberId){
+  var b=settingsBarbers.find(function(x){ return x.id===barberId; });
+  if(!b) return;
+  document.getElementById('set-goal').value=b.goal||'';
+  document.getElementById('set-goal2').value=b.goal2||'';
+  document.getElementById('set-pct1').value=b.pct1||40;
+  document.getElementById('set-pct2').value=b.pct2||30;
+  document.getElementById('set-avgprice').value=b.avgPrice||'';
+  document.getElementById('set-avgduration').value=b.avgDuration||'';
+  // Schedule pe zile
+  var schedule=b.schedule||{};
+  document.querySelectorAll('#set-schedule .sched-row').forEach(function(row){
+    var day=row.dataset.day;
+    var ds=schedule[day]||{active:parseInt(day)>=1&&parseInt(day)<=6,start:'10:00',end:'20:00',breakMin:0};
+    row.querySelector('.sched-check').checked=ds.active!==false;
+    row.querySelector('.sched-start').value=ds.start||'10:00';
+    row.querySelector('.sched-end').value=ds.end||'20:00';
+    row.querySelector('.sched-break').value=ds.breakMin||'';
+    row.classList.toggle('disabled',!ds.active&&ds.active!==undefined);
   });
 }
+
+async function saveBarberSettings(){
+  var barberId=document.getElementById('settings-barber').value;
+  if(!barberId){ toast('Selectează un frizer.','warning'); return; }
+  var schedule={};
+  document.querySelectorAll('#set-schedule .sched-row').forEach(function(row){
+    var day=row.dataset.day;
+    schedule[day]={
+      active:row.querySelector('.sched-check').checked,
+      start:row.querySelector('.sched-start').value||'10:00',
+      end:row.querySelector('.sched-end').value||'20:00',
+      breakMin:parseInt(row.querySelector('.sched-break').value)||0
+    };
+  });
+  // Extragem workDays din schedule pentru backwards compat
+  var workDays=[];
+  Object.keys(schedule).forEach(function(d){ if(schedule[d].active) workDays.push(parseInt(d)); });
+  var data={
+    goal:parseInt(document.getElementById('set-goal').value)||0,
+    goal2:parseInt(document.getElementById('set-goal2').value)||0,
+    pct1:parseInt(document.getElementById('set-pct1').value)||40,
+    pct2:parseInt(document.getElementById('set-pct2').value)||30,
+    schedule:schedule,
+    workDays:workDays,
+    avgPrice:parseInt(document.getElementById('set-avgprice').value)||0,
+    avgDuration:parseInt(document.getElementById('set-avgduration').value)||0
+  };
+  try {
+    await updateDoc(doc(db,'barbers',barberId),data);
+    toast('Setări salvate!','success');
+    renderAdminView();
+  } catch(err){
+    toast('Eroare: '+err.message,'error');
+  }
+}
+
+// Calcul ore efective pe o zi specifică (dayOfWeek: 0=D, 1=L, etc.)
+function getEffectiveHoursForDay(b, dayOfWeek){
+  var schedule=b.schedule||{};
+  var ds=schedule[String(dayOfWeek)];
+  if(!ds){
+    // Fallback la valorile vechi
+    var workDays=b.workDays||[1,2,3,4,5,6];
+    if(workDays.indexOf(dayOfWeek)<0) return 0;
+    var start=b.workStart||'10:00', end=b.workEnd||'20:00';
+    var s=start.split(':'), e=end.split(':');
+    var totalMin=(parseInt(e[0])*60+parseInt(e[1]))-(parseInt(s[0])*60+parseInt(s[1]));
+    return Math.max(0,(totalMin-(b.breakMin||0))/60);
+  }
+  if(!ds.active) return 0;
+  var s2=(ds.start||'10:00').split(':'), e2=(ds.end||'20:00').split(':');
+  var totalMin2=(parseInt(e2[0])*60+parseInt(e2[1]))-(parseInt(s2[0])*60+parseInt(s2[1]));
+  return Math.max(0,(totalMin2-(ds.breakMin||0))/60);
+}
+
+// Calcul ore efective medie pe zi (pentru backward compat)
+function getEffectiveHours(b){
+  var total=0, count=0;
+  for(var d=0;d<=6;d++){
+    var h=getEffectiveHoursForDay(b,d);
+    if(h>0){ total+=h; count++; }
+  }
+  return count>0?(total/count):0;
+}
+
+// Calcul capacitate maximă dintr-un număr de ore
+// Folosește preț mediu programare + durată medie programare
+function calcCapacity(hours, b){
+  var avgPrice=b.avgPrice||0;
+  var avgDuration=b.avgDuration||45; // default 45 min
+  if(!avgPrice || avgPrice<=0) return 0;
+  if(avgDuration<=0) avgDuration=45;
+  var programariPerOra=60/avgDuration;
+  // Capacitatea = nr programări × preț × procentul admin (ce pune frizerul)
+  // La 50% admin: fiecare programare de 80 lei → pune 40 lei
+  // Deci capacitate în "lei puși" = ore × programări/oră × preț × 0.5
+  // Dar gradul de ocupare trebuie calculat pe real, nu pe pus
+  // Capacitate reală = ore × programări/oră × preț
+  return hours * programariPerOra * avgPrice;
+}
+
+// Calcul programări maxime pe zi
+function getMaxAppointmentsPerDay(hoursDay, b){
+  var avgDuration=b.avgDuration||45;
+  if(avgDuration<=0) avgDuration=45;
+  return Math.floor((hoursDay*60)/avgDuration);
+}
+
+// Calcul zile lucrătoare în lună (exclusiv concedii) + ore totale
+function getWorkingDaysInMonth(b, monthKey, vacDays){
+  var p=monthKey.split('-');
+  var year=parseInt(p[0]), month=parseInt(p[1]);
+  var daysInMonth=new Date(year,month,0).getDate();
+  var count=0;
+  var vacSet=new Set((vacDays||[]).map(function(v){ return v.date||v; }));
+  for(var d=1;d<=daysInMonth;d++){
+    var dt=new Date(year,month-1,d);
+    var dayOfWeek=dt.getDay();
+    var dateStr=year+'-'+String(month).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    if(getEffectiveHoursForDay(b,dayOfWeek)>0 && !vacSet.has(dateStr)) count++;
+  }
+  return count;
+}
+
+// Calcul total ore disponibile în lună
+function getTotalHoursInMonth(b, monthKey, vacDays){
+  var p=monthKey.split('-');
+  var year=parseInt(p[0]), month=parseInt(p[1]);
+  var daysInMonth=new Date(year,month,0).getDate();
+  var total=0;
+  var vacSet=new Set((vacDays||[]).map(function(v){ return v.date||v; }));
+  for(var d=1;d<=daysInMonth;d++){
+    var dt=new Date(year,month-1,d);
+    var dayOfWeek=dt.getDay();
+    var dateStr=year+'-'+String(month).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    if(!vacSet.has(dateStr)) total+=getEffectiveHoursForDay(b,dayOfWeek);
+  }
+  return total;
+}
+
+// Calcul zile lucrătoare trecute (până la ziua curentă)
+function getWorkingDaysPassed(b, monthKey, vacDays){
+  var p=monthKey.split('-');
+  var year=parseInt(p[0]), month=parseInt(p[1]);
+  var today=new Date();
+  var maxDay=(year===today.getFullYear()&&month===today.getMonth()+1)?today.getDate():new Date(year,month,0).getDate();
+  var count=0;
+  var vacSet=new Set((vacDays||[]).map(function(v){ return v.date||v; }));
+  for(var d=1;d<=maxDay;d++){
+    var dt=new Date(year,month-1,d);
+    var dayOfWeek=dt.getDay();
+    var dateStr=year+'-'+String(month).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    if(getEffectiveHoursForDay(b,dayOfWeek)>0 && !vacSet.has(dateStr)) count++;
+  }
+  return count;
+}
+
+// Calcul ore trecute (până la ziua curentă)
+function getHoursPassed(b, monthKey, vacDays){
+  var p=monthKey.split('-');
+  var year=parseInt(p[0]), month=parseInt(p[1]);
+  var today=new Date();
+  var maxDay=(year===today.getFullYear()&&month===today.getMonth()+1)?today.getDate():new Date(year,month,0).getDate();
+  var total=0;
+  var vacSet=new Set((vacDays||[]).map(function(v){ return v.date||v; }));
+  for(var d=1;d<=maxDay;d++){
+    var dt=new Date(year,month-1,d);
+    var dayOfWeek=dt.getDay();
+    var dateStr=year+'-'+String(month).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    if(!vacSet.has(dateStr)) total+=getEffectiveHoursForDay(b,dayOfWeek);
+  }
+  return total;
+}
+
+// Calcul preț mediu/oră din ultimele 3 luni
+async function calcAvgPricePerHour(barberId, barberSettings){
+  if(barberSettings.avgPrice && barberSettings.avgPrice>0) return barberSettings.avgPrice;
+  var now=new Date();
+  var totalAmount=0, totalHours=0;
+  for(var i=1;i<=3;i++){
+    var d=new Date(now.getFullYear(),now.getMonth()-i,1);
+    var mk=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+    try {
+      var snap=await getDocs(query(collection(db,'entries'),where('barberId','==',barberId),where('month','==',mk)));
+      var mTotal=0; snap.forEach(function(doc){ mTotal+=doc.data().amount; });
+      if(mTotal>0){
+        var vacSnap=await getDocs(query(collection(db,'vacations'),where('barberId','==',barberId),where('month','==',mk)));
+        var vacs=[]; vacSnap.forEach(function(d2){ vacs.push(d2.data()); });
+        var wDays=getWorkingDaysPassed(barberSettings,mk,vacs);
+        var effH=getEffectiveHours(barberSettings);
+        totalAmount+=mTotal;
+        totalHours+=wDays*effH;
+      }
+    } catch(e){}
+  }
+  return totalHours>0?Math.round(totalAmount/totalHours):0;
+}
+
+// Calcul grad de ocupare
+function calcOccupancy(totalPut, barberSettings, workDaysPassed, avgPricePerHour){
+  if(!avgPricePerHour||avgPricePerHour<=0||!workDaysPassed) return 0;
+  var effH=getEffectiveHours(barberSettings);
+  var maxCapacity=workDaysPassed*effH*avgPricePerHour;
+  // totalPut e la 50% admin, deci total real salon = totalPut / (adminPct/100)
+  // Dar gradul de ocupare se calculează pe totalul real
+  var adminPct=50; // default sub ob.1
+  var totalReal=adminPct>0?(totalPut/(adminPct/100)):0;
+  return maxCapacity>0?Math.min(100,Math.round(totalReal/maxCapacity*100)):0;
+}
+
+// Calcul procentul admin pentru O ZI bazat pe totalul acumulat PÂNĂ IERI
+function getDayAdminPct(totalUntilYesterday, b){
+  var goal=b.goal||0, goal2=b.goal2||0;
+  var pct1=b.pct1||40, pct2=b.pct2||30;
+  if(goal2>0 && totalUntilYesterday>=goal2) return pct2;
+  if(goal>0 && totalUntilYesterday>=goal) return pct1;
+  return 50;
+}
+
+// Calcul complet zi cu zi: parcurge entries sortate pe zile
+// Returnează: { totalAdmin, totalReal, barberEarnings, currentDayPct }
+function calcMonthBreakdown(entries, b){
+  // Grupăm entries pe zile, sortate cronologic
+  var dayMap={};
+  entries.forEach(function(e){
+    if(!dayMap[e.date]) dayMap[e.date]=[];
+    dayMap[e.date].push(e);
+  });
+  var days=Object.keys(dayMap).sort();
+
+  var totalAdmin=0; // ce a pus frizerul în app (banii tăi)
+  var totalReal=0; // total real salon
+  var barberEarnings=0; // câștigul frizerului
+  var cumAdmin=0; // acumulator pentru praguri
+
+  days.forEach(function(day){
+    // La începutul zilei, verificăm totalul acumulat PÂNĂ IERI
+    var adminPctToday=getDayAdminPct(cumAdmin, b);
+    var barberPctToday=100-adminPctToday;
+
+    // Toate sumele din ziua asta sunt la procentul zilei
+    var dayTotal=dayMap[day].reduce(function(s,e){ return s+e.amount; },0);
+
+    // dayTotal = ce a pus frizerul = procentul admin din real
+    // Deci: dayTotal = realDay * (adminPctToday/100)
+    // realDay = dayTotal / (adminPctToday/100)
+    var realDay=(adminPctToday>0)?(dayTotal/(adminPctToday/100)):0;
+    var barberDay=realDay-dayTotal;
+
+    totalAdmin+=dayTotal;
+    totalReal+=realDay;
+    barberEarnings+=barberDay;
+    cumAdmin+=dayTotal;
+  });
+
+  // Procentul curent (pentru ziua de azi/următoarea zi)
+  var currentDayPct=getDayAdminPct(cumAdmin, b);
+
+  return {
+    totalAdmin: Math.round(totalAdmin),
+    totalReal: Math.round(totalReal),
+    barberEarnings: Math.round(barberEarnings),
+    currentDayPct: currentDayPct
+  };
+}
+
+// Calcul procentul curent admin (wrapper simplu)
+function getCurrentAdminPct(totalMonth, b){
+  return getDayAdminPct(totalMonth, b);
+}
+
+// Calcul suma reală salon din entries (zi cu zi)
+function calcRealRevenue(totalMonth, b, entries){
+  if(entries && entries.length){
+    return calcMonthBreakdown(entries, b).totalReal;
+  }
+  // Fallback fără entries detaliate
+  var adminPct=getDayAdminPct(totalMonth, b);
+  return adminPct>0?Math.round(totalMonth/(adminPct/100)):0;
+}
+
+// Calcul câștigul frizerului (zi cu zi)
+function calcBarberEarnings(totalMonth, b, entries){
+  if(entries && entries.length){
+    return calcMonthBreakdown(entries, b).barberEarnings;
+  }
+  var real=calcRealRevenue(totalMonth, b);
+  return real-totalMonth;
+}
+
+// Mesaj motivațional
+function getMotivationMsg(occupancy, compPct){
+  var msg='', sub='';
+  if(occupancy<30){
+    msg='Ai mult loc de creștere — fiecare client contează!';
+  } else if(occupancy<50){
+    msg='Bun start, dar poți mai mult!';
+  } else if(occupancy<70){
+    msg='Mergi bine! Ești pe drumul bun.';
+  } else if(occupancy<85){
+    msg='Excelent! Ești aproape full!';
+  } else {
+    msg='Ești FULL! Bravo!';
+  }
+  if(compPct!==null && compPct!==undefined){
+    if(compPct>0) sub='Cu '+Math.abs(Math.round(compPct))+'% mai ocupat decât luna trecută';
+    else if(compPct<0) sub='Cu '+Math.abs(Math.round(compPct))+'% sub luna trecută — hai să recuperăm!';
+    else sub='La fel ca luna trecută';
+  }
+  return {msg:msg,sub:sub};
+}
+
+// Backwards compat - keep old name working
+async function renderManageList(){ await openSettingsModal(); }
 
 // ── BACKUP ──
 async function exportBackup(){
@@ -1731,6 +2893,7 @@ function showBarberView(){
   document.getElementById('headerSub').textContent=(barberData.name||'Frizer')+' · Evidență personală';
   hide('adminView'); show('barberView'); hide('undoBtn');
   maybeInitChat(barberData.name||'Frizer');
+  loadAnnouncement();
   document.getElementById('myName').textContent=barberData.name||'—';
   viewMonth=new Date().toISOString().slice(0,7);
   updateMonthLabel();
@@ -1783,8 +2946,10 @@ async function renderBarberView(){
   var bSnap=await getDoc(doc(db,'barbers',currentUser.uid));
   if(bSnap.exists()) barberData={ id:currentUser.uid,...bSnap.data() };
   var goal=barberData.goal||0;
-  document.getElementById('myGoalTxt').textContent='Obiectiv lunar: '+fmt(goal);
+  var goal2=barberData.goal2||0;
+  document.getElementById('myGoalTxt').textContent='Ob.1: '+fmt(goal)+' · Ob.2: '+fmt(goal2);
   document.getElementById('bGoal').textContent=fmt(goal);
+  document.getElementById('bGoal2').textContent=fmt(goal2);
 
   var snap=await getDocs(query(collection(db,'entries'),where('barberId','==',currentUser.uid),where('month','==',viewMonth)));
   var entries=[]; snap.forEach(function(d){ entries.push({ docId:d.id,...d.data() }); });
@@ -1796,13 +2961,83 @@ async function renderBarberView(){
 
   var mTotal=entries.reduce(function(s,e){ return s+e.amount; },0);
   var pct=goal>0?Math.min(100,Math.round(mTotal/goal*100)):0;
+  var pct2=goal2>0?Math.min(100,Math.round(mTotal/goal2*100)):0;
   var reached=goal>0&&mTotal>=goal;
-  document.getElementById('myCard').className='barber-card'+(reached?' goal-reached':'');
+  var reached2=goal2>0&&mTotal>=goal2;
+  document.getElementById('myCard').className='barber-card'+(reached2?' goal2-reached':(reached?' goal-reached':''));
   document.getElementById('myProgress').style.width=pct+'%';
+  document.getElementById('myProgress2').style.width=pct2+'%';
+  document.getElementById('myProgressLabel1').textContent='OB.1 — '+pct+'%';
+  document.getElementById('myProgressLabel2').textContent='OB.2 — '+pct2+'%';
   document.getElementById('myMonthTotal').textContent=fmt(mTotal);
   document.getElementById('bSumMonth').textContent=fmt(mTotal);
   document.getElementById('myPct').textContent=pct+'%';
+  document.getElementById('myPct2').textContent=pct2+'%';
   document.getElementById('myVacCount').textContent=vacDays.length;
+
+  // ── STATS DASHBOARD ──
+  var barberBreakdown=calcMonthBreakdown(entries,barberData);
+  var barberEarnings=barberBreakdown.barberEarnings;
+  var realRevenue=barberBreakdown.totalReal;
+  var hoursPassed=getHoursPassed(barberData,viewMonth,vacDays);
+  var hoursTotal=getTotalHoursInMonth(barberData,viewMonth,vacDays);
+  var wDaysPassed=getWorkingDaysPassed(barberData,viewMonth,vacDays);
+  var wDaysTotal=getWorkingDaysInMonth(barberData,viewMonth,vacDays);
+  var wDaysRemaining=Math.max(0,wDaysTotal-wDaysPassed);
+  var maxCap=calcCapacity(hoursPassed,barberData);
+  var occupancy=maxCap>0?Math.min(100,Math.round(realRevenue/maxCap*100)):0;
+
+  // Estimare final lună
+  var dailyRate=wDaysPassed>0?(mTotal/wDaysPassed):0;
+  var estimateTotal=Math.round(mTotal+dailyRate*wDaysRemaining);
+  var currentPct=barberBreakdown.currentDayPct;
+  var remainingAdmin=Math.round(dailyRate*wDaysRemaining);
+  var remainingReal=currentPct>0?Math.round(remainingAdmin/(currentPct/100)):0;
+  var remainingBarber=remainingReal-remainingAdmin;
+  var estimateEarnings=barberEarnings+remainingBarber;
+
+  // Programări/zi necesare pt Ob.1
+  var remainToGoal=Math.max(0,(goal>0?goal:0)-mTotal);
+  var avgPrice=barberData.avgPrice||0;
+  var avgDuration=barberData.avgDuration||45;
+  var neededPerDay=0;
+  var neededAppointments=0;
+  if(remainToGoal>0 && wDaysRemaining>0 && avgPrice>0){
+    // Câți lei/zi trebuie să pună (la procentul curent)
+    var adminNeededPerDay=Math.ceil(remainToGoal/wDaysRemaining);
+    neededPerDay=adminNeededPerDay;
+    // Câte programări = lei/zi reali / preț programare
+    var realNeededPerDay=currentPct>0?(adminNeededPerDay/(currentPct/100)):0;
+    neededAppointments=Math.ceil(realNeededPerDay/avgPrice);
+  }
+
+  // Comparație cu luna trecută
+  var compPct=null;
+  try {
+    var prevD=new Date(viewMonth+'-01'); prevD.setMonth(prevD.getMonth()-1);
+    var prevMK=prevD.getFullYear()+'-'+String(prevD.getMonth()+1).padStart(2,'0');
+    var prevSnap=await getDocs(query(collection(db,'entries'),where('barberId','==',currentUser.uid),where('month','==',prevMK)));
+    var prevEntries=[]; prevSnap.forEach(function(d){ prevEntries.push(d.data()); });
+    // Filtrăm doar până la aceeași zi a lunii
+    var today=new Date();
+    var cutoffDay=(viewMonth===today.toISOString().slice(0,7))?today.getDate():new Date(parseInt(viewMonth.slice(0,4)),parseInt(viewMonth.slice(5)),0).getDate();
+    var prevTotal=prevEntries.filter(function(e){ return parseInt(e.date.slice(8))<=cutoffDay; }).reduce(function(s,e){ return s+e.amount; },0);
+    if(prevTotal>0) compPct=((mTotal-prevTotal)/prevTotal)*100;
+  } catch(e){}
+
+  // Update UI
+  document.getElementById('myEarnings').textContent=fmt(barberEarnings);
+  var occEl=document.getElementById('myOccupancy');
+  occEl.textContent=occupancy+'%';
+  occEl.className='stat-value '+(occupancy>=70?'green':occupancy>=40?'gold':'red');
+  document.getElementById('myEstimate').textContent=fmt(estimateEarnings);
+  document.getElementById('myNeeded').textContent=reached?'—':(neededAppointments>0?neededAppointments+' prog/zi':neededPerDay+' lei/zi');
+
+  var motiv=getMotivationMsg(occupancy,compPct);
+  document.getElementById('myMotivMsg').textContent=motiv.msg;
+  var subEl=document.getElementById('myMotivSub');
+  subEl.textContent=motiv.sub;
+  subEl.className='motivation-sub '+(compPct!==null?(compPct>=0?'up':'down'):'');
 
   // Entries
   var el=document.getElementById('myEntries'); el.innerHTML='';
@@ -1865,6 +3100,8 @@ async function renderBarberView(){
   // Notes
   var noteSnap=await getDoc(doc(db,'notes',currentUser.uid));
   if(noteSnap.exists()) document.getElementById('myNotes').value=noteSnap.data().text||'';
+  // Stock products
+  await renderBarberStockList();
 }
 
 async function addMyEntry(){
@@ -1900,11 +3137,27 @@ async function renderBarberChart(){
     var snap=await getDocs(query(collection(db,'entries'),where('barberId','==',currentUser.uid),where('month','==',mk)));
     var t=0; snap.forEach(function(d){ t+=d.data().amount; }); return t;
   }));
+  // Proiecție: luna curentă = estimare bazată pe ritm
+  var projection=totals.slice();
+  var curMK=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
+  var curIdx=months.indexOf(curMK);
+  if(curIdx>=0){
+    var wPassed=getWorkingDaysPassed(barberData,curMK,[]);
+    var wTotal=getWorkingDaysInMonth(barberData,curMK,[]);
+    if(wPassed>0&&wTotal>wPassed){
+      projection[curIdx]=Math.round(totals[curIdx]/wPassed*wTotal);
+    }
+  }
   var mNames=['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Nov','Dec'];
   var labels=months.map(function(mk){ return mNames[parseInt(mk.slice(5))-1]+' '+mk.slice(2,4); });
   var ctx=document.getElementById('barberChart').getContext('2d');
   if(barberChart) barberChart.destroy();
-  barberChart=new Chart(ctx,{ type:'bar', data:{ labels:labels, datasets:[{ label:'Incasari', data:totals, backgroundColor:'rgba(200,169,110,0.25)', borderColor:'#c8a96e', borderWidth:2, borderRadius:6 },{ label:'Obiectiv', data:months.map(function(){ return barberData.goal||0; }), type:'line', borderColor:'rgba(74,222,128,0.5)', borderWidth:1.5, borderDash:[5,4], pointRadius:0, fill:false }] }, options:{ responsive:true, plugins:{ legend:{ labels:{ color:'#888', font:{family:'DM Sans',size:11}, boxWidth:12, padding:14 } }, tooltip:{ backgroundColor:'#1a1a1a', borderColor:'#2e2e2e', borderWidth:1, titleColor:'#f0ede8', bodyColor:'#888', callbacks:{ label:function(c){ return ' '+c.dataset.label+': '+c.parsed.y.toLocaleString('ro-RO')+' lei'; } } } }, scales:{ x:{ ticks:{ color:'#666', font:{size:10} }, grid:{ color:'#1f1f1f' } }, y:{ ticks:{ color:'#666', font:{size:10}, callback:function(v){ return v.toLocaleString('ro-RO')+' lei'; } }, grid:{ color:'#1f1f1f' } } } } });
+  barberChart=new Chart(ctx,{ type:'bar', data:{ labels:labels, datasets:[
+    { label:'Încasări', data:totals, backgroundColor:'rgba(200,169,110,0.25)', borderColor:'#c8a96e', borderWidth:2, borderRadius:6 },
+    { label:'Proiecție', data:projection, type:'line', borderColor:'rgba(251,191,36,0.5)', borderWidth:2, borderDash:[4,4], pointRadius:3, pointBackgroundColor:'rgba(251,191,36,0.8)', fill:false, tension:0.3 },
+    { label:'Obiectiv 1', data:months.map(function(){ return barberData.goal||0; }), type:'line', borderColor:'rgba(74,222,128,0.5)', borderWidth:1.5, borderDash:[5,4], pointRadius:0, fill:false },
+    { label:'Obiectiv 2', data:months.map(function(){ return barberData.goal2||0; }), type:'line', borderColor:'rgba(251,191,36,0.3)', borderWidth:1.5, borderDash:[3,6], pointRadius:0, fill:false }
+  ] }, options:{ responsive:true, plugins:{ legend:{ labels:{ color:'#888', font:{family:'DM Sans',size:11}, boxWidth:12, padding:14 } }, tooltip:{ backgroundColor:'#1a1a1a', borderColor:'#2e2e2e', borderWidth:1, titleColor:'#f0ede8', bodyColor:'#888', callbacks:{ label:function(c){ return ' '+c.dataset.label+': '+c.parsed.y.toLocaleString('ro-RO')+' lei'; } } } }, scales:{ x:{ ticks:{ color:'#666', font:{size:10} }, grid:{ color:'#1f1f1f' } }, y:{ ticks:{ color:'#666', font:{size:10}, callback:function(v){ return v.toLocaleString('ro-RO')+' lei'; } }, grid:{ color:'#1f1f1f' } } } } });
 }
 
 window.loadVacDaysAdmin = loadVacDaysAdmin;
@@ -1926,13 +3179,24 @@ function getBarberName(barberId){
   return adminBarberNames[barberId]||'Frizer necunoscut';
 }
 
+var _recentNotifKeys={};
 async function saveNotif(type, title, msg){
   try {
-    await addDoc(collection(db,'notifications'),{
+    // De-duplicare locală (per tab): evită notificări identice în 5 secunde
+    var key=type+'|'+title+'|'+msg;
+    var now=Date.now();
+    if(_recentNotifKeys[key] && (now - _recentNotifKeys[key]) < 5000) return;
+    _recentNotifKeys[key]=now;
+    Object.keys(_recentNotifKeys).forEach(function(k){ if(now - _recentNotifKeys[k] > 10000) delete _recentNotifKeys[k]; });
+
+    // De-duplicare cross-device: folosim un ID determinist bazat pe conținut
+    // Astfel, oricare tab ajunge primul scrie, al doilea suprascrie cu aceleași date (fără duplicat)
+    var notifId = type+'_'+msg.replace(/[^a-zA-Z0-9]/g,'_').slice(0,80)+'_'+Math.floor(now/10000);
+    await setDoc(doc(db,'notifications',notifId),{
       type: type,
       title: title,
       msg: msg,
-      ts: Date.now(),
+      ts: now,
       read: false
     });
   } catch(e){ console.error('Notif save error:',e); }
@@ -2012,9 +3276,12 @@ function startAdminRealtimeListener(){
   // Pornim și listener-ul de istoric notificări
   startNotifHistoryListener();
 
-  // Clear button
+  // Clear button (doar o dată)
   var clearBtn=document.getElementById('adminClearNotifs');
-  if(clearBtn) clearBtn.addEventListener('click', clearAllNotifs);
+  if(clearBtn && !clearBtn._listenerAdded) {
+    clearBtn._listenerAdded=true;
+    clearBtn.addEventListener('click', clearAllNotifs);
+  }
 
   adminRealtimeUnsub=onSnapshot(collection(db,'entries'),function(snap){
     if(adminFirstLoad){
@@ -2544,92 +3811,129 @@ function maybeInitChat(name){
   initChat();
 }
 
-// ── MERO SYNC ──
-var MERO_PAGE_ID = '5da8bbe341ae460c8a5f06df';
-// Worker IDs (from /worker endpoint _id field)
-var MERO_WORKER_IDS = {
-  '65564d838fcbe845d716ebe7': 'Florin Hancu',
-  '6495e557f7354746387582dc': 'Dup Casian',
-  '632894e65e4e0cf7d4f9743f': 'Ionut Mihai Nichitut',
-  '5da8bbe641ae460c8a5f06e5': 'Patrick Biriş'
+// ══════════════════════════════════════════════════
+// ── MERO SYNC (statistics2 via Cloudflare Worker POST) ──
+// ══════════════════════════════════════════════════
+var MERO_PAGE_ID='5da8bbe341ae460c8a5f06df';
+var MERO_PROXY='https://thecellmero.birispatryk2.workers.dev';
+// Worker IDs (din /worker endpoint, câmpul _id)
+var MERO_WID={
+  '65564d838fcbe845d716ebe7':'Florin Hancu',
+  '6495e557f7354746387582dc':'Dup Casian',
+  '632894e65e4e0cf7d4f9743f':'Ionut Mihai Nichitut',
+  '5da8bbe641ae460c8a5f06e5':'Patrick Biriş'
 };
-var meroMonth = new Date().toISOString().slice(0,7);
+var meroMonth=new Date().toISOString().slice(0,7);
 
 function getMeroToken(){ return localStorage.getItem('meroToken')||''; }
-function setMeroToken(t){ localStorage.setItem('meroToken', t.trim()); }
+function setMeroToken(t){ localStorage.setItem('meroToken',t.replace(/^bearer\s+/i,'').trim()); }
 
-function updateMeroStatus(state, text){
+function updateMeroStatus(st,txt){
   var el=document.getElementById('meroStatus'); if(!el) return;
-  var dotClass=state==='ok'?'green':state==='warn'?'yellow':'red';
-  el.innerHTML='<span class="mero-dot '+dotClass+'"></span> '+esc(text);
+  el.innerHTML='<span class="mero-dot '+(st==='ok'?'green':st==='warn'?'yellow':'red')+'"></span> '+esc(txt);
 }
-
 function updateMeroMonthLabel(){
-  var parts=meroMonth.split('-');
-  var mo=parseInt(parts[1])-1;
-  var label=document.getElementById('meroMonthLabel');
-  if(label) label.textContent=MONTHS[mo]+' '+parts[0];
+  var p=meroMonth.split('-');
+  var el=document.getElementById('meroMonthLabel');
+  if(el) el.textContent=MONTHS[parseInt(p[1])-1]+' '+p[0];
 }
 
-async function meroFetch(fullUrl){
-  var token=getMeroToken();
-  if(!token) throw new Error('Token lipsă');
-  var proxyBase='https://thecellmero.birispatryk2.workers.dev';
-  var resp=await fetch(proxyBase, {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({ url:fullUrl, token:token })
-  });
-  if(resp.status===401||resp.status===403){
-    updateMeroStatus('red','Token expirat! Reînnoire necesară.');
-    throw new Error('Token expirat');
-  }
-  if(!resp.ok){
-    throw new Error('Eroare proxy: '+resp.status);
-  }
-  return resp.json();
+async function meroPost(url){
+  var token=getMeroToken(); if(!token) throw new Error('Token lipsă');
+  var r=await fetch(MERO_PROXY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url:url,token:token})});
+  if(r.status===401||r.status===403){ updateMeroStatus('red','Token expirat!'); throw new Error('Token expirat'); }
+  if(!r.ok) throw new Error('Proxy: '+r.status);
+  return r.json();
 }
 
-async function meroGetWorkerStats(from, to, workerId){
-  var url='https://pro.mero.ro/api/v2.0/analytics/page/'+MERO_PAGE_ID+'/statistics2?from='+encodeURIComponent(from)+'&to='+encodeURIComponent(to)+'&workerId='+workerId;
-  return meroFetch(url);
-}
-
-async function meroGetAllStats(from, to){
-  var url='https://pro.mero.ro/api/v2.0/analytics/page/'+MERO_PAGE_ID+'/statistics2?from='+encodeURIComponent(from)+'&to='+encodeURIComponent(to);
-  return meroFetch(url);
+function meroStatsUrl(from,to,workerId){
+  var u='https://pro.mero.ro/api/v2.0/analytics/page/'+MERO_PAGE_ID+'/statistics2?from='+encodeURIComponent(from)+'&to='+encodeURIComponent(to);
+  if(workerId) u+='&workerId='+workerId;
+  return u;
 }
 
 async function meroTestConnection(){
   try {
-    await meroFetch('https://pro.mero.ro/api/v2.0/business/page/'+MERO_PAGE_ID+'/worker');
-    updateMeroStatus('ok','Conectat la Mero ✓');
-    return true;
-  } catch(e){
-    updateMeroStatus('red', e.message.includes('expirat')?'Token expirat!':'Eroare: '+e.message);
-    return false;
-  }
+    await meroPost('https://pro.mero.ro/api/v2.0/business/page/'+MERO_PAGE_ID+'/worker');
+    updateMeroStatus('ok','Conectat la Mero ✓'); return true;
+  } catch(e){ updateMeroStatus('red',e.message); return false; }
 }
 
-function meroAmount(obj){
-  if(!obj||!obj.amount) return 0;
-  var val=obj.amount.value||0, scale=obj.amount.scale||0;
-  return val/Math.pow(10,scale);
-}
-
-function matchBarberToWorker(barber){
-  var name=(barber.name||'').toLowerCase();
-  var map={ 'florin':'65564d838fcbe845d716ebe7', 'casian':'6495e557f7354746387582dc',
-    'ionut':'632894e65e4e0cf7d4f9743f', 'ionuț':'632894e65e4e0cf7d4f9743f',
-    'nichitut':'632894e65e4e0cf7d4f9743f', 'nichituț':'632894e65e4e0cf7d4f9743f',
-    'patrick':'5da8bbe641ae460c8a5f06e5' };
-  for(var key in map){ if(name.indexOf(key)!==-1) return map[key]; }
+// Map app barber name → Mero worker ID
+function matchBarberToWorker(b){
+  var n=(b.name||'').toLowerCase();
+  var m={'florin':'65564d838fcbe845d716ebe7','casian':'6495e557f7354746387582dc',
+    'ionut':'632894e65e4e0cf7d4f9743f','ionuț':'632894e65e4e0cf7d4f9743f',
+    'nichitut':'632894e65e4e0cf7d4f9743f','nichituț':'632894e65e4e0cf7d4f9743f',
+    'patrick':'5da8bbe641ae460c8a5f06e5'};
+  for(var k in m){ if(n.indexOf(k)!==-1) return m[k]; }
   return null;
 }
 
+// Check if barber is Patrick (admin = 100%)
+function isPatrickBarber(b){
+  return (b.name||'').toLowerCase().indexOf('patrick')!==-1;
+}
+
+// Calcul procente din suma Mero (brut)
+// Până la Ob.1 → 50% admin (frizerul ia 50%)
+// Între Ob.1 și Ob.2 → 60% admin (frizerul ia 40%)  
+// Peste Ob.2 → 70% admin (frizerul ia 30%)
+// Patrick = 100% la el
+function calcMeroBreakdown(meroIncome, b){
+  if(isPatrickBarber(b)){
+    return { total:meroIncome, adminShare:0, barberShare:meroIncome, prag:'Patrick (100%)' };
+  }
+  var g1=b.goal||0, g2=b.goal2||0;
+  var adminShare=0, barberShare=0, remaining=meroIncome;
+  var prag='sub Ob.1 (50%)';
+
+  // Prag 1: până la Ob.1 → 50% admin
+  if(g1>0 && remaining>0){
+    var chunk=Math.min(remaining, g1);
+    adminShare+=chunk*0.5;
+    barberShare+=chunk*0.5;
+    remaining-=chunk;
+  } else if(g1===0){
+    // Fără obiective, tot e 50%
+    adminShare=meroIncome*0.5;
+    barberShare=meroIncome*0.5;
+    return { total:meroIncome, adminShare:Math.round(adminShare), barberShare:Math.round(barberShare), prag:prag };
+  }
+
+  // Prag 2: între Ob.1 și Ob.2 → 60% admin
+  if(g2>0 && remaining>0){
+    prag='între Ob.1-Ob.2 (60%)';
+    var chunk2=Math.min(remaining, g2-g1);
+    adminShare+=chunk2*0.6;
+    barberShare+=chunk2*0.4;
+    remaining-=chunk2;
+  }
+
+  // Prag 3: peste Ob.2 → 70% admin
+  if(remaining>0){
+    prag='peste Ob.2 (70%)';
+    adminShare+=remaining*0.7;
+    barberShare+=remaining*0.3;
+  }
+
+  if(meroIncome<=g1) prag='sub Ob.1 (50%)';
+  else if(g2>0 && meroIncome<=g2) prag='între Ob.1-Ob.2 (60%)';
+  else if(g2>0) prag='peste Ob.2 (70%)';
+
+  return { total:Math.round(meroIncome), adminShare:Math.round(adminShare), barberShare:Math.round(barberShare), prag:prag };
+}
+
+// Calcul sugestie: ce trebuie introdus în app pe baza Mero
+function calcSuggestion(meroIncome, b){
+  if(isPatrickBarber(b)) return { toEnter:meroIncome, explanation:'Patrick: 100% → introdu '+fmt(meroIncome) };
+  var bd=calcMeroBreakdown(meroIncome,b);
+  return { toEnter:bd.adminShare, explanation:'Din '+fmt(meroIncome)+' Mero → introduci '+fmt(bd.adminShare)+' (partea admin)' };
+}
+
+// ── MERO SYNC MONTH (tab Mero) ──
 async function meroSyncMonth(){
-  var parts=meroMonth.split('-');
-  var yr=parseInt(parts[0]), mo=parseInt(parts[1]);
+  var p=meroMonth.split('-'), yr=parseInt(p[0]), mo=parseInt(p[1]);
   var from=yr+'-'+String(mo).padStart(2,'0')+'-01T00:00:00.000Z';
   var lastDay=new Date(yr,mo,0).getDate();
   var to=yr+'-'+String(mo).padStart(2,'0')+'-'+lastDay+'T23:59:59.999Z';
@@ -2640,232 +3944,240 @@ async function meroSyncMonth(){
     var barbers=await getBarbers();
     var appEntries=await getAllEntriesForMonth(monthKey);
     var meroData={};
-    var workerIds=Object.keys(MERO_WORKER_IDS);
-    for(var i=0;i<workerIds.length;i++){
-      try { 
-        var statsResp=await meroGetWorkerStats(from,to,workerIds[i]);
-        meroData[workerIds[i]]=statsResp.result||null;
-      } catch(e){ meroData[workerIds[i]]=null; }
+    var wids=Object.keys(MERO_WID);
+    for(var i=0;i<wids.length;i++){
+      try { var r=await meroPost(meroStatsUrl(from,to,wids[i])); meroData[wids[i]]=r.result||null; }
+      catch(e){ meroData[wids[i]]=null; }
     }
-    var stats=null;
-    try { var allResp=await meroGetAllStats(from,to); stats=allResp; } catch(e){}
-    renderMeroComparison(barbers,appEntries,meroData,stats,monthKey);
+    var allStats=null;
+    try { var ar=await meroPost(meroStatsUrl(from,to)); allStats=ar; } catch(e){}
+    renderMeroComparison(barbers,appEntries,meroData,allStats,monthKey);
     updateMeroStatus('ok','Sincronizat ✓ — '+new Date().toLocaleTimeString('ro-RO'));
     toast('Sincronizare completă!','success');
-  } catch(e){
-    toast('Eroare sincronizare: '+e.message,'error');
-  }
+  } catch(e){ toast('Eroare: '+e.message,'error'); }
 }
 
-function renderMeroComparison(barbers,appEntries,meroData,stats,monthKey){
-  var container=document.getElementById('meroCompareCards');
-  var resultsEl=document.getElementById('meroResults');
-  if(!container||!resultsEl) return;
-  resultsEl.style.display='block';
-  container.innerHTML='';
-
-  var grandApp=0, grandMero=0;
+function renderMeroComparison(barbers,appEntries,meroData,allStats,monthKey){
+  var c=document.getElementById('meroCompareCards');
+  var rEl=document.getElementById('meroResults');
+  if(!c||!rEl) return;
+  rEl.style.display='block'; c.innerHTML='';
+  var gApp=0,gMero=0,gAdmin=0,gBarber=0;
 
   barbers.forEach(function(b){
-    var workerId=matchBarberToWorker(b);
-    var appTotal=(appEntries[b.id]||[]).reduce(function(s,e){ return s+e.amount; },0);
-    var mero=workerId?meroData[workerId]:null;
-    var meroTotal=mero&&mero.bookings?mero.bookings.finishedStats.income:0;
+    var wId=matchBarberToWorker(b);
+    var appTotal=(appEntries[b.id]||[]).reduce(function(s,e){return s+e.amount;},0);
+    var mero=wId?meroData[wId]:null;
+    var meroIncome=mero&&mero.bookings?mero.bookings.finishedStats.income:0;
     var meroCount=mero&&mero.bookings?mero.bookings.finishedStats.count:0;
-    var meroAvg=mero&&mero.clients?mero.clients.averageBookingValue:0;
-    var meroCancelled=mero&&mero.bookings?mero.bookings.cancelledStats.count:0;
-    var meroNoShow=mero&&mero.bookings?mero.bookings.noShowStats.count:0;
+    var bd=calcMeroBreakdown(meroIncome,b);
+    var sug=calcSuggestion(meroIncome,b);
 
-    grandApp+=appTotal; grandMero+=meroTotal;
+    gApp+=appTotal; gMero+=meroIncome; gAdmin+=bd.adminShare; gBarber+=bd.barberShare;
 
-    var diff=appTotal-meroTotal;
+    var diff=appTotal-bd.adminShare;
     var diffClass=Math.abs(diff)<1?'match':'mismatch';
-    var diffText=Math.abs(diff)<1?'✓ Se potrivește':(diff>0?'+'+fmt(diff)+' în plus în app':fmt(Math.abs(diff))+' lipsă din app');
+    var diffText=Math.abs(diff)<1?'✓ Se potrivește':(diff>0?'+'+fmt(diff)+' în plus':fmt(Math.abs(diff))+' lipsă');
 
-    var servicesHtml='';
+    var servHtml='';
     if(mero&&mero.services&&mero.services.length){
-      servicesHtml='<div style="margin-top:6px;">';
-      mero.services.forEach(function(s){
-        servicesHtml+='<div class="mero-service-row"><span>'+esc(s.name)+' ×'+s.count+'</span><span>'+fmt(s.income)+'</span></div>';
-      });
-      servicesHtml+='</div>';
+      mero.services.forEach(function(s){ servHtml+='<div class="mero-service-row"><span>'+esc(s.name)+' ×'+s.count+'</span><span>'+fmt(s.income)+'</span></div>'; });
     }
 
     var card=document.createElement('div');
     card.className='mero-compare-card';
     card.innerHTML=
-      '<div class="mc-name">'+esc(b.name)+(workerId?'':' <span style="color:var(--red);font-size:0.7rem;">(neconectat Mero)</span>')+'</div>'+
-      '<div class="mero-compare-row"><span class="mc-label">📱 Mero total</span><span class="mc-val neutral">'+fmt(meroTotal)+'</span></div>'+
-      '<div class="mero-compare-row"><span class="mc-label">📋 Aplicație total</span><span class="mc-val neutral">'+fmt(appTotal)+'</span></div>'+
-      '<div class="mero-compare-row"><span class="mc-label">⚖️ Diferență</span><span class="mc-val '+diffClass+'">'+diffText+'</span></div>'+
-      '<div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.06);">'+
-        '<div class="mero-compare-row"><span class="mc-label">Programări finalizate</span><span class="mc-val neutral">'+meroCount+'</span></div>'+
-        '<div class="mero-compare-row"><span class="mc-label">Valoare medie</span><span class="mc-val neutral">'+(meroAvg?meroAvg.toFixed(0)+' lei':'—')+'</span></div>'+
-        '<div class="mero-compare-row"><span class="mc-label">Anulări</span><span class="mc-val neutral">'+meroCancelled+'</span></div>'+
-        '<div class="mero-compare-row"><span class="mc-label">Neprezentări</span><span class="mc-val neutral">'+meroNoShow+'</span></div>'+
-      '</div>'+servicesHtml;
-    container.appendChild(card);
+      '<div class="mc-name">'+esc(b.name)+(wId?'':' <span style="color:var(--red);font-size:0.7rem;">(neconectat)</span>')+'</div>'+
+      '<div class="mero-breakdown">'+
+        '<div class="mero-breakdown-item"><div class="mbi-label">Mero brut</div><div class="mbi-val" style="color:var(--accent);">'+fmt(meroIncome)+'</div></div>'+
+        '<div class="mero-breakdown-item"><div class="mbi-label">Admin</div><div class="mbi-val" style="color:var(--green);">'+fmt(bd.adminShare)+'</div></div>'+
+        '<div class="mero-breakdown-item"><div class="mbi-label">Frizer</div><div class="mbi-val" style="color:var(--blue);">'+fmt(bd.barberShare)+'</div></div>'+
+      '</div>'+
+      '<div class="mero-compare-row" style="margin-top:8px;"><span class="mc-label">Prag</span><span class="mc-val neutral" style="font-size:0.78rem;">'+bd.prag+'</span></div>'+
+      '<div class="mero-compare-row"><span class="mc-label">În app (admin)</span><span class="mc-val neutral">'+fmt(appTotal)+'</span></div>'+
+      '<div class="mero-compare-row"><span class="mc-label">Trebuia</span><span class="mc-val neutral">'+fmt(bd.adminShare)+'</span></div>'+
+      '<div class="mero-compare-row"><span class="mc-label">Diferență</span><span class="mc-val '+diffClass+'">'+diffText+'</span></div>'+
+      '<div class="mero-compare-row"><span class="mc-label">Programări</span><span class="mc-val neutral">'+meroCount+'</span></div>'+
+      (servHtml?'<div style="margin-top:6px;padding-top:6px;border-top:1px solid var(--border);">'+servHtml+'</div>':'')+
+      (Math.abs(diff)>=1?'<div class="mero-suggestion">💡 '+sug.explanation+'</div>':'');
+    c.appendChild(card);
   });
 
-  // Grand total card
-  var grandDiff=grandApp-grandMero;
-  var grandClass=Math.abs(grandDiff)<1?'match':'mismatch';
-  var grandCard=document.createElement('div');
-  grandCard.className='mero-compare-card';
-  grandCard.style.borderColor='rgba(74,222,128,0.3)';
-  grandCard.innerHTML=
+  // Grand total
+  var gc=document.createElement('div');
+  gc.className='mero-compare-card';
+  gc.style.borderColor='rgba(74,222,128,0.3)';
+  gc.innerHTML=
     '<div class="mc-name" style="color:var(--green);">TOTAL GENERAL</div>'+
-    '<div class="mero-compare-row"><span class="mc-label">📱 Mero</span><span class="mc-val neutral" style="font-size:1rem;">'+fmt(grandMero)+'</span></div>'+
-    '<div class="mero-compare-row"><span class="mc-label">📋 Aplicație</span><span class="mc-val neutral" style="font-size:1rem;">'+fmt(grandApp)+'</span></div>'+
-    '<div class="mero-compare-row"><span class="mc-label">⚖️ Diferență</span><span class="mc-val '+grandClass+'" style="font-size:1rem;">'+(Math.abs(grandDiff)<1?'✓ Perfect':fmt(grandDiff))+'</span></div>';
-  container.insertBefore(grandCard, container.firstChild);
+    '<div class="mero-breakdown">'+
+      '<div class="mero-breakdown-item"><div class="mbi-label">Mero brut</div><div class="mbi-val" style="color:var(--accent);">'+fmt(gMero)+'</div></div>'+
+      '<div class="mero-breakdown-item"><div class="mbi-label">Total admin</div><div class="mbi-val" style="color:var(--green);">'+fmt(gAdmin)+'</div></div>'+
+      '<div class="mero-breakdown-item"><div class="mbi-label">Total frizeri</div><div class="mbi-val" style="color:var(--blue);">'+fmt(gBarber)+'</div></div>'+
+    '</div>'+
+    '<div class="mero-compare-row" style="margin-top:8px;"><span class="mc-label">În app</span><span class="mc-val neutral" style="font-size:1rem;">'+fmt(gApp)+'</span></div>'+
+    '<div class="mero-compare-row"><span class="mc-label">Diferență</span><span class="mc-val '+(Math.abs(gApp-gAdmin)<1?'match':'mismatch')+'" style="font-size:1rem;">'+(Math.abs(gApp-gAdmin)<1?'✓ Perfect':fmt(gApp-gAdmin))+'</span></div>';
+  c.insertBefore(gc,c.firstChild);
 
-  // Overall Statistics
-  var statsBox=document.getElementById('meroStatsBox');
-  if(stats&&stats.result){
-    var r=stats.result, bk=r.bookings||{}, cl=r.clients||{};
-    var html='<div class="mero-stats-box">'+
-      '<div class="mero-stat-row"><span>Total programări</span><span style="color:var(--accent);font-weight:600;">'+((bk.totalCount)||0)+'</span></div>'+
-      '<div class="mero-stat-row"><span>Finalizate</span><span style="color:var(--green);font-weight:600;">'+(bk.finishedStats?bk.finishedStats.count:0)+' ('+(bk.finishedStats?bk.finishedStats.percent:0)+'%)</span></div>'+
-      '<div class="mero-stat-row"><span>Anulate</span><span style="color:var(--red);font-weight:600;">'+(bk.cancelledStats?bk.cancelledStats.count:0)+'</span></div>'+
-      '<div class="mero-stat-row"><span>Neprezentări</span><span style="color:#fbbf24;font-weight:600;">'+(bk.noShowStats?bk.noShowStats.count:0)+'</span></div>'+
-      '<div class="mero-stat-row"><span>Total încasări</span><span style="color:var(--green);font-weight:600;">'+fmt(bk.finishedStats?bk.finishedStats.income:0)+'</span></div>'+
-      '<div class="mero-stat-row"><span>Valoare medie</span><span style="color:var(--accent);font-weight:600;">'+(cl.averageBookingValue||0).toFixed(1)+' lei</span></div>'+
-      '<div class="mero-stat-row"><span>Clienți noi</span><span style="color:var(--blue);font-weight:600;">'+(cl.newClientStats?cl.newClientStats.count:0)+'</span></div>'+
+  // All stats
+  var sb=document.getElementById('meroStatsBox');
+  if(allStats&&allStats.result){
+    var r=allStats.result,bk=r.bookings||{},cl=r.clients||{};
+    var h='<div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;">'+
+      '<div class="mero-compare-row"><span>Programări totale</span><span style="font-weight:600;">'+((bk.totalCount)||0)+'</span></div>'+
+      '<div class="mero-compare-row"><span>Finalizate</span><span style="color:var(--green);font-weight:600;">'+(bk.finishedStats?bk.finishedStats.count:0)+'</span></div>'+
+      '<div class="mero-compare-row"><span>Anulate</span><span style="color:var(--red);font-weight:600;">'+(bk.cancelledStats?bk.cancelledStats.count:0)+'</span></div>'+
+      '<div class="mero-compare-row"><span>Neprezentări</span><span style="color:var(--gold);font-weight:600;">'+(bk.noShowStats?bk.noShowStats.count:0)+'</span></div>'+
+      '<div class="mero-compare-row"><span>Valoare medie</span><span style="font-weight:600;">'+(cl.averageBookingValue||0).toFixed(0)+' lei</span></div>'+
+      '<div class="mero-compare-row"><span>Clienți noi</span><span style="color:var(--blue);font-weight:600;">'+(cl.newClientStats?cl.newClientStats.count:0)+'</span></div>'+
     '</div>';
-    if(r.services&&r.services.length){
-      html+='<div style="margin-top:12px;"><div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px;">Top servicii</div>';
-      r.services.forEach(function(s){
-        html+='<div class="mero-service-row"><span>'+esc(s.name)+' ×'+s.count+'</span><span>'+fmt(s.income)+'</span></div>';
-      });
-      html+='</div>';
-    }
-    statsBox.innerHTML=html;
-  } else {
-    statsBox.innerHTML='<div style="color:var(--muted);font-size:0.82rem;text-align:center;padding:20px;">Statistici indisponibile</div>';
-  }
+    sb.innerHTML=h;
+  } else { sb.innerHTML=''; }
 }
 
-// Load Mero daily data for current month and re-render table
+// ── MERO DAILY DATA (for table comparison) ──
 async function loadMeroDailyData(){
   var token=getMeroToken();
-  if(!token){
-    toast('Setează token-ul Mero în tab-ul 📱 Mero','warning');
-    return;
-  }
+  if(!token){ toast('Setează token-ul în tab-ul Mero','warning'); return; }
   var dateKey=getDate(), monthKey=dateKey.slice(0,7);
-  var parts=monthKey.split('-');
-  var yr=parseInt(parts[0]), mo=parseInt(parts[1]);
+  var p=monthKey.split('-'), yr=parseInt(p[0]), mo=parseInt(p[1]);
   var lastDay=new Date(yr,mo,0).getDate();
-
-  toast('Se încarcă date Mero pe zile... (poate dura câteva secunde)','info');
+  toast('Se încarcă date Mero pe zile...','info');
   var btn=document.getElementById('meroSyncTable');
   if(btn){ btn.disabled=true; btn.textContent='⏳ Se încarcă...'; }
-
   try {
-    var workerIds=Object.keys(MERO_WORKER_IDS);
-    var dailyData={};
-    workerIds.forEach(function(wId){ dailyData[wId]={}; });
-
+    var wids=Object.keys(MERO_WID);
+    var daily={}; wids.forEach(function(w){ daily[w]={}; });
     var tasks=[];
-    workerIds.forEach(function(wId){
-      for(var d=1; d<=lastDay; d++){
-        (function(workerId, day){
-          var dayStr=yr+'-'+String(mo).padStart(2,'0')+'-'+String(day).padStart(2,'0');
-          tasks.push({ wId:workerId, dayStr:dayStr });
-        })(wId, d);
+    wids.forEach(function(w){
+      for(var d=1;d<=lastDay;d++){
+        var ds=yr+'-'+String(mo).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+        tasks.push({w:w,ds:ds});
       }
     });
-
-    var batchSize=8;
-    for(var i=0; i<tasks.length; i+=batchSize){
-      var batch=tasks.slice(i, i+batchSize);
-      await Promise.all(batch.map(function(task){
-        var from=task.dayStr+'T00:00:00.000Z';
-        var to=task.dayStr+'T23:59:59.999Z';
-        return meroGetWorkerStats(from,to,task.wId).then(function(data){
-          var income=(data.result&&data.result.bookings&&data.result.bookings.finishedStats)?data.result.bookings.finishedStats.income:0;
-          if(income>0) dailyData[task.wId][task.dayStr]=income;
+    var bs=8;
+    for(var i=0;i<tasks.length;i+=bs){
+      var batch=tasks.slice(i,i+bs);
+      await Promise.all(batch.map(function(t){
+        var from=t.ds+'T00:00:00.000Z', to=t.ds+'T23:59:59.999Z';
+        return meroPost(meroStatsUrl(from,to,t.w)).then(function(data){
+          var inc=(data.result&&data.result.bookings&&data.result.bookings.finishedStats)?data.result.bookings.finishedStats.income:0;
+          if(inc>0) daily[t.w][t.ds]=inc;
         }).catch(function(){});
       }));
     }
-
-    window._meroDaily={ monthKey:monthKey, data:dailyData, ts:Date.now() };
-
-    toast('Date Mero încărcate! Tabelul se actualizează...','success');
+    window._meroDaily={monthKey:monthKey,data:daily,ts:Date.now()};
+    toast('Tabelul se actualizează cu date Mero!','success');
     await renderAdminView();
-
-  } catch(e){
-    toast('Eroare Mero: '+e.message,'error');
-  }
+  } catch(e){ toast('Eroare Mero: '+e.message,'error'); }
   if(btn){ btn.disabled=false; btn.textContent='📱 Verifică cu Mero'; }
 }
 
+// ── INIT MERO TAB ──
 function initMeroTab(){
-  var savedToken=getMeroToken();
-  var savedProxy=localStorage.getItem('meroProxyUrl')||'';
-  if(savedToken){
-    document.getElementById('meroToken').value=savedToken;
-  }
-  if(savedProxy){
-    document.getElementById('meroProxy').value=savedProxy;
-  }
-  if(savedToken&&savedProxy){
-    updateMeroStatus('warn','Setat — apasă Sincronizează');
+  var t=getMeroToken();
+  if(t){
+    document.getElementById('meroToken').value=t;
+    updateMeroStatus('warn','Token salvat — apasă Sincronizează');
     document.getElementById('meroSelectMonth').style.display='block';
   }
   updateMeroMonthLabel();
-
   document.getElementById('meroSaveToken').addEventListener('click',function(){
-    var proxy=document.getElementById('meroProxy').value.trim();
-    var token=document.getElementById('meroToken').value.trim();
-    if(token.toLowerCase().startsWith('bearer ')) token=token.slice(7);
-    if(!proxy){ toast('Lipește URL-ul proxy!','warning'); return; }
-    if(!token){ toast('Lipește token-ul!','warning'); return; }
-    localStorage.setItem('meroProxyUrl', proxy);
-    setMeroToken(token);
-    document.getElementById('meroToken').value=token;
+    var tk=document.getElementById('meroToken').value.trim();
+    if(!tk){ toast('Lipește token-ul!','warning'); return; }
+    setMeroToken(tk);
+    document.getElementById('meroToken').value=getMeroToken();
     updateMeroStatus('warn','Salvat — testare...');
     document.getElementById('meroSelectMonth').style.display='block';
     meroTestConnection();
   });
-
   document.getElementById('meroSync').addEventListener('click',async function(){
-    var proxy=document.getElementById('meroProxy').value.trim();
-    var token=document.getElementById('meroToken').value.trim();
-    if(token.toLowerCase().startsWith('bearer ')) token=token.slice(7);
-    if(proxy) localStorage.setItem('meroProxyUrl', proxy);
-    if(token) setMeroToken(token);
+    var tk=document.getElementById('meroToken').value.trim();
+    if(tk) setMeroToken(tk);
     if(!getMeroToken()){ toast('Lipește token-ul!','warning'); return; }
-    if(!localStorage.getItem('meroProxyUrl')){ toast('Lipește URL-ul proxy!','warning'); return; }
     var ok=await meroTestConnection();
-    if(ok){
-      document.getElementById('meroSelectMonth').style.display='block';
-      await meroSyncMonth();
-    }
+    if(ok){ document.getElementById('meroSelectMonth').style.display='block'; await meroSyncMonth(); }
   });
-
   document.getElementById('meroSyncMonth').addEventListener('click',meroSyncMonth);
-
   document.getElementById('meroPrevMonth').addEventListener('click',function(){
-    var parts=meroMonth.split('-');
-    var d=new Date(parseInt(parts[0]),parseInt(parts[1])-2,1);
-    meroMonth=d.toISOString().slice(0,7);
-    updateMeroMonthLabel();
+    var d=new Date(parseInt(meroMonth.slice(0,4)),parseInt(meroMonth.slice(5))-2,1);
+    meroMonth=d.toISOString().slice(0,7); updateMeroMonthLabel();
   });
   document.getElementById('meroNextMonth').addEventListener('click',function(){
-    var parts=meroMonth.split('-');
-    var d=new Date(parseInt(parts[0]),parseInt(parts[1]),1);
-    meroMonth=d.toISOString().slice(0,7);
-    updateMeroMonthLabel();
+    var d=new Date(parseInt(meroMonth.slice(0,4)),parseInt(meroMonth.slice(5)),1);
+    meroMonth=d.toISOString().slice(0,7); updateMeroMonthLabel();
   });
 }
-
 var meroInitDone=false;
 var _origShowAdmin=showAdminView;
 showAdminView=async function(){
   await _origShowAdmin();
-  if(!meroInitDone){ meroInitDone=true; initMeroTab(); }
+  if(!meroInitDone){ meroInitDone=true; initMeroTab(); initNecesar(); }
+};
+
+// ══════════════════════════════════════════════════
+// ── NECESAR (produse necesare — toți pot adăuga) ──
+// ══════════════════════════════════════════════════
+var necesarUnsub=null;
+function initNecesar(){
+  startNecesarListener();
+  // Admin add
+  var addBtn=document.getElementById('necesarAddBtn');
+  var addInp=document.getElementById('necesarInput');
+  if(addBtn) addBtn.addEventListener('click',function(){ addNecesarItem('necesarInput'); });
+  if(addInp) addInp.addEventListener('keydown',function(e){ if(e.key==='Enter') addNecesarItem('necesarInput'); });
+  // Barber add
+  var addBtn2=document.getElementById('necesarAddBtnBarber');
+  var addInp2=document.getElementById('necesarInputBarber');
+  if(addBtn2) addBtn2.addEventListener('click',function(){ addNecesarItem('necesarInputBarber'); });
+  if(addInp2) addInp2.addEventListener('keydown',function(e){ if(e.key==='Enter') addNecesarItem('necesarInputBarber'); });
+}
+
+async function addNecesarItem(inputId){
+  var inp=document.getElementById(inputId);
+  var text=inp.value.trim();
+  if(!text){ toast('Scrie ce produs e necesar!','warning'); return; }
+  inp.value='';
+  var userName=isAdmin?'Patrick':(barberData?barberData.name:'Necunoscut');
+  await addDoc(collection(db,'necesar'),{ text:text, name:userName, uid:currentUser.uid, ts:Date.now() });
+}
+
+function startNecesarListener(){
+  if(necesarUnsub) necesarUnsub();
+  var q=query(collection(db,'necesar'),orderBy('ts','desc'),limit(50));
+  necesarUnsub=onSnapshot(q,function(snap){
+    var items=[];
+    snap.forEach(function(d){ items.push({docId:d.id,...d.data()}); });
+    renderNecesarList('necesarList',items);
+    renderNecesarList('necesarListBarber',items);
+  });
+}
+
+function renderNecesarList(containerId,items){
+  var el=document.getElementById(containerId); if(!el) return;
+  if(!items.length){ el.innerHTML='<div style="color:var(--muted);font-size:0.82rem;text-align:center;padding:20px 0;">Nimic de cumpărat momentan.</div>'; return; }
+  el.innerHTML='';
+  items.forEach(function(item){
+    var div=document.createElement('div');
+    div.className='necesar-item';
+    var canDel=currentUser&&(isAdmin||item.uid===currentUser.uid);
+    div.innerHTML=
+      '<span class="ni-name">'+esc(item.name)+'</span>'+
+      '<span class="ni-text">'+esc(item.text)+'</span>'+
+      (canDel?'<button class="ni-del" data-id="'+item.docId+'">✕</button>':'');
+    if(canDel){
+      div.querySelector('.ni-del').addEventListener('click',async function(){
+        await deleteDoc(doc(db,'necesar',this.dataset.id));
+      });
+    }
+    el.appendChild(div);
+  });
+}
+
+// Init necesar for barber view too
+var _origShowBarber=showBarberView;
+showBarberView=async function(){
+  await _origShowBarber();
+  if(!necesarUnsub) initNecesar();
 };
 
 </script>
