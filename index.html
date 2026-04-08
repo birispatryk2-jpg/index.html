@@ -1530,6 +1530,7 @@ onAuthStateChanged(auth, async function(user){
     barberData=bSnap.exists()?{ id:user.uid,...bSnap.data() }:{ id:user.uid,name:user.email,goal:0,goal2:0 };
   }
   initDate();
+  await loadMeroTokenFromFirestore();
   if(isAdmin) showAdminView(); else showBarberView();
 });
 
@@ -3849,7 +3850,22 @@ var MERO_WID={
 var meroMonth=new Date().toISOString().slice(0,7);
 
 function getMeroToken(){ return localStorage.getItem('meroToken')||''; }
-function setMeroToken(t){ localStorage.setItem('meroToken',t.replace(/^bearer\s+/i,'').trim()); }
+function setMeroToken(t){
+  t=t.replace(/^bearer\s+/i,'').trim();
+  localStorage.setItem('meroToken',t);
+  // Salvează și în Firestore ca toți utilizatorii să-l acceseze
+  try { setDoc(doc(db,'settings','meroToken'),{ token:t, updatedAt:Date.now() }); } catch(e){}
+}
+// Încarcă token-ul din Firestore la init (pentru frizeri care nu l-au setat)
+async function loadMeroTokenFromFirestore(){
+  try {
+    var snap=await getDoc(doc(db,'settings','meroToken'));
+    if(snap.exists()){
+      var t=snap.data().token||'';
+      if(t) localStorage.setItem('meroToken',t);
+    }
+  } catch(e){}
+}
 
 function updateMeroStatus(st,txt){
   var el=document.getElementById('meroStatus'); if(!el) return;
@@ -3904,35 +3920,65 @@ function isPatrickBarber(b){
 // Peste Ob.2 → 70% admin (frizerul ia 30%)
 // Patrick = 100% la el
 // Calcul simplu pe tranșe (fără context zilnic) - pentru totaluri rapide
+// Sub Ob.1: 50% admin / 50% frizer
+// Peste Ob.1: pct1% admin (default 40%) / restul frizer — DOAR pe surplusul peste Ob.1
+// Peste Ob.2: pct2% admin (default 30%) / restul frizer — DOAR pe surplusul peste Ob.2
 function calcMeroBreakdownSimple(totalIncome, b){
   if(isPatrickBarber(b)){
     return { total:totalIncome, adminShare:0, barberShare:totalIncome, prag:'Patrick (100%)' };
   }
   var g1=b.goal||0, g2=b.goal2||0;
-  var adminPctBase=50, adminPct1=b.pct1||40, adminPct2=b.pct2||30;
+  var adminPctBase=50;
+  var adminPct1=b.pct1||40; // ce pune frizerul după Ob.1 (partea admin)
+  var adminPct2=b.pct2||30; // ce pune frizerul după Ob.2 (partea admin)
   var adminShare=0, barberShare=0, remaining=totalIncome;
-  var prag='sub Ob.1 ('+adminPctBase+'%/'+( 100-adminPctBase)+'%)';
+  var prag='sub Ob.1 (50% admin / 50% frizer)';
 
   if(g1===0){
     adminShare=totalIncome*(adminPctBase/100);
     barberShare=totalIncome*((100-adminPctBase)/100);
     return { total:totalIncome, adminShare:Math.round(adminShare), barberShare:Math.round(barberShare), prag:prag };
   }
-  if(remaining>0){ var c1=Math.min(remaining,g1); adminShare+=c1*(adminPctBase/100); barberShare+=c1*((100-adminPctBase)/100); remaining-=c1; }
-  if(g2>0 && remaining>0){ var c2=Math.min(remaining,g2-g1); adminShare+=c2*(adminPct1/100); barberShare+=c2*((100-adminPct1)/100); remaining-=c2; }
-  else if(g2===0 && remaining>0){ adminShare+=remaining*(adminPct1/100); barberShare+=remaining*((100-adminPct1)/100); remaining=0; }
-  if(remaining>0){ adminShare+=remaining*(adminPct2/100); barberShare+=remaining*((100-adminPct2)/100); }
 
-  if(totalIncome<=g1) prag='sub Ob.1 ('+adminPctBase+'% admin)';
-  else if(g2>0 && totalIncome<=g2) prag='Ob.1 atins ('+adminPct1+'% admin pe surplus)';
-  else if(g2>0) prag='Ob.2 atins ('+adminPct2+'% admin pe surplus)';
-  else prag='Ob.1 atins ('+adminPct1+'% admin pe surplus)';
+  // Tranșa 1: de la 0 la Ob.1 → 50% admin / 50% frizer
+  var chunk1=Math.min(remaining, g1);
+  adminShare+=chunk1*(adminPctBase/100);
+  barberShare+=chunk1*((100-adminPctBase)/100);
+  remaining-=chunk1;
+
+  // Tranșa 2: de la Ob.1 la Ob.2 → pct1% admin / (100-pct1)% frizer
+  if(remaining>0){
+    if(g2>0){
+      var chunk2=Math.min(remaining, g2-g1);
+      adminShare+=chunk2*(adminPct1/100);
+      barberShare+=chunk2*((100-adminPct1)/100);
+      remaining-=chunk2;
+    } else {
+      // Fără Ob.2 — tot surplusul peste Ob.1 la pct1%
+      adminShare+=remaining*(adminPct1/100);
+      barberShare+=remaining*((100-adminPct1)/100);
+      remaining=0;
+    }
+  }
+
+  // Tranșa 3: peste Ob.2 → pct2% admin / (100-pct2)% frizer
+  if(remaining>0){
+    adminShare+=remaining*(adminPct2/100);
+    barberShare+=remaining*((100-adminPct2)/100);
+  }
+
+  // Determină pragul curent
+  if(totalIncome<=g1) prag='sub Ob.1 ('+adminPctBase+'% admin / '+(100-adminPctBase)+'% frizer)';
+  else if(g2>0 && totalIncome<=g2) prag='Ob.1 atins ('+adminPct1+'% admin / '+(100-adminPct1)+'% frizer pe surplus)';
+  else if(g2>0) prag='Ob.2 atins ('+adminPct2+'% admin / '+(100-adminPct2)+'% frizer pe surplus)';
+  else prag='Ob.1 atins ('+adminPct1+'% admin / '+(100-adminPct1)+'% frizer pe surplus)';
 
   return { total:Math.round(totalIncome), adminShare:Math.round(adminShare), barberShare:Math.round(barberShare), prag:prag };
 }
 
 // Calcul ZI CU ZI din date Mero zilnice — regula: obiectivul nou se aplică DIN ZIUA URMĂTOARE
-// dailyData = { '2026-04-01': 500, '2026-04-02': 600, ... } (sume brut Mero per zi)
+// Sub Ob.1: 50% admin. Peste Ob.1: pct1% admin. Peste Ob.2: pct2% admin.
+// Procentul zilei se determină pe baza totalului PÂNĂ IERI.
 function calcMeroBreakdownDaily(dailyData, b){
   if(isPatrickBarber(b)){
     var tot=0; Object.values(dailyData).forEach(function(v){ tot+=v; });
@@ -3941,14 +3987,14 @@ function calcMeroBreakdownDaily(dailyData, b){
   var g1=b.goal||0, g2=b.goal2||0;
   var adminPctBase=50, adminPct1=b.pct1||40, adminPct2=b.pct2||30;
   var days=Object.keys(dailyData).sort();
-  var cumTotal=0; // acumulator total Mero până IERI
+  var cumTotal=0;
   var totalAdmin=0, totalBarber=0;
-  var dayResults={}; // per zi: { admin, barber, pct }
+  var dayResults={};
 
   days.forEach(function(day){
     var dayIncome=dailyData[day]||0;
-    // Procentul de AZI se determină pe baza totalului de PÂNĂ IERI
-    var todayAdminPct=adminPctBase; // default sub Ob.1
+    // Procentul de AZI = bazat pe totalul de PÂNĂ IERI
+    var todayAdminPct=adminPctBase;
     if(g2>0 && cumTotal>=g2) todayAdminPct=adminPct2;
     else if(g1>0 && cumTotal>=g1) todayAdminPct=adminPct1;
 
@@ -3958,14 +4004,13 @@ function calcMeroBreakdownDaily(dailyData, b){
     totalBarber+=barberDay;
     dayResults[day]={ admin:adminDay, barber:barberDay, pct:todayAdminPct, mero:dayIncome };
 
-    // Actualizăm acumulatorul DUPĂ zi (pentru ziua de mâine)
     cumTotal+=dayIncome;
   });
 
   var totalIncome=cumTotal;
-  var prag='sub Ob.1 ('+adminPctBase+'% admin)';
-  if(g2>0 && totalIncome>g2) prag='Ob.2 atins ('+adminPct2+'% admin pe surplus)';
-  else if(g1>0 && totalIncome>g1) prag='Ob.1 atins ('+adminPct1+'% admin pe surplus)';
+  var prag='sub Ob.1 ('+adminPctBase+'% admin / '+(100-adminPctBase)+'% frizer)';
+  if(g2>0 && totalIncome>g2) prag='Ob.2 atins ('+adminPct2+'% admin / '+(100-adminPct2)+'% frizer)';
+  else if(g1>0 && totalIncome>g1) prag='Ob.1 atins ('+adminPct1+'% admin / '+(100-adminPct1)+'% frizer)';
 
   return { total:Math.round(totalIncome), adminShare:Math.round(totalAdmin), barberShare:Math.round(totalBarber), prag:prag, days:dayResults };
 }
@@ -4322,9 +4367,11 @@ showBarberView=async function(){
 async function barberMeroSyncClick(){
   var token=getMeroToken();
   if(!token){
-    token=localStorage.getItem('meroToken')||'';
+    // Încearcă să încarce din Firestore
+    await loadMeroTokenFromFirestore();
+    token=getMeroToken();
     if(!token){
-      toast('Cere admin-ului token-ul Mero sau setează-l în tab-ul Mero (admin)','warning');
+      toast('Admin-ul nu a setat încă token-ul Mero.','warning');
       return;
     }
   }
