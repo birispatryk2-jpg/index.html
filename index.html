@@ -3903,48 +3903,79 @@ function isPatrickBarber(b){
 // Între Ob.1 și Ob.2 → 60% admin (frizerul ia 40%)  
 // Peste Ob.2 → 70% admin (frizerul ia 30%)
 // Patrick = 100% la el
-function calcMeroBreakdown(meroIncome, b){
+// Calcul simplu pe tranșe (fără context zilnic) - pentru totaluri rapide
+function calcMeroBreakdownSimple(totalIncome, b){
   if(isPatrickBarber(b)){
-    return { total:meroIncome, adminShare:0, barberShare:meroIncome, prag:'Patrick (100%)' };
+    return { total:totalIncome, adminShare:0, barberShare:totalIncome, prag:'Patrick (100%)' };
   }
   var g1=b.goal||0, g2=b.goal2||0;
-  var adminShare=0, barberShare=0, remaining=meroIncome;
-  var prag='sub Ob.1 (50%)';
+  var adminPctBase=50, adminPct1=b.pct1||40, adminPct2=b.pct2||30;
+  var adminShare=0, barberShare=0, remaining=totalIncome;
+  var prag='sub Ob.1 ('+adminPctBase+'%/'+( 100-adminPctBase)+'%)';
 
-  // Prag 1: până la Ob.1 → 50% admin
-  if(g1>0 && remaining>0){
-    var chunk=Math.min(remaining, g1);
-    adminShare+=chunk*0.5;
-    barberShare+=chunk*0.5;
-    remaining-=chunk;
-  } else if(g1===0){
-    // Fără obiective, tot e 50%
-    adminShare=meroIncome*0.5;
-    barberShare=meroIncome*0.5;
-    return { total:meroIncome, adminShare:Math.round(adminShare), barberShare:Math.round(barberShare), prag:prag };
+  if(g1===0){
+    adminShare=totalIncome*(adminPctBase/100);
+    barberShare=totalIncome*((100-adminPctBase)/100);
+    return { total:totalIncome, adminShare:Math.round(adminShare), barberShare:Math.round(barberShare), prag:prag };
   }
+  if(remaining>0){ var c1=Math.min(remaining,g1); adminShare+=c1*(adminPctBase/100); barberShare+=c1*((100-adminPctBase)/100); remaining-=c1; }
+  if(g2>0 && remaining>0){ var c2=Math.min(remaining,g2-g1); adminShare+=c2*(adminPct1/100); barberShare+=c2*((100-adminPct1)/100); remaining-=c2; }
+  else if(g2===0 && remaining>0){ adminShare+=remaining*(adminPct1/100); barberShare+=remaining*((100-adminPct1)/100); remaining=0; }
+  if(remaining>0){ adminShare+=remaining*(adminPct2/100); barberShare+=remaining*((100-adminPct2)/100); }
 
-  // Prag 2: între Ob.1 și Ob.2 → 60% admin
-  if(g2>0 && remaining>0){
-    prag='între Ob.1-Ob.2 (60%)';
-    var chunk2=Math.min(remaining, g2-g1);
-    adminShare+=chunk2*0.6;
-    barberShare+=chunk2*0.4;
-    remaining-=chunk2;
+  if(totalIncome<=g1) prag='sub Ob.1 ('+adminPctBase+'% admin)';
+  else if(g2>0 && totalIncome<=g2) prag='Ob.1 atins ('+adminPct1+'% admin pe surplus)';
+  else if(g2>0) prag='Ob.2 atins ('+adminPct2+'% admin pe surplus)';
+  else prag='Ob.1 atins ('+adminPct1+'% admin pe surplus)';
+
+  return { total:Math.round(totalIncome), adminShare:Math.round(adminShare), barberShare:Math.round(barberShare), prag:prag };
+}
+
+// Calcul ZI CU ZI din date Mero zilnice — regula: obiectivul nou se aplică DIN ZIUA URMĂTOARE
+// dailyData = { '2026-04-01': 500, '2026-04-02': 600, ... } (sume brut Mero per zi)
+function calcMeroBreakdownDaily(dailyData, b){
+  if(isPatrickBarber(b)){
+    var tot=0; Object.values(dailyData).forEach(function(v){ tot+=v; });
+    return { total:tot, adminShare:0, barberShare:tot, prag:'Patrick (100%)', days:{} };
   }
+  var g1=b.goal||0, g2=b.goal2||0;
+  var adminPctBase=50, adminPct1=b.pct1||40, adminPct2=b.pct2||30;
+  var days=Object.keys(dailyData).sort();
+  var cumTotal=0; // acumulator total Mero până IERI
+  var totalAdmin=0, totalBarber=0;
+  var dayResults={}; // per zi: { admin, barber, pct }
 
-  // Prag 3: peste Ob.2 → 70% admin
-  if(remaining>0){
-    prag='peste Ob.2 (70%)';
-    adminShare+=remaining*0.7;
-    barberShare+=remaining*0.3;
+  days.forEach(function(day){
+    var dayIncome=dailyData[day]||0;
+    // Procentul de AZI se determină pe baza totalului de PÂNĂ IERI
+    var todayAdminPct=adminPctBase; // default sub Ob.1
+    if(g2>0 && cumTotal>=g2) todayAdminPct=adminPct2;
+    else if(g1>0 && cumTotal>=g1) todayAdminPct=adminPct1;
+
+    var adminDay=Math.round(dayIncome*(todayAdminPct/100));
+    var barberDay=dayIncome-adminDay;
+    totalAdmin+=adminDay;
+    totalBarber+=barberDay;
+    dayResults[day]={ admin:adminDay, barber:barberDay, pct:todayAdminPct, mero:dayIncome };
+
+    // Actualizăm acumulatorul DUPĂ zi (pentru ziua de mâine)
+    cumTotal+=dayIncome;
+  });
+
+  var totalIncome=cumTotal;
+  var prag='sub Ob.1 ('+adminPctBase+'% admin)';
+  if(g2>0 && totalIncome>g2) prag='Ob.2 atins ('+adminPct2+'% admin pe surplus)';
+  else if(g1>0 && totalIncome>g1) prag='Ob.1 atins ('+adminPct1+'% admin pe surplus)';
+
+  return { total:Math.round(totalIncome), adminShare:Math.round(totalAdmin), barberShare:Math.round(totalBarber), prag:prag, days:dayResults };
+}
+
+// Wrapper: dacă avem date zilnice, folosim daily; altfel, simplu
+function calcMeroBreakdown(meroIncome, b, dailyData){
+  if(dailyData && Object.keys(dailyData).length>0){
+    return calcMeroBreakdownDaily(dailyData, b);
   }
-
-  if(meroIncome<=g1) prag='sub Ob.1 (50%)';
-  else if(g2>0 && meroIncome<=g2) prag='între Ob.1-Ob.2 (60%)';
-  else if(g2>0) prag='peste Ob.2 (70%)';
-
-  return { total:Math.round(meroIncome), adminShare:Math.round(adminShare), barberShare:Math.round(barberShare), prag:prag };
+  return calcMeroBreakdownSimple(meroIncome, b);
 }
 
 // Calcul sugestie: ce trebuie introdus în app pe baza Mero
@@ -4122,12 +4153,14 @@ function initMeroTab(){
   });
   document.getElementById('meroSyncMonth').addEventListener('click',meroSyncMonth);
   document.getElementById('meroPrevMonth').addEventListener('click',function(){
-    var d=new Date(parseInt(meroMonth.slice(0,4)),parseInt(meroMonth.slice(5))-2,1);
-    meroMonth=d.toISOString().slice(0,7); updateMeroMonthLabel();
+    var pp=meroMonth.split('-');
+    var d=new Date(parseInt(pp[0]),parseInt(pp[1])-1-1,1);
+    meroMonth=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'); updateMeroMonthLabel();
   });
   document.getElementById('meroNextMonth').addEventListener('click',function(){
-    var d=new Date(parseInt(meroMonth.slice(0,4)),parseInt(meroMonth.slice(5)),1);
-    meroMonth=d.toISOString().slice(0,7); updateMeroMonthLabel();
+    var pp=meroMonth.split('-');
+    var d=new Date(parseInt(pp[0]),parseInt(pp[1])-1+1,1);
+    meroMonth=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'); updateMeroMonthLabel();
   });
 }
 var meroInitDone=false;
