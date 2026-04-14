@@ -3892,10 +3892,6 @@ function upgradeAdminCardSummary(card){
       '<div class="barber-glance-card"><div class="barber-glance-label">Castig frizer</div><div class="barber-glance-value green">'+fmt(card.dataset.barberEarn||0)+'</div></div>'+
       '<div class="barber-glance-card"><div class="barber-glance-label">Admin %</div><div class="barber-glance-value">'+Number(card.dataset.adminPct||0)+'%</div></div>'+
     '</div>'+
-    (card.dataset.needed && card.dataset.needed!=='—' && card.dataset.needed!=='Obiective atinse' && card.dataset.needed!=='undefined' && card.dataset.needed!==''
-      ? '<div class="barber-need-row"><span class="barber-need-label">'+esc(card.dataset.neededLabel||'Mai ai nevoie')+'</span><span class="barber-need-value">'+esc(card.dataset.neededValue||card.dataset.needed)+'</span></div>'
-      : (card.dataset.needed==='Obiective atinse' ? '<div class="barber-need-row done"><span class="barber-need-label">✅ Obiective atinse</span></div>' : '')
-    )+
     meroHtml;
 
   Array.from(card.children).forEach(function(child){
