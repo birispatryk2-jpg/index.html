@@ -3818,7 +3818,7 @@ function upgradeBarberMainCard(card){
       '<div class="barber-main-glance-card"><div class="barber-main-glance-label">Estimare</div><div class="barber-main-glance-value">'+fmt(card.dataset.estimate||0)+'</div></div>'+
     '</div>'+
     (card.dataset.needed && card.dataset.needed!=='—' && card.dataset.needed!=='Obiective atinse'
-      ? '<div class="barber-need-row"><span class="barber-need-label">📌 Mai ai nevoie</span><span class="barber-need-value">'+esc(card.dataset.needed)+'</span></div>'
+      ? '<div class="barber-need-row"><span class="barber-need-label">Mai ai nevoie</span><span class="barber-need-value">'+esc(card.dataset.needed)+'</span></div>'
       : (card.dataset.needed==='Obiective atinse' ? '<div class="barber-need-row done"><span class="barber-need-label">✅ Obiective atinse</span></div>' : '')
     );
 
@@ -3892,8 +3892,8 @@ function upgradeAdminCardSummary(card){
       '<div class="barber-glance-card"><div class="barber-glance-label">Castig frizer</div><div class="barber-glance-value green">'+fmt(card.dataset.barberEarn||0)+'</div></div>'+
       '<div class="barber-glance-card"><div class="barber-glance-label">Admin %</div><div class="barber-glance-value">'+Number(card.dataset.adminPct||0)+'%</div></div>'+
     '</div>'+
-    (card.dataset.needed && card.dataset.needed!=='—' && card.dataset.needed!=='Obiective atinse'
-      ? '<div class="barber-need-row"><span class="barber-need-label">📌 '+esc(card.dataset.neededLabel||'Mai ai nevoie')+'</span><span class="barber-need-value">'+esc(card.dataset.neededValue||card.dataset.needed)+'</span></div>'
+    (card.dataset.needed && card.dataset.needed!=='—' && card.dataset.needed!=='Obiective atinse' && card.dataset.needed!=='undefined' && card.dataset.needed!==''
+      ? '<div class="barber-need-row"><span class="barber-need-label">'+esc(card.dataset.neededLabel||'Mai ai nevoie')+'</span><span class="barber-need-value">'+esc(card.dataset.neededValue||card.dataset.needed)+'</span></div>'
       : (card.dataset.needed==='Obiective atinse' ? '<div class="barber-need-row done"><span class="barber-need-label">✅ Obiective atinse</span></div>' : '')
     )+
     meroHtml;
@@ -4289,10 +4289,12 @@ async function renderAdminView(){
     var wDaysRemaining=Math.max(0,wDaysTotal-wDaysPassed);
     var avgPrice=b.avgPrice||0;
     var currentPct=adminPct;
-    var adminGoalNeed=buildGoalNeedSummary(goal,goal2,mTotal,wDaysRemaining,avgPrice,currentPct);
-    card.dataset.needed=String(adminGoalNeed.compact);
-    card.dataset.neededLabel=String(adminGoalNeed.label);
-    card.dataset.neededValue=String(adminGoalNeed.value);
+    try {
+      var adminGoalNeed=buildGoalNeedSummary(goal,goal2,mTotal,wDaysRemaining,avgPrice,currentPct);
+      card.dataset.needed=String(adminGoalNeed.compact||'');
+      card.dataset.neededLabel=String(adminGoalNeed.label||'');
+      card.dataset.neededValue=String(adminGoalNeed.value||'');
+    } catch(e){ card.dataset.needed=''; card.dataset.neededLabel=''; card.dataset.neededValue=''; }
     card.innerHTML=
       '<div class="barber-name">'+esc(b.name)+'</div>'+
       (goalReachedLabel?'<div class="card-goal-badge">'+goalReachedLabel+'</div>':'')+
