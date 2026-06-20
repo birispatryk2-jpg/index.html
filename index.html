@@ -2969,7 +2969,7 @@ window.showNotif=function(type,title,msg){
 };
 </script>
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { initializeApp, deleteApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs, onSnapshot, addDoc, deleteDoc, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
@@ -5190,9 +5190,19 @@ async function addNewBarber(){
   errEl.style.display='none';
   if(!name||!email||!pass||pass.length<6){ errEl.textContent='Completează toate câmpurile (parola min 6 caractere).'; errEl.style.display='block'; return; }
   btn.disabled=true; btn.textContent='Se creează...';
+  // Creăm contul noului frizer pe o instanță SECUNDARĂ de Firebase,
+  // ca să NU deconectăm adminul curent. Astfel setDoc-ul de mai jos
+  // rulează în continuare cu adminul autentificat (regulile Firestore trec).
+  var secondaryApp=null, newUid=null;
   try {
-    var cred=await createUserWithEmailAndPassword(auth,email,pass);
-    await setDoc(doc(db,'barbers',cred.user.uid),{
+    secondaryApp=initializeApp(firebaseConfig,'secondary-'+Date.now());
+    var secondaryAuth=getAuth(secondaryApp);
+    var cred=await createUserWithEmailAndPassword(secondaryAuth,email,pass);
+    newUid=cred.user.uid;
+    // Deconectăm imediat sesiunea de pe instanța secundară (nu ne afectează adminul)
+    try { await signOut(secondaryAuth); } catch(_){}
+    // Scriem profilul frizerului — aici adminul curent e tot logat pe instanța principală
+    await setDoc(doc(db,'barbers',newUid),{
       name:name,
       email:email,
       goal:goal,
@@ -5208,7 +5218,16 @@ async function addNewBarber(){
     ['nb-name','nb-email','nb-pass','nb-goal','nb-goal2'].forEach(function(id){ document.getElementById(id).value=''; });
     toast('Frizer adăugat! Pagina se reîncărcă...','success',3000);
     location.reload();
-  } catch(e){ errEl.textContent='Eroare: '+(e.message||'necunoscută'); errEl.style.display='block'; btn.disabled=false; btn.textContent='ADAUGĂ'; }
+  } catch(e){
+    var msg=e.message||'necunoscută';
+    if(e.code==='auth/email-already-in-use'){
+      msg='Există deja un cont cu acest email. Dacă frizerul nu apare în listă, contul de autentificare a fost creat anterior dar profilul nu a fost salvat — șterge userul din Firebase Authentication și încearcă din nou, sau folosește alt email.';
+    }
+    errEl.textContent='Eroare: '+msg; errEl.style.display='block';
+    btn.disabled=false; btn.textContent='ADAUGĂ';
+  } finally {
+    if(secondaryApp){ try { await deleteApp(secondaryApp); } catch(_){} }
+  }
 }
 
 async function addEntryAsAdmin(){
