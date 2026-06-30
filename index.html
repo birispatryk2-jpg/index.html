@@ -3140,6 +3140,8 @@ onAuthStateChanged(auth, async function(user){
   }
   initDate();
   await loadMeroTokenFromFirestore();
+  loadMeroRosterCache();   // potrivire instant din cache
+  fetchMeroRoster();       // reîmprospătare în fundal din Mero (non-blocant)
   if(isAdmin) showAdminView(); else showBarberView();
 });
 
@@ -7950,14 +7952,112 @@ function meroStatsUrl(from,to,workerId){
 
 async function meroTestConnection(){
   try {
-    await meroPost('https://pro.mero.ro/api/v2.0/business/page/'+MERO_PAGE_ID+'/worker');
+    var resp=await meroPost('https://pro.mero.ro/api/v2.0/business/page/'+MERO_PAGE_ID+'/worker');
+    // Refolosim răspunsul ca să populăm automat lista de frizeri (roster) din Mero
+    try { var list=parseMeroRoster(resp); if(applyMeroRoster(list)) window._meroRosterLoaded=true; } catch(e){}
     updateMeroStatus('ok','Conectat la Mero ✓'); return true;
   } catch(e){ updateMeroStatus('red',e.message); return false; }
 }
 
-// Map app barber name → Mero worker ID
+// ─────────────────────────────────────────────────────────────
+//  DESCOPERIRE AUTOMATĂ FRIZERI DIN MERO (fără hardcodare)
+//  Lista de frizeri (worker ID + nume) se ia direct din Mero,
+//  iar potrivirea app↔Mero se face după nume (fără diacritice).
+//  => Adaugi un frizer în Mero cu același nume → se conectează singur.
+// ─────────────────────────────────────────────────────────────
+
+// Normalizează un nume: litere mici, fără diacritice, fără semne
+function meroNorm(s){
+  return String(s||'').toLowerCase()
+    .replace(/[ăâ]/g,'a').replace(/[î]/g,'i').replace(/[șş]/g,'s').replace(/[țţ]/g,'t')
+    .replace(/[^a-z0-9]+/g,' ').trim();
+}
+// Bucăți relevante dintr-un nume (cuvinte de minim 3 litere)
+function meroNameTokens(s){
+  return meroNorm(s).split(' ').filter(function(t){ return t.length>=3; });
+}
+// Extrage numele unui worker din diversele forme posibile ale răspunsului Mero
+function meroExtractName(w){
+  if(!w) return '';
+  var direct=[w.name,w.fullName,w.fullname,w.displayName];
+  for(var i=0;i<direct.length;i++){ if(direct[i]&&typeof direct[i]==='string') return direct[i]; }
+  var fn=w.firstname||w.firstName||(w.user&&(w.user.firstname||w.user.firstName))||(w.profile&&(w.profile.firstname||w.profile.firstName))||'';
+  var ln=w.lastname||w.lastName||(w.user&&(w.user.lastname||w.user.lastName))||(w.profile&&(w.profile.lastname||w.profile.lastName))||'';
+  var full=(fn+' '+ln).trim();
+  if(full) return full;
+  if(w.user&&typeof w.user.name==='string') return w.user.name;
+  return '';
+}
+// Parsează răspunsul /worker în [{id, name}]
+function parseMeroRoster(resp){
+  var arr=resp;
+  if(resp&&!Array.isArray(resp)){
+    arr=resp.workers||resp.data||resp.result||resp.items||resp.list||(resp.data&&resp.data.workers)||[];
+  }
+  if(!Array.isArray(arr)) return [];
+  return arr.map(function(w){
+    if(!w) return null;
+    var id=w._id||w.id||w.workerId||(w.user&&(w.user._id||w.user.id))||'';
+    if(!id) return null;
+    return { id:String(id), name:meroExtractName(w) };
+  }).filter(Boolean);
+}
+// Aplică roster-ul: populează MERO_WID + window._meroRoster + cache localStorage
+function applyMeroRoster(list){
+  if(!Array.isArray(list)||!list.length) return false;
+  window._meroRoster=list.filter(function(w){ return w&&w.id; }).map(function(w){
+    return { id:w.id, name:w.name||'', norm:meroNorm(w.name), tokens:meroNameTokens(w.name) };
+  });
+  // populează MERO_WID (id → nume) fără să șteargă cheile existente
+  window._meroRoster.forEach(function(w){ MERO_WID[w.id]=w.name||MERO_WID[w.id]||''; });
+  try { localStorage.setItem('meroRoster', JSON.stringify(window._meroRoster.map(function(w){ return {id:w.id,name:w.name}; }))); } catch(e){}
+  return true;
+}
+// Încarcă roster-ul din cache (localStorage) instant la pornire
+function loadMeroRosterCache(){
+  try {
+    var raw=localStorage.getItem('meroRoster');
+    if(raw){ var arr=JSON.parse(raw); if(Array.isArray(arr)&&arr.length) applyMeroRoster(arr); }
+  } catch(e){}
+}
+// Descarcă lista de frizeri din Mero (o dată per sesiune, sau forțat)
+async function fetchMeroRoster(force){
+  if(!getMeroToken()) return false;
+  if(window._meroRosterLoaded&&!force) return true;
+  try {
+    var resp=await meroPost('https://pro.mero.ro/api/v2.0/business/page/'+MERO_PAGE_ID+'/worker');
+    var list=parseMeroRoster(resp);
+    if(applyMeroRoster(list)){ window._meroRosterLoaded=true; return true; }
+  } catch(e){}
+  return false;
+}
+
+// Potrivește un frizer din app cu worker ID-ul lui din Mero (după nume)
 function matchBarberToWorker(b){
-  var n=(b.name||'').toLowerCase();
+  var appTokens=meroNameTokens(b&&b.name);
+  var roster=window._meroRoster;
+  if(roster&&roster.length&&appTokens.length){
+    // 1) potrivire pe cuvinte: alegem worker-ul cu cele mai multe cuvinte comune
+    var best=null,bestScore=0,tie=false;
+    roster.forEach(function(w){
+      var score=0;
+      appTokens.forEach(function(t){ if(w.tokens.indexOf(t)!==-1) score++; });
+      if(score>bestScore){ bestScore=score; best=w; tie=false; }
+      else if(score===bestScore&&score>0&&best&&w.id!==best.id){ tie=true; }
+    });
+    if(best&&bestScore>0&&!tie) return best.id;
+    // 2) fallback: nume conținut (dacă nu s-a potrivit niciun cuvânt exact)
+    if(bestScore===0){
+      var subBest=null,subCount=0;
+      roster.forEach(function(w){
+        var hit=appTokens.some(function(t){ return w.norm.indexOf(t)!==-1; });
+        if(hit){ subBest=w; subCount++; }
+      });
+      if(subBest&&subCount===1) return subBest.id;
+    }
+  }
+  // 3) fallback hardcodat (siguranță pentru frizerii vechi dacă Mero nu răspunde)
+  var n=(b&&b.name||'').toLowerCase();
   var m={'florin':'65564d838fcbe845d716ebe7','casian':'6495e557f7354746387582dc',
     'ionut':'632894e65e4e0cf7d4f9743f','ionuț':'632894e65e4e0cf7d4f9743f',
     'nichitut':'632894e65e4e0cf7d4f9743f','nichituț':'632894e65e4e0cf7d4f9743f',
@@ -8108,6 +8208,7 @@ async function meroSyncMonth(){
 
   toast('Se sincronizeaza cu Mero...','info');
   try {
+    await fetchMeroRoster();   // asigură lista de frizeri Mero la zi
     var barbers=await getBarbers();
     var appEntries=await getAllEntriesForMonth(monthKey);
     var wids=Object.keys(MERO_WID);
@@ -8254,6 +8355,7 @@ async function loadMeroDailyData(){
   var btn=document.getElementById('meroSyncTable');
   if(btn){ btn.disabled=true; btn.textContent='⏳ Se încarcă...'; }
   try {
+    await fetchMeroRoster();   // asigură lista de frizeri Mero la zi
     await getMeroDailyMonthData(monthKey,true,{
       selectedDateKey:dateKey,
       refreshToday:true
@@ -8327,6 +8429,7 @@ async function finMeroSync(){
     var finLabel=document.getElementById('finMonthLabel');
     var finMonthKey=finLabel?finLabel.dataset.monthKey:new Date().toISOString().slice(0,7);
     if(!finMonthKey) finMonthKey=new Date().toISOString().slice(0,7);
+    await fetchMeroRoster();   // asigură lista de frizeri Mero la zi
     var barbers=await getBarbers();
     var appEntries=await getAllEntriesForMonth(finMonthKey);
     var wids=Object.keys(MERO_WID);
