@@ -482,6 +482,7 @@
   .e-status.pending{color:#fbbf24;border:1px solid rgba(251,191,36,0.25);background:rgba(251,191,36,0.06);}
   .e-status.approved{color:var(--green);border:1px solid rgba(74,222,128,0.25);background:rgba(74,222,128,0.06);}
   .e-status.rejected{color:var(--red);border:1px solid rgba(248,113,113,0.25);background:rgba(248,113,113,0.06);}
+  .e-sub-badge{display:inline-flex;align-items:center;gap:3px;font-size:0.62rem;font-weight:600;padding:3px 8px;border-radius:8px;color:#c084fc;background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.25);max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .e-approve{
     background:none;border:1px solid rgba(74,222,128,0.3);color:var(--green);
     cursor:pointer;font-size:0.68rem;font-weight:700;padding:5px 10px;border-radius:10px;transition:all 0.2s;
@@ -2428,6 +2429,10 @@
     <input class="form-input" type="number" id="ae-amount" placeholder="Ex: 350" min="1">
     <label class="form-label">Data</label>
     <input class="form-input" type="date" id="ae-date">
+    <label class="form-label" style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-top:4px;">
+      <input type="checkbox" id="ae-sub" style="width:16px;height:16px;"> 🎫 Abonament (împărțit 50/50)
+    </label>
+    <input class="form-input" type="text" id="ae-note" placeholder="Notă abonament (ex: Abonament Ion)" style="display:none;margin-top:6px;">
     <button class="modal-btn" id="addEntryBtn">ADAUGĂ</button>
     <div class="modal-err" id="addEntryErr"></div>
   </div>
@@ -2804,6 +2809,16 @@
         </div>
         <button class="entry-add-btn" id="myAddBtn">Adaugă</button>
         <div class="entry-err" id="myErr"></div>
+      </div>
+      <div class="add-entry-box" style="margin-top:8px;border:1px solid rgba(168,85,247,0.25);background:rgba(168,85,247,0.04);">
+        <label style="color:#c084fc;">🎫 Abonament <span style="font-weight:400;opacity:0.7;">(împărțit 50/50)</span></label>
+        <div class="entry-inputs">
+          <input type="number" id="mySubAmount" placeholder="Sumă (lei)" min="0">
+          <input type="date" id="mySubDate">
+        </div>
+        <input type="text" id="mySubNote" placeholder="Nume / notă (ex: Abonament Ion)" style="width:100%;margin-top:6px;box-sizing:border-box;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:var(--text);border-radius:10px;padding:9px 10px;font-size:0.9rem;outline:none;">
+        <button class="entry-add-btn" id="mySubAddBtn" style="margin-top:6px;background:rgba(168,85,247,0.1);border-color:rgba(168,85,247,0.3);color:#c084fc;">+ Adaugă abonament</button>
+        <div class="entry-err" id="mySubErr"></div>
       </div>
       <div class="vac-box">
         <label>🏖 Zi liberă / Concediu</label>
@@ -4193,6 +4208,11 @@ async function showAdminView(){
     document.getElementById('closeAddEntry').addEventListener('click',function(){ closeModal('addEntryModal'); });
     document.getElementById('addEntryModal').addEventListener('click',function(e){ if(e.target===this) closeModal('addEntryModal'); });
     document.getElementById('addEntryBtn').addEventListener('click',addEntryAsAdmin);
+    var aeSubEl=document.getElementById('ae-sub');
+    if(aeSubEl) aeSubEl.addEventListener('change',function(){
+      var noteEl=document.getElementById('ae-note');
+      if(noteEl) noteEl.style.display=this.checked?'block':'none';
+    });
 
     document.getElementById('openVac').addEventListener('click',async function(){
       var barbers=await getBarbers();
@@ -4445,7 +4465,7 @@ async function renderAdminView(){
         else if(status==='approved') statusHtml='<span class="e-status approved">✓</span>';
         else if(status==='rejected') statusHtml='<span class="e-status rejected">✗</span>';
         var cashHtml=(status==='approved')?'<button class="e-cash '+(isPaid?'received':'not-received')+'" data-id="'+e.docId+'">'+(isPaid?'Achitat':'Neachitat')+'</button>':'';
-        return '<div class="entry-row"><span class="e-date">'+e.date+'</span><span class="e-amount'+(isPaid?'':' unpaid')+'">'+fmt(e.amount)+'</span>'+statusHtml+cashHtml+'<button class="e-del" data-id="'+e.docId+'">✕</button></div>';
+        return '<div class="entry-row"><span class="e-date">'+e.date+'</span>'+(isSubscriptionEntry(e)?'<span class="e-sub-badge" title="'+esc(e.note||'Abonament')+'">🎫 '+esc(e.note||'Abonament')+'</span>':'')+'<span class="e-amount'+(isPaid?'':' unpaid')+'">'+fmt(e.amount)+'</span>'+statusHtml+cashHtml+'<button class="e-del" data-id="'+e.docId+'">✕</button></div>';
       }).join('')+'</div>'+
       (vacDays.length?'<div class="vac-days" style="margin-bottom:10px;">'+vacDays.sort().map(function(d){
         var vacDoc=(visibleVac[b.id]||[]).find(function(v){ return v.date===d; });
@@ -4535,7 +4555,9 @@ async function renderAdminView(){
   allDays.forEach(function(dk){
     var totDay=0,mTotDay=0;
     var cells=barbers.map(function(b){
-      var t=(visibleEntries[b.id]||[]).filter(function(e){ return e.date===dk; }).reduce(function(s,e){ return s+e.amount; },0);
+      var dayEntries=(visibleEntries[b.id]||[]).filter(function(e){ return e.date===dk; });
+      var t=dayEntries.reduce(function(s,e){ return s+e.amount; },0);
+      var tReg=dayEntries.filter(function(e){ return !isSubscriptionEntry(e); }).reduce(function(s,e){ return s+e.amount; },0);
       var isVac=(visibleVac[b.id]||[]).some(function(v){ return v.date===dk; });
       totDay+=t;
       var appCell='';
@@ -4544,11 +4566,11 @@ async function renderAdminView(){
       if(!hasMero) return appCell;
       var wId=matchBarberToWorker(b);
       var mVal=(wId&&window._meroDaily.data[wId]&&window._meroDaily.data[wId][dk])?window._meroDaily.data[wId][dk]:0;
-      // Calcul admin share din Mero
+      // Calcul admin share din Mero (comparam doar incasarile normale, NU abonamentele)
       var mAdmin=isPatrickBarber(b)?mVal:Math.round(mVal*0.5); // simplificat pe zi
       mTotDay+=mVal;
-      var diff=Math.abs(t-mAdmin);
-      var cls=mVal===0&&t===0?'color:var(--muted)':diff<1?'color:var(--green)':'color:var(--red);font-weight:700';
+      var diff=Math.abs(tReg-mAdmin);
+      var cls=mVal===0&&tReg===0?'color:var(--muted)':diff<1?'color:var(--green)':'color:var(--red);font-weight:700';
       return appCell+'<td style="'+cls+';font-size:0.75rem;">'+(mVal>0?fmt(mVal):'—')+'</td>';
     }).join('');
     var tr=document.createElement('tr');
@@ -4579,13 +4601,17 @@ async function renderAdminView(){
   var grandTotal=0,grandMero=0;
   document.getElementById('adminTableFoot').innerHTML='<tr><td>TOTAL</td>'+
     barbers.map(function(b){
-      var t=(visibleEntries[b.id]||[]).reduce(function(s,e){ return s+e.amount; },0); grandTotal+=t;
+      var allE=(visibleEntries[b.id]||[]);
+      var t=allE.reduce(function(s,e){ return s+e.amount; },0); grandTotal+=t;
+      var tReg=allE.filter(function(e){ return !isSubscriptionEntry(e); }).reduce(function(s,e){ return s+e.amount; },0);
       var td='<td>'+fmt(t)+'</td>';
       if(!hasMero) return td;
       var wId=matchBarberToWorker(b); var mT=0;
       if(wId&&window._meroDaily.data[wId]) Object.keys(window._meroDaily.data[wId]).forEach(function(dk){ if(dk<=dateKey) mT+=window._meroDaily.data[wId][dk]||0; });
       grandMero+=mT;
-      var cls=Math.abs(t-mT)<1?'color:var(--green)':'color:var(--red);font-weight:700';
+      // Comparam cu Mero doar incasarile normale (abonamentele nu sunt in Mero)
+      var mAdminTot=isPatrickBarber(b)?mT:Math.round(mT*0.5);
+      var cls=Math.abs(tReg-mAdminTot)<1?'color:var(--green)':'color:var(--red);font-weight:700';
       return td+'<td style="'+cls+'">'+fmt(mT)+'</td>';
     }).join('')+
     '<td>'+fmt(grandTotal)+'</td>'+(hasMero?'<td style="color:var(--blue);font-weight:700;">'+fmt(grandMero)+'</td>':'')+'</tr>';
@@ -5236,14 +5262,20 @@ async function addEntryAsAdmin(){
   var barberId=document.getElementById('ae-barber').value;
   var amount=parseFloat(document.getElementById('ae-amount').value);
   var date=document.getElementById('ae-date').value;
+  var isSub=document.getElementById('ae-sub')&&document.getElementById('ae-sub').checked;
+  var note=(document.getElementById('ae-note')&&document.getElementById('ae-note').value||'').trim();
   var errEl=document.getElementById('addEntryErr'), btn=document.getElementById('addEntryBtn');
   errEl.style.display='none';
   if(!barberId||!amount||amount<1||amount>99999){ errEl.textContent='Completează suma.'; errEl.style.display='block'; return; }
   if(!date){ errEl.textContent='Alege o dată.'; errEl.style.display='block'; return; }
   btn.disabled=true;
-  var entryRef=await addDoc(collection(db,'entries'),{ barberId:barberId, amount:amount, date:date, month:date.slice(0,7), ts:Date.now(), addedByAdmin:true, receivedCash:false, status:'approved' });
+  var entryData={ barberId:barberId, amount:amount, date:date, month:date.slice(0,7), ts:Date.now(), addedByAdmin:true, receivedCash:false, status:'approved' };
+  if(isSub){ entryData.source='abonament'; entryData.note=note||'Abonament'; }
+  var entryRef=await addDoc(collection(db,'entries'),entryData);
   rememberAdminLocalMutation('entries',entryRef.id);
   document.getElementById('ae-amount').value='';
+  if(document.getElementById('ae-note')) document.getElementById('ae-note').value='';
+  if(document.getElementById('ae-sub')){ document.getElementById('ae-sub').checked=false; document.getElementById('ae-note').style.display='none'; }
   btn.disabled=false;
   closeModal('addEntryModal');
   queueSilentRealtimeRender('admin',renderActiveAdminRealtimeView);
@@ -5859,25 +5891,43 @@ function getAdminPctForDate(entries, b, dateKey){
   return getDayAdminPct(beforeTotal, b);
 }
 
+// Verifică dacă o încasare este abonament (split 50/50 fix)
+function isSubscriptionEntry(e){ return !!(e && (e.source==='abonament' || e.type==='abonament' || e.isSubscription)); }
+
 // Calcul complet pe zile.
 // Daca un obiectiv este atins astazi, procentul nou intra doar de maine.
+// Abonamentele: mereu 50/50, indiferent de trepte (dar conteaza la obiective).
 // Returnează: { totalAdmin, totalReal, barberEarnings, currentDayPct }
 function calcMonthBreakdown(entries, b){
   var totalAdmin=0; // ce a pus frizerul în app (banii tăi)
   var totalReal=0; // total real salon
   var barberEarnings=0; // câștigul frizerului
   var cumAdmin=0; // acumulator pentru praguri
-  var dailyTotals=buildAppDailyTotals(entries);
-  Object.keys(dailyTotals).sort().forEach(function(day){
-    var dayTotal=Number(dailyTotals[day]||0);
+  // Grupăm pe zile separat: încasări normale (pe trepte) vs abonamente (50/50 fix)
+  var dailyReg={}, dailySub={};
+  (entries||[]).forEach(function(e){
+    var amt=Number(e.amount||0); if(!amt) return;
+    if(isSubscriptionEntry(e)) dailySub[e.date]=(dailySub[e.date]||0)+amt;
+    else dailyReg[e.date]=(dailyReg[e.date]||0)+amt;
+  });
+  var allDays={};
+  Object.keys(dailyReg).forEach(function(d){ allDays[d]=1; });
+  Object.keys(dailySub).forEach(function(d){ allDays[d]=1; });
+  Object.keys(allDays).sort().forEach(function(day){
+    var regDay=Number(dailyReg[day]||0);
+    var subDay=Number(dailySub[day]||0);
     var adminPctDay=getDayAdminPct(cumAdmin, b);
-    var realDay=(adminPctDay>0)?(dayTotal/(adminPctDay/100)):0;
-    var barberDay=realDay-dayTotal;
+    // Încasări normale: procent pe trepte
+    var realReg=(adminPctDay>0)?(regDay/(adminPctDay/100)):0;
+    var barberReg=realReg-regDay;
+    // Abonamente: mereu 50/50 (frizerul ia exact cât pune, la fel ca adminul)
+    var realSub=subDay*2;
+    var barberSub=subDay;
 
-    totalAdmin+=dayTotal;
-    totalReal+=realDay;
-    barberEarnings+=barberDay;
-    cumAdmin+=dayTotal;
+    totalAdmin+=regDay+subDay;
+    totalReal+=realReg+realSub;
+    barberEarnings+=barberReg+barberSub;
+    cumAdmin+=regDay+subDay;
   });
 
   // Procentul curent pentru ziua urmatoare.
@@ -6113,6 +6163,12 @@ function showBarberView(){
     var syncDateEl=document.getElementById('barberMeroDate');
     if(syncDateEl) syncDateEl.value=todayKey;
     document.getElementById('myAddBtn').addEventListener('click',function(){if(!debounceBtn(this,2000))addMyEntry();});
+    var mySubBtnEl=document.getElementById('mySubAddBtn');
+    if(mySubBtnEl){
+      mySubBtnEl.addEventListener('click',function(){if(!debounceBtn(this,2000))addMySubscription();});
+      var mySubDateEl=document.getElementById('mySubDate');
+      if(mySubDateEl&&!mySubDateEl.value) mySubDateEl.value=new Date().toISOString().slice(0,10);
+    }
 
     // Contabilitate
     initBarberAccounting();
@@ -6354,7 +6410,8 @@ async function renderBarberView(){
     else if(status==='rejected') statusHtml='<span class="e-status rejected">✗ Respins</span>';
     var cashHtml='<span class="e-cash '+(isPaid?'received':'not-received')+'" style="cursor:default;">'+(isPaid?'✓ Achitat':'✗ Neachitat')+'</span>';
     var delHtml=(status==='pending')?'<button class="e-del" data-id="'+e.docId+'">✕</button>':'';
-    row.innerHTML='<span class="e-date">'+e.date+'</span><span class="e-amount'+(isPaid?'':' unpaid')+'">'+fmt(e.amount)+'</span>'+statusHtml+cashHtml+delHtml;
+    var subBadge=isSubscriptionEntry(e)?'<span class="e-sub-badge" title="'+esc(e.note||'Abonament')+'">🎫 '+esc(e.note||'Abonament')+'</span>':'';
+    row.innerHTML='<span class="e-date">'+e.date+'</span>'+subBadge+'<span class="e-amount'+(isPaid?'':' unpaid')+'">'+fmt(e.amount)+'</span>'+statusHtml+cashHtml+delHtml;
     if(status==='pending' && row.querySelector('.e-del')){
       row.querySelector('.e-del').addEventListener('click', async function(){
         var _ok2=await showConfirm('Șterge','Ești sigur?','🗑️'); if(!_ok2) return;
@@ -6421,6 +6478,25 @@ async function addMyEntry(){
   await addDoc(collection(db,'entries'),{ barberId:currentUser.uid, amount:amt, date:date, month:date.slice(0,7), ts:Date.now(), receivedCash:false, status:'pending' });
   amtEl.value='';
   dateEl.value=todayKey;
+  btn.disabled=false;
+  if(date.slice(0,7)!==viewMonth){ viewMonth=date.slice(0,7); updateMonthLabel(); }
+  await rerenderPreservingScroll(renderBarberView);
+}
+
+async function addMySubscription(){
+  var amtEl=document.getElementById('mySubAmount');
+  var dateEl=document.getElementById('mySubDate');
+  var noteEl=document.getElementById('mySubNote');
+  var errEl=document.getElementById('mySubErr');
+  var btn=document.getElementById('mySubAddBtn');
+  var todayKey=new Date().toISOString().slice(0,10);
+  var amt=parseFloat(amtEl.value), date=dateEl.value, note=(noteEl.value||'').trim();
+  errEl.style.display='none';
+  if(!amt||amt<1||amt>99999){ errEl.textContent='Introdu o sumă validă.'; errEl.style.display='block'; return; }
+  if(!date){ errEl.textContent='Alege o dată.'; errEl.style.display='block'; return; }
+  btn.disabled=true;
+  await addDoc(collection(db,'entries'),{ barberId:currentUser.uid, amount:amt, date:date, month:date.slice(0,7), ts:Date.now(), receivedCash:false, status:'pending', source:'abonament', note:note||'Abonament' });
+  amtEl.value=''; noteEl.value=''; dateEl.value=todayKey;
   btn.disabled=false;
   if(date.slice(0,7)!==viewMonth){ viewMonth=date.slice(0,7); updateMonthLabel(); }
   await rerenderPreservingScroll(renderBarberView);
@@ -8585,13 +8661,9 @@ async function barberMeroSyncClick(){
   if(btn){ btn.disabled=true; btn.textContent='⏳ Se sincronizează...'; }
 
   try {
-    var wId=null;
+    await fetchMeroRoster();   // asigură lista de frizeri Mero la zi
     var bName=(barberData.name||'').toLowerCase();
-    var wMap={'florin':'65564d838fcbe845d716ebe7','casian':'6495e557f7354746387582dc',
-      'ionut':'632894e65e4e0cf7d4f9743f','ionuț':'632894e65e4e0cf7d4f9743f',
-      'nichitut':'632894e65e4e0cf7d4f9743f','nichituț':'632894e65e4e0cf7d4f9743f',
-      'patrick':'5da8bbe641ae460c8a5f06e5'};
-    for(var k in wMap){ if(bName.indexOf(k)!==-1){ wId=wMap[k]; break; } }
+    var wId=matchBarberToWorker(barberData);
     if(!wId){ toast('Nu s-a găsit frizerul în Mero','error'); return; }
 
     var isPatrick=bName.indexOf('patrick')!==-1;
