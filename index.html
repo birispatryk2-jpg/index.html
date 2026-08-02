@@ -4854,11 +4854,29 @@ async function renderStockModal(){
         '</div>';
       item.querySelector('.stock-edit-btn').addEventListener('click', async function(){
         var newQty=parseInt(item.querySelector('.stock-edit-qty').value)||0;
-        try { await updateDoc(doc(db,'stock',this.dataset.id),{qty:newQty}); toast('Stoc actualizat!','success'); await renderStockModal(); } catch(err){ toast('Eroare: '+err.message,'error'); }
+        this.disabled=true;
+        try { 
+          await updateDoc(doc(db,'stock',this.dataset.id),{qty:newQty}); 
+          item.style.opacity='0.6';
+          toast('✓ Stoc actualizat!','success'); 
+          this.disabled=false;
+        } catch(err){ 
+          toast('Eroare: '+err.message,'error');
+          this.disabled=false;
+        }
       });
       item.querySelector('.stock-del-btn').addEventListener('click', async function(){
         var ok2=await showConfirm('Sterge produs','Stergi '+esc(p.name)+'?','\u{1F5D1}'); if(!ok2) return;
-        try { await deleteDoc(doc(db,'stock',this.dataset.id)); toast('Produs sters!','success'); await renderStockModal(); } catch(err){ toast('Eroare: '+err.message,'error'); }
+        this.disabled=true;
+        try { 
+          await deleteDoc(doc(db,'stock',this.dataset.id)); 
+          item.remove();
+          toast('🗑 Produs șters!','success'); 
+          this.disabled=false;
+        } catch(err){ 
+          toast('Eroare: '+err.message,'error');
+          this.disabled=false;
+        }
       });
       el.appendChild(item);
     });
@@ -6788,7 +6806,7 @@ function bindAdminEntryRowActions(row){
         await updateDoc(doc(db,'entries',entryId),{ status:'approved' });
         row.dataset.status='approved';
         renderAdminEntryRowUi(row);
-        queueSilentRealtimeRender('admin',renderActiveAdminRealtimeView);
+        toast('✓ Marcat OK!','success');
       } catch(err){
         setMiniButtonBusy(this,false);
         toast('Eroare: '+err.message,'error');
@@ -6807,7 +6825,7 @@ function bindAdminEntryRowActions(row){
         await updateDoc(doc(db,'entries',entryId),{ status:'rejected' });
         row.dataset.status='rejected';
         renderAdminEntryRowUi(row);
-        queueSilentRealtimeRender('admin',renderActiveAdminRealtimeView);
+        toast('✗ Refuzat!','success');
       } catch(err){
         setMiniButtonBusy(this,false);
         toast('Eroare: '+err.message,'error');
@@ -6827,7 +6845,7 @@ function bindAdminEntryRowActions(row){
         await updateDoc(doc(db,'entries',entryId),{ receivedCash:nextPaid });
         row.dataset.paid=nextPaid?'1':'0';
         renderAdminEntryRowUi(row);
-        queueSilentRealtimeRender('admin',renderActiveAdminRealtimeView);
+        toast((nextPaid?'💰 Marcat achitat!':'⏳ Marcat neachitat!'),'success');
       } catch(err){
         setMiniButtonBusy(this,false);
         toast('Eroare: '+err.message,'error');
@@ -6856,7 +6874,7 @@ function bindAdminEntryRowActions(row){
         var list=row.parentNode;
         row.remove();
         if(list&&!list.children.length) list.innerHTML='<div class="entry-empty">Nu sunt incasari pana la data selectata.</div>';
-        queueSilentRealtimeRender('admin',renderActiveAdminRealtimeView);
+        toast('🗑 Șters!','success');
       } catch(err){
         setMiniButtonBusy(this,false);
         toast('Eroare: '+err.message,'error');
@@ -7920,7 +7938,7 @@ function getMeroMonthSyncTasks(state,monthKey,options){
 }
 async function fetchMeroTaskGroups(tasks){
   var groups={};
-  var batchSize=8;
+  var batchSize=20;  // Increased from 8 to 20 for faster parallel requests
   var successCount=0;
   var lastErr=null;
   for(var i=0;i<tasks.length;i+=batchSize){
@@ -8284,20 +8302,27 @@ async function meroSyncMonth(){
 
   toast('Se sincronizeaza cu Mero...','info');
   try {
-    await fetchMeroRoster();   // asigură lista de frizeri Mero la zi
-    var barbers=await getBarbers();
-    var appEntries=await getAllEntriesForMonth(monthKey);
+    // Parallelize initial data fetching
+    var [roster, barbers, appEntries] = await Promise.all([
+      fetchMeroRoster(),
+      getBarbers(),
+      getAllEntriesForMonth(monthKey)
+    ]);
+    
     var wids=Object.keys(MERO_WID);
     var selectedDateKey=getDate();
     if(selectedDateKey.slice(0,7)!==monthKey){
       var selectedDay=Math.min(parseInt(selectedDateKey.slice(8),10)||1,lastDay);
       selectedDateKey=monthKey+'-'+String(selectedDay).padStart(2,'0');
     }
+    
+    // Main Mero data fetch (this is the heavy operation)
     var dailyMonthData=await getMeroDailyMonthData(monthKey,true,{
       workers:wids,
       selectedDateKey:selectedDateKey,
       refreshToday:true
     });
+    
     var monthState=setMeroState(window._meroDaily,monthKey);
     var meroData=buildMeroMonthDataFromCache(monthState,wids);
     var todayKey=getUtcTodayKey();
@@ -8305,15 +8330,21 @@ async function meroSyncMonth(){
     var selectedDateLabel=(selectedDateKey===todayKey?'Azi':'Pe '+selectedParts[2]+'.'+selectedParts[1]+'.'+selectedParts[0]);
     var selectedDayData=buildSelectedMeroDayData(monthState,selectedDateKey,wids);
     selectedDayData.label=selectedDateLabel;
-    try{
-      var vacMap=await loadVacationMapForMonth(monthKey);
-      await persistBarberMeroProfiles(barbers,monthKey,selectedDateKey,vacMap);
-    } catch(profileErr){}
-    var allStats=null;
-    try { var ar=await meroPost(meroStatsUrl(from,to)); allStats=ar; } catch(e){}
+    
+    // Parallelize vacation and stats fetching
+    var [vacMap, allStats] = await Promise.all([
+      loadVacationMapForMonth(monthKey).catch(function(){ return null; }),
+      meroPost(meroStatsUrl(from,to)).catch(function(){ return null; })
+    ]);
+    
+    // Persist profiles if vacation map available
+    if(vacMap){
+      try { await persistBarberMeroProfiles(barbers,monthKey,selectedDateKey,vacMap); } catch(profileErr){}
+    }
+    
     renderMeroComparison(barbers,appEntries,meroData,allStats,monthKey,selectedDayData,dailyMonthData);
     updateMeroStatus('ok','Sincronizat - '+new Date().toLocaleTimeString('ro-RO'));
-    toast('Sincronizare completa!','success');
+    toast('✓ Sincronizare completa!','success');
     try { await renderAdminView(); postProcessAdminCards(); } catch(e){}
   } catch(e){ toast('Eroare: '+e.message,'error'); }
 }
@@ -8505,19 +8536,26 @@ async function finMeroSync(){
     var finLabel=document.getElementById('finMonthLabel');
     var finMonthKey=finLabel?finLabel.dataset.monthKey:new Date().toISOString().slice(0,7);
     if(!finMonthKey) finMonthKey=new Date().toISOString().slice(0,7);
-    await fetchMeroRoster();   // asigură lista de frizeri Mero la zi
-    var barbers=await getBarbers();
-    var appEntries=await getAllEntriesForMonth(finMonthKey);
+    
+    // Parallelize initial data fetching
+    var [roster, barbers, appEntries] = await Promise.all([
+      fetchMeroRoster(),
+      getBarbers(),
+      getAllEntriesForMonth(finMonthKey)
+    ]);
+    
     var wids=Object.keys(MERO_WID);
     await getMeroDailyMonthData(finMonthKey,true,{
       workers:wids,
       refreshToday:true
     });
+    
     try{
       var finCutoff=(finMonthKey===getUtcTodayKey().slice(0,7))?getUtcTodayKey():'';
       var finVacMap=await loadVacationMapForMonth(finMonthKey);
       await persistBarberMeroProfiles(barbers,finMonthKey,finCutoff,finVacMap);
     } catch(profileErr){}
+    
     var monthState=setMeroState(window._meroDaily,finMonthKey);
     var patrickMero=0, totalAdminFromBarbers=0, totalBarberEarnings=0;
     var detailsHtml='';
